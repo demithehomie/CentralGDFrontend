@@ -1,0 +1,24 @@
+.title-fonts {
+    color: #ffffff;
+}
+
+.results-list {
+    max-height: 400px; /* Ajuste conforme necessário */
+    overflow-y: auto; /* Cria a barra de rolagem vertical */
+    background-color: white;
+    list-style-type: none; /* Remove marcadores padrão da lista */
+    padding: 0;
+  }
+  
+  .results-list li {
+    color: black;
+    font-weight: bold;
+    padding: 10px;
+    border-bottom: 1px solid gray; /* Separadores cinzas */
+    cursor: pointer; /* Muda o cursor para indicar clicabilidade */
+  }
+  
+  .results-list li:last-child {
+    border-bottom: none; /* Remove o separador do último item */
+  }
+  

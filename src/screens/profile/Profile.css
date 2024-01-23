@@ -1,0 +1,81 @@
+/* Estilos gerais */
+.container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f4f4f4;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Estilização do avatar */
+  .profile-avatar {
+    display: block;
+    margin: 10px auto 20px;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #009688;
+  }
+  
+  /* Estilização dos campos de input e labels */
+  .input-group {
+    margin-bottom: 15px;
+  }
+  
+  .input-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+  }
+  
+  .input-group input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+  }
+  
+  /* Estilização do botão de escolha de arquivo */
+  .file-input {
+    border: 2px dashed #009688;
+    border-radius: 5px;
+    padding: 10px;
+    text-align: center;
+    margin-bottom: 20px;
+    cursor: pointer;
+  }
+  
+  .file-input:hover {
+    background-color: #e0f2f1;
+  }
+  
+  /* Estilização do texto dentro do input file */
+  .file-input input {
+    display: none;
+  }
+  
+  .file-input label {
+    color: #009688;
+    cursor: pointer;
+  }
+  
+  /* Botões e ações */
+  .profile-button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #009688;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .profile-button:hover {
+    background-color: #00796b;
+  }
+  

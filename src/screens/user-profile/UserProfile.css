@@ -1,0 +1,114 @@
+.new-text-alignment{
+  text-align: start;
+}
+
+.row-of-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+}
+.row-of-buttons-button{
+  margin: 1.5%;
+}
+
+.payment-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;  
+  border: 1px solid #ccc;
+  border-radius: 20px;
+}
+
+
+
+.new-text-alignment-user-data{
+  text-align: start;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-left: 1.5%;
+  padding-right: 1.5%;
+  align-items: center;
+}
+
+.new-text-alignment-credit-data{
+  text-align: start;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+}
+
+
+.title-color{
+  color: #000000;
+}
+
+.title-color-payment{
+  color: #000000;
+  padding-right: 5%;
+}
+
+.main-title-color{
+  color: #000000;
+  font-size: 20px;
+}
+
+.user-profile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .profile-card {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 800px;
+    width: 150%;
+    background-color: white;
+  }
+  
+  .profile-card h2 {
+    color: #333;
+    text-align: center;
+  }
+  
+  .profile-card form {
+    margin-top: 20px;
+  }
+  
+  .profile-card label {
+    font-weight: bold;
+  }
+  
+  .profile-card input {
+    width: 50%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .profile-card button {
+    width: 50%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .profile-card button:hover {
+    background-color: #45a049;
+  }
+  

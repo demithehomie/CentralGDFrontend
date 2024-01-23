@@ -1,0 +1,115 @@
+.profile-picture {
+    width: 100px;
+    height: 100px;
+    border: 3px solid #ffffff;
+    border-radius: 50px;
+}
+
+
+.dashboard-container {
+    display: flex;
+    height: 100vh;
+    justify-content: space-between;
+  }
+  
+  .sidebar {
+    width: 20%;
+    background-color: #302F50;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .main-content {
+
+    display: grid;
+    grid-auto-flow: column; /* Cria colunas automaticamente */
+    grid-auto-columns: minmax(0, max-content); /* Define a largura da coluna com base no conteúdo */
+    gap: 30px;
+    overflow-x: auto;
+    overflow-y: hidden;
+      
+  }
+  
+
+  .cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+  }
+
+  .dashboard-card {
+    flex: 1;
+    width: calc(100% / 3- 30px); 
+   /* Faz com que o card ocupe toda a largura da célula da grade */
+    /* Restante dos estilos do card */
+  }
+  
+  .logo, .avatar, .name,  .button {
+    margin-bottom: 10px;
+    color: #ffffff;
+    font-weight: 900;
+  }
+
+  .role {
+    margin-top: -60;
+    margin-bottom: 20px;
+    color: #ffffff;
+  }
+  
+  .button {
+    width: 100%;
+    min-width: 150px;
+    border: 1px solid white;
+    border-radius: 5px;
+    padding: 10px 20px;
+    background-color: transparent;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .button-filled {
+    background-color: white;
+    color: #302F50;
+  }
+
+  .button-filled-large {
+    width: 100%;
+    min-width: 150px;
+    border: 1px solid white;
+    border-radius: 5px;
+    padding: 10px 20px;
+    background-color: white;
+    color: #302F50;
+    cursor: pointer;
+  }
+  
+  /* width */
+::-webkit-scrollbar {
+    width: 20px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+   
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+  .separador {
+    border: 2px solid #ffffff;
+    margin: 25px;
+    
+    overflow-y: hidden;
+  }

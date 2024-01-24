@@ -23,7 +23,7 @@ const SearchResults = () => {
   const fetchResults = async (query: string) => {
     setIsLoading(true);
     try {
-      const response = await axios.get(`http://localhost:3001/search-users`, {
+      const response = await axios.get(`https://gdcompanion-2fns.onrender.com/search-users`, {
         params: { keyword: query }
       });
       setResults(response.data);

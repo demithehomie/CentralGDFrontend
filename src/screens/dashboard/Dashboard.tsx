@@ -2,10 +2,10 @@
   import './Dashboard.css';
   import { useNavigate } from 'react-router-dom';
   import logo from '../../assets/logoo.png';
-  import logo_profile from '../../assets/DEMETRIUS.jpg';
-  import report from '../../assets/icons/report.png';
-  import megaphone from '../../assets/icons/megaphone.png';
-  import bell from '../../assets/icons/bell.png';
+  import logo_profile from '../../assets/user_logo.jpg';
+  // import report from '../../assets/icons/report.png';
+  // import megaphone from '../../assets/icons/megaphone.png';
+  // import bell from '../../assets/icons/bell.png';
   import warning from '../../assets/icons/warning.png';
   import DashboardCard from '../../components/dashboard-cards/DashboardCard';
 
@@ -37,11 +37,11 @@
 
 
     const cards: CardData[] = [
-      { id: 1, badge: "2024", color: "", backgroundColor: "#FF5733", title: "Você tem um novo relatório disponível.", icon: warning, ctaText: "Saiba Mais" },
-      { id: 2, badge: "2024", color: "", backgroundColor: "#33FF57", title: "Relatório Anual 2024", icon: bell, ctaText: "Ver Mais" },
-      { id: 3, badge: "2024", color: "", backgroundColor: "#3357FF", title: "As regras para o pix mudaram.", icon: report, ctaText: "Ver Detalhes" },
-      { id: 4, badge: "2024", color: "", backgroundColor: "#33FF57", title: "326 transferências agendadas para hoje.", icon: bell, ctaText: "Saiba Mais" },
-      { id: 5, badge: "2024", color: "", backgroundColor: "#FFBF00", title: "Ver todas as notificações.", icon: megaphone, ctaText: "Ver Detalhes" },
+      { id: 1, badge: "2024", color: "", backgroundColor: "#FF5733", title: "Notificações e Dashboard sendo reformados..", icon: warning, ctaText: "Aguarde" },
+      // { id: 2, badge: "2024", color: "", backgroundColor: "#33FF57", title: "Relatório Anual 2024", icon: bell, ctaText: "Ver Mais" },
+      // { id: 3, badge: "2024", color: "", backgroundColor: "#3357FF", title: "As regras para o pix mudaram.", icon: report, ctaText: "Ver Detalhes" },
+      // { id: 4, badge: "2024", color: "", backgroundColor: "#33FF57", title: "326 transferências agendadas para hoje.", icon: bell, ctaText: "Saiba Mais" },
+      // { id: 5, badge: "2024", color: "", backgroundColor: "#FFBF00", title: "Ver todas as notificações.", icon: megaphone, ctaText: "Ver Detalhes" },
      
       // ...outros cards...
     ];
@@ -52,7 +52,15 @@
     const profile = async () => {
       navigate('/profile')
     }
+    
+    
+    const prints = async () => {
+      navigate('/get-prints-themagictool')
+    }
 
+    const targets = async () => {
+      navigate('/target')
+    }
     // const configure = async () => {
     //   navigate('/configure')
     // }
@@ -81,7 +89,7 @@
             <img src={logo_profile} alt="logo_profile" className='profile-picture' />
           </div>
           <div className="name">
-            Demetrius Ferreira
+            Leandro Guerra
             </div>
           <div className="role">Admin</div>
           {/* Botões */}
@@ -90,6 +98,8 @@
             <button className="button" onClick={scheduling}  >Agendamento</button>
             <button className="button" onClick={configure}>Configurar</button> */}
             <button className="button" onClick={getAllUsers}>Usuários</button>
+            <button className="button" onClick={prints}  >Prints</button>
+            <button className="button" onClick={targets}  >Targets</button>
         </div>
 
         <hr className='separador'/>

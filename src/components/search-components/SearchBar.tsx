@@ -27,7 +27,7 @@ const SearchBar = () => {
     navigate(`/search-results?query=${encodeURIComponent(searchTerm)}`);
   };
 
-  //const apiurldev = `http://localhost:3001`;
+  //const apiurldev = `https://gdcompanion-2fns.onrender.com`;
 
   // const search = async (query: string) => {
   //   try {

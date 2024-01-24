@@ -1,0 +1,31 @@
+.miniTargetTable ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .miniTargetTable li {
+    padding: 10px;
+    color: #000000;
+    font-weight: 900;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .miniTargetTable li:nth-child(odd) {
+    background-color: #f9f9f9;
+  }
+  
+  .miniTargetTable li:nth-child(even) {
+    background-color: #e9e9e9;
+  }
+  
+  .miniTargetTable input {
+    margin-right: 10px;
+    padding: 5px;
+  }
+  
+  .miniTargetTable button {
+    margin-right: 10px;
+    padding: 5px 10px;
+  }
+  

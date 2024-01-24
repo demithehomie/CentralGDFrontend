@@ -13,7 +13,10 @@ import Users from './screens/users/Users';
 import { AuthProvider } from './context/auth/AuthContext';
 import SearchResults from './screens/search-results/SearchResults';
 import UserProfile from './screens/user-profile/UserProfile';
-import PaymentScreen from './screens/all=payments-screen/PaymentScreen';
+import PaymentScreen from './screens/all-payments-screen/PaymentScreen';
+import PrintsGuerraTool from './screens/prints-screen/guerratool/PrintsGuerraTool';
+import PrintsTheMagicTool from './screens/prints-screen/themagictool/PrintsTheMagicTool';
+import MiniTargetTable from './components/mni-target-table/MiniTargetTable';
 
 //import { User } from './components/user-table/UserTable';
 //import User from './components/user-table/UserTable';
@@ -47,7 +50,10 @@ function App() {
             <Route path="/search-results" element={<SearchResults/>}/>
             <Route path="/user-profile/:userId" element={<UserProfile />} />
             <Route path="/payment-screen/:userId" element={<PaymentScreen />} />
-
+            <Route path="/get-prints-guerra-tool" element={<PrintsGuerraTool />} />
+            <Route path="/get-prints-themagictool" element={<PrintsTheMagicTool />} />
+            <Route path="/target" element={<MiniTargetTable />} />
+            {/* get-all-prints */}
 
             {/* <Route path="/user-profile" element={
       userData ? <UserProfile user={userData} onSendCredits={() => {}} onSendMoney={() => {}} /> : <div>Loading...</div>

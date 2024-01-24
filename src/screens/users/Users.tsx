@@ -11,7 +11,7 @@ export default function Users() {
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage] = useState<number>(10);
-  const apiurldev = `http://localhost:3001`;
+  const apiurldev = `https://gdcompanion-2fns.onrender.com`;
 
   const fetchAndUpdateUsers = async () => {
     const endpoint = `${apiurldev}/users-with-pagination?page=${currentPage}&limit=${itemsPerPage}`;
@@ -70,7 +70,7 @@ export default function Users() {
         <UserTable users={users} onToggleResellerStatus={toggleResellerStatus} />
         <div className="pagination">
           <button className='title-table-black' disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>Anterior</button>
-          <span>Página {currentPage}</span>
+          <span style={{ color: '#ffffff'}}>Página {currentPage}</span>
           <button className='title-table-black' onClick={() => handlePageChange(currentPage + 1)}>Próxima</button>
         </div>
       </>

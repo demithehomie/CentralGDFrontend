@@ -7,6 +7,7 @@ import axios from 'axios';
 import { User } from '../../components/user-table/UserTable';
 import { useParams } from 'react-router-dom';
 import { UserProfileProps } from '../user-profile/UserProfile';
+import './PaymentScreen.css';
 
 
 export const mercadoPagoApi = axios.create({
@@ -15,7 +16,9 @@ export const mercadoPagoApi = axios.create({
 
 mercadoPagoApi.interceptors.request.use(async config => {
 
-    const token = `TEST-5220412533742046-011815-1ca564c5f1c0341bab7026692cf1e670-419577621`
+//  const tokenDev = `TEST-5220412533742046-011815-1ca564c5f1c0341bab7026692cf1e670-419577621`
+
+    const token = `APP_USR-5220412533742046-011815-549eea6144946c47d1c330d299e6fb6a-419577621`
    
     const idempotencyKey = `0d5020ed-1af6-469c-ae06-c3bec19954bb`;
 
@@ -39,7 +42,7 @@ const PaymentScreen : React.FC<UserProfileProps> = ({  }) => {
     const { userId } = useParams<{ userId: string }>();
     const [userData, setUserData] = useState<User | null>(null);
 
-    const [formData, setFormData] = useReducer(formReducer, {})
+    const [ /* formData */, setFormData] = useReducer(formReducer, {})
     const [responsePayment, setResponsePayment] = useState<{ data: any } | null>(null);
     const [linkBuyMercadoPago, setLinkBuyMercadoPago] = useState<string | null>(null);
     const [statusPayment, setStatusPayment] = useState<boolean>(false);
@@ -47,7 +50,7 @@ const PaymentScreen : React.FC<UserProfileProps> = ({  }) => {
     useEffect(() => {
       const fetchUser = async () => {
         try {
-          const response = await fetch(`http://localhost:3001/users/${userId}`);
+          const response = await fetch(`https://gdcompanion-2fns.onrender.com/users/${userId}`);
           if (!response.ok) {
             throw new Error('Failed to fetch user');
           }
@@ -76,9 +79,10 @@ const PaymentScreen : React.FC<UserProfileProps> = ({  }) => {
             if (response.data.status === "approved") {
               // Logic for handling approved payment
               setStatusPayment(true);
+              console.log(`Payment status: ${response.data.status}`);
             } else {
               // Logic for handling other payment statuses
-              console.log(`Payment status: ${response.data.status}`);
+              console.log(`Not approved - Payment status: ${response.data.status}`);
             }
           })
           .catch(error => {
@@ -116,13 +120,13 @@ const PaymentScreen : React.FC<UserProfileProps> = ({  }) => {
         mercadoPagoApi.post("v1/payments", body ).then(response => {
 
             setResponsePayment(response)
-            console.log(response.data)
-            console.log(body)
-            setLinkBuyMercadoPago(response.data.point_of_interaction.transaction_data.ticket_url)
+            console.log('Resposta do Servidor:', JSON.stringify(response.data, null, 2));
+           // console.log(body)
+            setLinkBuyMercadoPago(JSON.stringify(response.data.point_of_interaction.transaction_data.ticket_url, null, 2))
           }).catch(err => {
-            console.log(err)
+            console.log(`Deu ruim: ${JSON.stringify(err)}`) // JSON.stringify(response.data.point_of_interaction.transaction_data.ticket_url, null, 2)
             //console.log(response)
-            console.log(body)
+            console.log(`Deu ruim: ${JSON.stringify(body)}`)
           })
         }
       
@@ -146,30 +150,32 @@ const PaymentScreen : React.FC<UserProfileProps> = ({  }) => {
             <label style={{ color: '#ffffff' }}>E-mail</label>
             <input onChange={handleChange} name="email" />
           </div>
-
+        <br />
           <div>
             <label style={{ color: '#ffffff' }}>Nome</label>
             <input onChange={handleChange} name="nome" />
           </div>
-
+        <br />
           <div>
             <label style={{ color: '#ffffff' }}>CPF</label>
             <input onChange={handleChange} name="cpf" />
           </div>
-
+        <br />
           <div>
             <button type="submit">Pagar</button>
           </div>
         </form>
       }
 
+<div className='pix-payment-container'>
       {responsePayment &&
-        <button style={{ color: '#ffffff' }} onClick={getStatusPayment}>Verificar status pagamento</button>
+     
+        <button style={{ color: '#000000', margin: '30px' }} onClick={getStatusPayment}>Verificar status pagamento</button>
       }
 
       {
         linkBuyMercadoPago && !statusPayment &&
-        < iframe src={linkBuyMercadoPago} width="400px" height="620px" title="link_buy" />
+        < iframe src={linkBuyMercadoPago} width="600px" height="620px" title="link_buy" />
       }
 
       {
@@ -178,7 +184,7 @@ const PaymentScreen : React.FC<UserProfileProps> = ({  }) => {
           Compra Aprovada
         </h1>
       }
-
+</div>
 
     </div>
   </div >

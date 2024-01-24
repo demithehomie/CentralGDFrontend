@@ -16,9 +16,9 @@ const AuthContext = createContext<AuthContextType>({
 
 export const useAuth = () => useContext(AuthContext);
 
-const apiurldev = `http://localhost:3001`;
+const apiurldev = `https://gdcompanion-2fns.onrender.com`;
 
-//const apiurl = `http://localhost:3001`
+//const apiurl = `https://gdcompanion-2fns.onrender.com`
 
 export const AuthProvider = ({ children }: any) => {
     const [currentUser, setCurrentUser] = useState(null);
@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }: any) => {
     
     const login = (username: string, password: string): Promise<any> => {
     // Note que estamos retornando a chamada axios diretamente, que retorna uma Promise
-    return axios.post(`${apiurldev}/login`, {
+    return axios.post(`${apiurldev}/login-individual`, {
         username,
         password,
     });

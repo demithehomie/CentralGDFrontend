@@ -1,0 +1,13 @@
+.pix-payment-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .pix-payment-container iframe {
+    max-width: 100%;
+    height: 500px;
+  }
+  

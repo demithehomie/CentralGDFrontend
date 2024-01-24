@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import './UserProfile.css';
 // import { useLocation, useParams } from 'react-router-dom';
-import {  useNavigate, useParams } from 'react-router-dom';
+
+import {  /*useNavigate , */useParams } from 'react-router-dom';
 import { User } from '../../components/user-table/UserTable';
 // import useSendFunctions from '../../personalized-hooks/useSendFunctions';
 import axios from 'axios'; 
@@ -16,13 +17,13 @@ const UserProfile: React.FC<UserProfileProps> = ({  }) => {
   //user, onSendCredits, onSendMoney
   //const { handleSendCredits, handleSendMoney } = useSendFunctions(onSendCredits, onSendMoney);
   //const location = useLocation();
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
   const { userId } = useParams<{ userId: string }>();
   const [userData, setUserData] = useState<User | null>(null);
   const [addAmount, setAddAmount] = useState<string>('');
   const [subtractAmount, setSubtractAmount] = useState<string>('');
   
-  const apiurldev = `http://localhost:3001`;
+  const apiurldev = `https://gdcompanion-2fns.onrender.com`;
 
   const handleAddCredits = async () => {
     try {
@@ -43,9 +44,9 @@ const UserProfile: React.FC<UserProfileProps> = ({  }) => {
   };
  
 
-  const  goToPaymentScreen  = async () => {
-  navigate('/payment-screen/:userId')
-}
+//   const  goToPaymentScreen  = async () => {
+//   navigate('/payment-screen/:userId')
+// }
 
   // const handleSubmit = async (e: React.FormEvent) => {
   //   e.preventDefault();
@@ -73,7 +74,7 @@ const UserProfile: React.FC<UserProfileProps> = ({  }) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/users/${userId}`);
+        const response = await fetch(`https://gdcompanion-2fns.onrender.com/users/${userId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch user');
         }
@@ -108,11 +109,11 @@ const UserProfile: React.FC<UserProfileProps> = ({  }) => {
         )}
     </div>
     <hr />
-<div className='row-of-buttons'>
-<button className='row-of-buttons-button' onClick={goToPaymentScreen} >Iniciar Pagamento</button>
-<button className='row-of-buttons-button'>Todos os Pagamentos</button>
-<button className='row-of-buttons-button'>Agendar Pagamento</button>
-</div>
+      {/* <div className='row-of-buttons'>
+        <button className='row-of-buttons-button' onClick={goToPaymentScreen} >Receber Pagamento</button>
+        <button className='row-of-buttons-button'>Todos os Pagamentos</button>
+        <button className='row-of-buttons-button'>Agendar Pagamento</button>
+      </div> */}
  
         <hr />
 

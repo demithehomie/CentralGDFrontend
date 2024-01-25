@@ -17,6 +17,7 @@ import PaymentScreen from './screens/all-payments-screen/PaymentScreen';
 import PrintsGuerraTool from './screens/prints-screen/guerratool/PrintsGuerraTool';
 import PrintsTheMagicTool from './screens/prints-screen/themagictool/PrintsTheMagicTool';
 import MiniTargetTable from './components/mni-target-table/MiniTargetTable';
+import PaymentMenu from './screens/payment-menu/PaymentMenu';
 
 //import { User } from './components/user-table/UserTable';
 //import User from './components/user-table/UserTable';
@@ -42,6 +43,7 @@ function App() {
           <Routes>
             <Route path="/" element={<LoginForm />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/payments" element={<PaymentMenu />} />
             <Route path="/profile" element={<Profile nomeInicial={'Demetrius'} funcaoInicial={'Admin'}/>} />
             <Route path="/activity" element={<Activity />} />
             <Route path="/scheduling" element={<Scheduling />} />

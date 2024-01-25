@@ -11,3 +11,44 @@
     height: 500px;
   }
   
+
+  .transaction-input-container {
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+    padding: 10px;
+    background-color: #333; /* Cor de fundo para realçar o label e input */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.transaction-input-container label {
+    font-size: 25px;
+    color: #ffffff; /* Mantendo a cor do label branca */
+    margin-bottom: 8px;
+}
+
+.transaction-input-container input {
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    outline: none;
+    transition: border-color 0.3s;
+    font-size: 30px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.transaction-input-container input:focus {
+    border-color: #007bff; /* Cor da borda ao focar no input */
+}
+
+.payment-buttons {
+   margin: 10px;
+}
+
+.payment-buttons-danger {
+  margin: 40px;
+  color: #ffffff;
+  background-color: red;
+}

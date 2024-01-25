@@ -70,7 +70,7 @@ const MiniTargetTable = () => {
 
   return (
     <div className="miniTargetTable">
-        <h3 style={{ color: '#ffffff;'}}>Inserir Alvo</h3>
+        <h3 style={{ color: '#ffffff'}}>Inserir Alvo</h3>
       <div>
         <input
           value={newTarget}
@@ -80,9 +80,9 @@ const MiniTargetTable = () => {
         <button onClick={handleCreate}>Criar</button>
         <br /><br />
       </div>
-      <ul>
+      <ul >
         {requests.map((request) => (
-          <li key={request.id}>
+          <li key={request.id} className="requestsList">
             {request.target}{' '}
             <input
              value={editTargets[request.id] || ''}

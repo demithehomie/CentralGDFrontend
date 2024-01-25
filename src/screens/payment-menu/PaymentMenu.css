@@ -1,0 +1,47 @@
+.row-of-buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+  
+  }
+  .row-of-buttons-button{
+    margin: 1.5%;
+  }
+
+  .payment-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.title {
+    margin-bottom: 20px;
+    color: #ffffff;
+    font-size: 200%;
+}
+
+.column-of-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.payment-button, .back-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.payment-button:hover, .back-button:hover {
+    transform: scale(1.05);
+}
+
+.back-button {
+    margin-top: 20px;
+    background-color: #f44336;
+    color: white;
+}

@@ -29,3 +29,11 @@
     padding: 5px 10px;
   }
   
+
+  .requestsList {
+    max-height: 300px; /* Exemplo de altura máxima */
+    overflow: auto;
+    justify-content: space-between;
+    display: flex;
+  }
+  

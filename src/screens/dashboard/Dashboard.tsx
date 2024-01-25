@@ -19,7 +19,7 @@
 
     interface CardData {
       id: number;
-     // badge: string;
+      // badge: string;
       //category: string;
       backgroundColor: string;
       badge: string;
@@ -61,9 +61,10 @@
     const targets = async () => {
       navigate('/target')
     }
-    // const configure = async () => {
-    //   navigate('/configure')
-    // }
+
+    const payments = async () => {
+      navigate('/payments')
+    }
 
     // const scheduling = async () => {
     //   navigate('/scheduling')
@@ -96,10 +97,11 @@
           <button className="button button-filled">Dashboard</button>
             {/* <button className="button" onClick={activity}>Atividade</button>
             <button className="button" onClick={scheduling}  >Agendamento</button>
-            <button className="button" onClick={configure}>Configurar</button> */}
+             */}
             <button className="button" onClick={getAllUsers}>Usuários</button>
             <button className="button" onClick={prints}  >Prints</button>
             <button className="button" onClick={targets}  >Targets</button>
+            <button className="button" onClick={payments}>Pagamentos</button>
         </div>
 
         <hr className='separador'/>

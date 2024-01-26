@@ -12,7 +12,7 @@ interface ScreenShotRequest {
 
 const MiniTargetTable = () => {
     const navigate = useNavigate();
-  const apiURL = 'https://gdcompanion-2fns.onrender.com';
+  const apiURL = 'https://gdcompanion-prod.onrender.com';
   const [requests, setRequests] = useState<ScreenShotRequest[]>([]); // Tipagem aqui
   const [newTarget, setNewTarget] = useState('');
   const [editTargets, setEditTargets] = useState<{ [key: number]: string }>({});

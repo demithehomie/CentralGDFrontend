@@ -13,7 +13,9 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   #root {
-    height: 100vh;
+    height: auto;
+    padding-top: 5vh; // 5% da altura da tela no topo
+    padding-bottom: 10vh; // 10% da altura da tela na base
     display: flex;
     justify-content: center;
     align-items: center;

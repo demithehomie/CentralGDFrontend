@@ -13,7 +13,7 @@ export default function PrintsGuerraTool() {
     const [error, setError] = useState<string | null>(null);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [itemsPerPage] = useState<number>(4);
-    const apiurldev = `https://gdcompanion-2fns.onrender.com`;
+    const apiurldev = `https://gdcompanion-prod.onrender.com`;
 
     const fetchAndUpdateUsers = async () => {
         const endpoint = `${apiurldev}/prints-with-pagination?page=${currentPage}&limit=${itemsPerPage}`;

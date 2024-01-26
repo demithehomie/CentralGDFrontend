@@ -60,7 +60,7 @@ export type ImageViewerProps = {
 const ImageViewer: React.FC<ImageViewerProps> = ({ images }) => {
     const [userNames, setUserNames] = useState<{ [key: number]: string }>({});
 
-    const apiurldev = `https://gdcompanion-2fns.onrender.com`;
+    const apiurldev = `https://gdcompanion-prod.onrender.com`;
 
 
 

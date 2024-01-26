@@ -23,7 +23,7 @@ const UserProfile: React.FC<UserProfileProps> = ({  }) => {
   const [addAmount, setAddAmount] = useState<string>('');
   const [subtractAmount, setSubtractAmount] = useState<string>('');
   
-  const apiurldev = `https://gdcompanion-2fns.onrender.com`;
+  const apiurldev = `https://gdcompanion-prod.onrender.com`;
 
   const handleAddCredits = async () => {
     try {
@@ -74,7 +74,7 @@ const UserProfile: React.FC<UserProfileProps> = ({  }) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetch(`https://gdcompanion-2fns.onrender.com/users/${userId}`);
+        const response = await fetch(`https://gdcompanion-prod.onrender.com/users/${userId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch user');
         }

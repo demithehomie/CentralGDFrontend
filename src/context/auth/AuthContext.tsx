@@ -16,9 +16,9 @@ const AuthContext = createContext<AuthContextType>({
 
 export const useAuth = () => useContext(AuthContext);
 
-const apiurldev = `https://gdcompanion-2fns.onrender.com`;
+const apiurldev = `https://gdcompanion-prod.onrender.com`;
 
-//const apiurl = `https://gdcompanion-2fns.onrender.com`
+//const apiurl = `https://gdcompanion-prod.onrender.com`
 
 export const AuthProvider = ({ children }: any) => {
     const [currentUser, setCurrentUser] = useState(null);

@@ -11,7 +11,7 @@ export default function Users() {
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage] = useState<number>(10);
-  const apiurldev = `https://gdcompanion-2fns.onrender.com`;
+  const apiurldev = `https://gdcompanion-prod.onrender.com`;
 
   const fetchAndUpdateUsers = async () => {
     const endpoint = `${apiurldev}/users-with-pagination?page=${currentPage}&limit=${itemsPerPage}`;

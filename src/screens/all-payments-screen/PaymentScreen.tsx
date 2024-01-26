@@ -8,7 +8,7 @@
 // const idempotencyKey = `0d5020ed-1af6-469c-ae06-c3bec19954bb`;
 import React, { useEffect, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, /*useParams*/ } from 'react-router-dom';
 import './PaymentScreen.css';
 
 interface UserData {
@@ -16,10 +16,21 @@ interface UserData {
   // Add other properties as needed
 }
 
+interface TransferData {
+  id: string;
+  username: string;
+  name: string;
+  amount: number;
+  credit: number;
+  pending_payments: string | boolean;
+  setStatusPaymentApproved: boolean;
+  setStatusPaymentPending: (status: boolean) => boolean;
+}
+
 const PaymentScreen: React.FC = () => {
   const navigate = useNavigate();
-  const { userId } = useParams<{ userId: string }>();
-  const [userData, setUserData] = useState<UserData | null>(null);
+ // const { userId } = useParams<{ userId: string }>();
+  const [userData, /* setUserData */] = useState<UserData | null>(null);
   const [formData, setFormData] = useState({
     email: 'leandroguerratool@gmail.com',
     nome: 'Leandro',
@@ -31,6 +42,29 @@ const PaymentScreen: React.FC = () => {
   const [linkBuyMercadoPago, setLinkBuyMercadoPago] = useState<string | null>(null);
   const [statusPaymentApproved, setStatusPaymentApproved] = useState<boolean>(false);
   const [statusPaymentPending, setStatusPaymentPending] = useState<boolean>(true);
+  const [pendingTransfers, setPendingTransfers] = useState<TransferData[]>([]);
+  const [isLoading, setIsLoading] = useState(true); 
+  const [showPopupForm, setShowPopupForm] = useState(true);
+  const [clientFormData, setClientFormData] = useState({
+    name: '',
+    whatsapp: '',
+    service_provided: '',
+    amount: formData.transaction_amount
+  });
+
+  const handleClientFormChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setClientFormData({
+      ...clientFormData,
+      [name]: name === 'amount' ? parseFloat(value) : value,
+    });
+  };
+
+  const updateTransactionAmount = (amount: any) => {
+    setFormData({ ...formData, transaction_amount: amount });
+  };
+
+
   
   const calculateTotalAmount = (amount: number) => {
     const addedPercentage = amount * 0.01; // 1% of the amount
@@ -47,24 +81,7 @@ const PaymentScreen: React.FC = () => {
       });
   };
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await fetch(`https://gdcompanion-2fns.onrender.com/users/${userId}`);
-        if (response.ok) {
-          const userData: UserData = await response.json();
-          setUserData(userData);
-        } else {
-          throw new Error('Failed to fetch user');
-        }
-      } catch (error) {
-        console.error((error as Error).message);
-      }
-    };
-
-    fetchUser();
-  }, [userId]);
-
+ 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setFormData({
@@ -107,151 +124,230 @@ const PaymentScreen: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const token = 'APP_USR-5220412533742046-011815-549eea6144946c47d1c330d299e6fb6a-419577621'; // Replace with your MercadoPago API access token
-    const idempotencyKey =  generateIdempotencyKey();// '0d5020ed-1af6-469c-ae06-c3bec19954bb'; // Replace with your desired idempotency key
+    // Preparando o corpo da requisição para o MercadoPago
+    const token = 'APP_USR-5220412533742046-011815-549eea6144946c47d1c330d299e6fb6a-419577621';
+    const idempotencyKey = `${Date.now()}-${Math.random()}`; // Chave de idempotência
 
-    const body = {
+    const paymentBody = {
       transaction_amount: calculateTotalAmount(formData.transaction_amount),
       description: 'Família Guerra',
       payment_method_id: 'pix',
       payer: {
-        email: 'leandroguerratool@gmail.com', //formData.email,
-        first_name: `Leandro`, //formData.nome,
-        last_name: `Guerra `,// formData.sobrenome,
+        email: formData.email,
+        first_name: formData.nome,
+        last_name: formData.sobrenome,
         identification: {
           type: 'CPF',
-          number: `10050031732`//formData.cpf,
+          number: formData.cpf,
         },
       },
       notification_url: 'https://eorpjcvcjvhqnq6.m.pipedream.net',
     };
 
     try {
-      const response = await axios.post('https://api.mercadopago.com/v1/payments', body, {
+      // Enviando dados para o MercadoPago
+      const paymentResponse = await axios.post('https://api.mercadopago.com/v1/payments', paymentBody, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'X-Idempotency-Key': idempotencyKey,
         },
       });
-      setResponsePayment(response);
-      
-      console.log('Resposta do Servidor:', JSON.stringify(response.data, null, 2));
-      setLinkBuyMercadoPago(response.data.point_of_interaction.transaction_data.ticket_url);
-      console.log('Link para pagamento:', response.data.point_of_interaction.transaction_data.ticket_url);
-      console.log('Payment ID:', response.data.id);
+      setResponsePayment(paymentResponse);
+      setLinkBuyMercadoPago(paymentResponse.data.point_of_interaction.transaction_data.ticket_url);
+	console.log('Resposta do Servidor:', JSON.stringify(paymentResponse.data, null, 2));
+      setLinkBuyMercadoPago(paymentResponse.data.point_of_interaction.transaction_data.ticket_url);
+      console.log('Link para pagamento:', paymentResponse.data.point_of_interaction.transaction_data.ticket_url);
+      console.log('Payment ID:', paymentResponse.data.id);
       console.log('FORMDATA:', formData);
 
+      // Preparar dados do cliente para enviar para o servidor
+      const clientData = {
+        name: clientFormData.name,
+        whatsapp: clientFormData.whatsapp,
+        service_provided: clientFormData.service_provided,
+        amount: clientFormData.amount,
+      };
+
+      // Enviar dados do cliente para o servidor
+      await axios.post('http://localhost:3001/inserir-cliente', clientData);
+
+      // Aqui você pode adicionar qualquer lógica adicional após o envio bem-sucedido
     } catch (error) {
-      
-      console.log(`Deu ruim: ${JSON.stringify(error)}`);
-      console.log(`Deu ruim: ${JSON.stringify(body)}`);
+      console.error('Erro ao processar o pagamento ou enviar dados do cliente:', error);
+       console.log(`Deu ruim: ${JSON.stringify(error)}`);
+      console.log(`Deu ruim: ${JSON.stringify(paymentBody)}`);
     }
   };
 
-  const generateIdempotencyKey = () => {
-    // Generate a unique idempotency key, e.g., using a timestamp or UUID
-    return `${Date.now()}-${Math.random()}`;
+
+
+  const fetchPendingTransfers = async () => {
+    try {
+      // Replace this with your API endpoint to fetch pending transfers
+      const response = await axios.get('http://localhost:3001/pending-transfers-from-clients');
+      if (response.data) {
+        const pendingTransfersData: TransferData[] = response.data;
+        setPendingTransfers(pendingTransfersData);
+        console.log(response.data)
+      }
+    } catch (error) {
+      console.error('Error fetching pending transfers:', error);
+    } finally {
+      setIsLoading(false); // Set loading state to false when data is fetched or if an error occurs
+    }
   };
+  
+  useEffect(() => {
+    // Fetch pending transfers when the component mounts
+    fetchPendingTransfers();
+  }, []);
+
+  useEffect(() => {
+    if (linkBuyMercadoPago && statusPaymentPending) {
+      // Forçar recarga da página
+      window.location.reload();
+    }
+  }, [linkBuyMercadoPago, statusPaymentPending]);
+
+
 
   return (
     <div className="App">
       <div className="App-header">
         <h3 style={{ color: '#ffffff', fontSize: '30px' }}>Gerar PIX</h3>
+        <h4>Destino: Leandro Guerra - Mercado Pago</h4>
         <h3 style={{ color: '#ffffff' }}>{userData?.user_id}</h3>
+
+        {isLoading && <div></div>}
 
         {!responsePayment && (
           <form onSubmit={handleSubmit}>
-               <div className="transaction-input-container">
-            <label>Valor a Receber</label>
-            <input
+            <div className="transaction-input-container">
+              <label>Valor a Receber</label>
+              <input
                 type="number"
                 onChange={handleChange}
                 value={formData.transaction_amount}
                 name="transaction_amount"
-            />
-            <br />
+              />
               <div>
-    <strong style={{ color: '#ffffff' }}>Total (com a Taxa de 1%): </strong>
-   <label style={{ color: '#ffffff' }}>{calculateTotalAmount(formData.transaction_amount).toFixed(2)}</label>
-    
-  </div>
-        </div>
-            <br />
-            {/* <div>
-              <label style={{ color: '#ffffff' }}>E-mail</label>
+                <strong style={{ color: '#ffffff' }}>Total (com a Taxa de 1%): </strong>
+                <label style={{ color: '#ffffff' }}>
+                  {calculateTotalAmount(formData.transaction_amount).toFixed(2)}
+                </label>
+              </div>
+            </div>
+
+            <div className="client-form-container">
+              <h4>Dados do Cliente</h4>
               <input
-                onChange={handleChange}
-                value={formData.email}
-                name="email"
+                type="text"
+                name="name"
+                value={clientFormData.name}
+                onChange={handleClientFormChange}
+                placeholder="Nome do Cliente"
+              />
+              <input
+                type="text"
+                name="whatsapp"
+                value={clientFormData.whatsapp}
+                onChange={handleClientFormChange}
+                placeholder="WhatsApp"
+              />
+              <input
+                type="text"
+                name="service_provided"
+                value={clientFormData.service_provided}
+                onChange={handleClientFormChange}
+                placeholder="Serviço Fornecido"
+              />
+              <input
+                hidden
+                type="number"
+                name="amount"
+                value={formData.transaction_amount}
+                onChange={handleClientFormChange}
+                placeholder="Valor"
               />
             </div>
-            <br />
-            <div>
-              <label style={{ color: '#ffffff' }}>Nome</label>
-              <input
-                onChange={handleChange}
-                value={formData.nome}
-                name="nome"
-              />
-            </div>
-            <br />
-            <div>
-              <label style={{ color: '#ffffff' }}>CPF</label>
-              <input
-                onChange={handleChange}
-                value={formData.cpf}
-                name="cpf"
-              />
-            </div>
-            <br /> */}
-            <div>
-              <button type="submit">Gerar QR Code e Copia e Cola</button>
-            </div>
+
+            <button type="submit">Gerar QR Code e Copia e Cola</button>
           </form>
         )}
 
         {linkBuyMercadoPago && (
           <>
-            <button className='payment-buttons' onClick={() => copyToClipboard(linkBuyMercadoPago)}>
+            <button className="payment-buttons" onClick={() => copyToClipboard(linkBuyMercadoPago)}>
               Copiar Link de Pagamento
-            </button> 
-            <button className='payment-buttons' onClick={() => window.open(linkBuyMercadoPago, '_blank')}>
+            </button>
+            <button className="payment-buttons" onClick={() => window.open(linkBuyMercadoPago, '_blank')}>
               Acessar Link de Pagamento
             </button>
           </>
         )}
 
         {responsePayment?.data?.point_of_interaction?.transaction_data?.qr_code && (
-          <button className='payment-buttons' onClick={() => copyToClipboard(responsePayment.data.point_of_interaction.transaction_data.qr_code)}>
+          <button className="payment-buttons" onClick={() => copyToClipboard(responsePayment.data.point_of_interaction.transaction_data.qr_code)}>
             Copiar Pix Copia e Cola
           </button>
         )}
 
         <div className="pix-payment-container">
           {responsePayment && (
-            <button className='payment-buttons-danger' onClick={getStatusPayment}>
+            <button className="payment-buttons-danger" onClick={getStatusPayment}>
               Verificar status de pagamento
             </button>
           )}
 
           {linkBuyMercadoPago && statusPaymentPending && (
-            <>
             <iframe src={linkBuyMercadoPago} width="600px" height="620px" title="link_buy" />
-            </>
-            )}
+          )}
 
           {statusPaymentApproved && (
             <>
               <h1 style={{ color: '#ffffff' }}>Transferência Aprovada</h1>
-            <button className="button" onClick={backToDashboard}>Voltar ao Início</button>
+              <button className="button" onClick={backToDashboard}>Voltar ao Início</button>
             </>
-          
           )}
+        </div>
+      </div>
 
+      <div className="PixPendentes">
+        <hr />
+        <h3 style={{ color: '#ffffff', fontSize: '20px' }}>Pix Pendentes</h3>
+        <div className="pending-transfers-list">
+          {pendingTransfers && Array.isArray(pendingTransfers) && pendingTransfers.length > 0 ? (
+            <table className="pending-transfers-table">
+              <thead>
+                <tr>
+                  <th style={{ color: 'white' }}>Quantia</th>
+                  <th style={{ color: 'white' }}>Nome</th>
+                  <th style={{ color: 'white' }}>Pendente</th>
+                </tr>
+              </thead>
+              <tbody>
+                {pendingTransfers.map((transfer) => (
+                  <tr key={transfer.id} className="pending-transfer-row">
+                    <td style={{ color: 'black' }}>{transfer.amount}</td>
+                    <td style={{ color: 'black' }}>{transfer.name}</td>
+                    <td style={{ color: 'black' }}>
+                      {transfer.pending_payments === "true" || transfer.pending_payments === true ? (
+                        <div className="loader"></div>
+                      ) : null}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p>No pending transfers found.</p>
+          )}
         </div>
       </div>
     </div>
   );
+  
+  
 };
 
 export default PaymentScreen;

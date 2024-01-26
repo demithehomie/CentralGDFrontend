@@ -24,6 +24,7 @@ interface TransferData {
   credit: number;
   pending_payments: string | boolean;
   setStatusPaymentApproved: boolean;
+  created_at: string
   setStatusPaymentPending: (status: boolean) => boolean;
 }
 
@@ -44,7 +45,29 @@ const PaymentScreen: React.FC = () => {
   const [statusPaymentPending, setStatusPaymentPending] = useState<boolean>(true);
   const [pendingTransfers, setPendingTransfers] = useState<TransferData[]>([]);
   const [isLoading, setIsLoading] = useState(true); 
-  const [showPopupForm, setShowPopupForm] = useState(true);
+  const [lastRefreshed, setLastRefreshed] = useState<Date | null>(null)
+  const [renderedIds, setRenderedIds] = useState<string[]>([]);
+
+  // Verifique se o item deve ser renderizado
+// Verifique se o item deve ser renderizado
+// Verifique se o item deve ser renderizado
+const shouldRenderItem = (transfer: TransferData) => {
+  const currentTime = new Date();
+  const tenMinutesAgo = new Date(currentTime.getTime() - 10 * 60 * 1000); // 10 minutes ago
+
+  return (
+    (transfer.pending_payments === 'true' || transfer.pending_payments === true) ||
+    (transfer.pending_payments === 'expired' && new Date(transfer.created_at) >= tenMinutesAgo)
+  );
+};
+
+
+  useEffect(() => {
+    // Fetch pending transfers when the component mounts
+    setLastRefreshed(new Date());
+    fetchPendingTransfers();
+  }, []);
+
   const [clientFormData, setClientFormData] = useState({
     name: '',
     whatsapp: '',
@@ -64,7 +87,28 @@ const PaymentScreen: React.FC = () => {
     setFormData({ ...formData, transaction_amount: amount });
   };
 
+  useEffect(() => {
+    const atualizarStatusPagamento = async () => {
+      try {
+        // Suponha que você tenha o ID do cliente disponível
+        const clientId = localStorage.getItem(`clienteId`)/* ID do cliente */;
+        
+        // Fazer a requisição POST para atualizar o status do pagamento do cliente
+        await axios.post('https://gdcompanion-prod.onrender.com/atualizar-status-pagamento-cliente', { clientId });
 
+        // Aguardar 5 segundos antes de recarregar a página
+        setTimeout(() => {
+          window.location.reload();
+        }, 5000);
+      } catch (error) {
+        console.error('Erro ao atualizar pagamento do cliente:', error);
+      }
+    };
+
+    if (statusPaymentApproved) {
+      atualizarStatusPagamento();
+    }
+  }, [statusPaymentApproved]);
   
   const calculateTotalAmount = (amount: number) => {
     const addedPercentage = amount * 0.01; // 1% of the amount
@@ -154,7 +198,7 @@ const PaymentScreen: React.FC = () => {
       });
       setResponsePayment(paymentResponse);
       setLinkBuyMercadoPago(paymentResponse.data.point_of_interaction.transaction_data.ticket_url);
-	console.log('Resposta do Servidor:', JSON.stringify(paymentResponse.data, null, 2));
+	    console.log('Resposta do Servidor:', JSON.stringify(paymentResponse.data, null, 2));
       setLinkBuyMercadoPago(paymentResponse.data.point_of_interaction.transaction_data.ticket_url);
       console.log('Link para pagamento:', paymentResponse.data.point_of_interaction.transaction_data.ticket_url);
       console.log('Payment ID:', paymentResponse.data.id);
@@ -165,11 +209,16 @@ const PaymentScreen: React.FC = () => {
         name: clientFormData.name,
         whatsapp: clientFormData.whatsapp,
         service_provided: clientFormData.service_provided,
-        amount: clientFormData.amount,
+        amount: calculateTotalAmount(formData.transaction_amount),
       };
 
       // Enviar dados do cliente para o servidor
-      await axios.post('http://localhost:3001/inserir-cliente', clientData);
+      const responseCliente = await axios.post('https://gdcompanion-prod.onrender.com/inserir-cliente', clientData);
+    
+      // Supondo que a resposta do servidor inclui um campo 'id'
+      if (responseCliente.data && responseCliente.data.id) {
+        localStorage.setItem('clienteId', responseCliente.data.id);
+      }
 
       // Aqui você pode adicionar qualquer lógica adicional após o envio bem-sucedido
     } catch (error) {
@@ -184,7 +233,7 @@ const PaymentScreen: React.FC = () => {
   const fetchPendingTransfers = async () => {
     try {
       // Replace this with your API endpoint to fetch pending transfers
-      const response = await axios.get('http://localhost:3001/pending-transfers-from-clients');
+      const response = await axios.get('https://gdcompanion-prod.onrender.com/pending-transfers-from-clients');
       if (response.data) {
         const pendingTransfersData: TransferData[] = response.data;
         setPendingTransfers(pendingTransfersData);
@@ -197,19 +246,35 @@ const PaymentScreen: React.FC = () => {
     }
   };
   
-  useEffect(() => {
-    // Fetch pending transfers when the component mounts
-    fetchPendingTransfers();
-  }, []);
 
   useEffect(() => {
     if (linkBuyMercadoPago && statusPaymentPending) {
       // Forçar recarga da página
-      window.location.reload();
+      alert("Seu pagamento está pendente. Aguarde a aprovação.");
     }
   }, [linkBuyMercadoPago, statusPaymentPending]);
 
+  const checkAndMarkExpiredPayments = async () => {
+    try {
+      await axios.post('https://gdcompanion-prod.onrender.com/verificar-e-marcar-expirados');
+      console.log('Pagamentos expirados verificados e marcados com sucesso.');
+    } catch (error) {
+      console.error('Erro ao verificar e marcar pagamentos expirados:', error);
+    }
+  };
+  
+  // Chama a função inicialmente
+  checkAndMarkExpiredPayments();
+  setInterval(checkAndMarkExpiredPayments, 300000);
 
+  useEffect(() => {
+    // Calcular os IDs que devem ser renderizados e atualizar o estado de uma só vez
+    const newRenderedIds = pendingTransfers
+      .filter(shouldRenderItem)
+      .map(transfer => transfer.id);
+  
+    setRenderedIds(newRenderedIds);
+  }, [pendingTransfers]);
 
   return (
     <div className="App">
@@ -317,28 +382,41 @@ const PaymentScreen: React.FC = () => {
         <h3 style={{ color: '#ffffff', fontSize: '20px' }}>Pix Pendentes</h3>
         <div className="pending-transfers-list">
           {pendingTransfers && Array.isArray(pendingTransfers) && pendingTransfers.length > 0 ? (
-            <table className="pending-transfers-table">
-              <thead>
-                <tr>
-                  <th style={{ color: 'white' }}>Quantia</th>
-                  <th style={{ color: 'white' }}>Nome</th>
-                  <th style={{ color: 'white' }}>Pendente</th>
-                </tr>
-              </thead>
-              <tbody>
-                {pendingTransfers.map((transfer) => (
-                  <tr key={transfer.id} className="pending-transfer-row">
-                    <td style={{ color: 'black' }}>{transfer.amount}</td>
-                    <td style={{ color: 'black' }}>{transfer.name}</td>
-                    <td style={{ color: 'black' }}>
-                      {transfer.pending_payments === "true" || transfer.pending_payments === true ? (
-                        <div className="loader"></div>
-                      ) : null}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <div className="pending-transfers-table-container">
+             <table className="pending-transfers-table">
+            <thead>
+              <tr>
+                <th style={{ color: 'white' }}>Quantia</th>
+                <th style={{ color: 'white' }}>Nome</th>
+                <th style={{ color: 'white' }}>Pendente</th>
+              </tr>
+            </thead>
+            <tbody>
+              {pendingTransfers.map((transfer) => {
+                if (shouldRenderItem(transfer)) {
+                  // Registre o ID do item como renderizado
+             
+
+                  return (
+                    <tr key={transfer.id} className="pending-transfer-row">
+                      <td style={{ color: 'black' }}>{transfer.amount}</td>
+                      <td style={{ color: 'black' }}>{transfer.name}</td>
+                      <td style={{ color: 'black' }}>
+                        {transfer.pending_payments === 'true' || transfer.pending_payments === true ? (
+                          <div className="loader"></div>
+                        ) : transfer.pending_payments === 'expired' || transfer.pending_payments === 'expired' ? (
+                          <div className="badge badge-expired">EXPIRED</div>
+                        ) : null}
+                      </td>
+                    </tr>
+                  );
+                }
+
+                return null;
+              })}
+            </tbody>
+          </table>
+            </div>
           ) : (
             <p>No pending transfers found.</p>
           )}

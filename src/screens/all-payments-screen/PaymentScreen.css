@@ -77,6 +77,11 @@
 /* Add these styles to your CSS or style sheet */
 
 /* Style for the table */
+.pending-transfers-table-container {
+  max-height: 250px; /* Altura máxima desejada */
+  overflow-y: auto;
+}
+
 .pending-transfers-table {
   width: 100%;
   border-collapse: collapse;
@@ -84,6 +89,7 @@
   max-width: 95%;
   min-width: 300px;
 }
+
 
 /* Style for table headers */
 .pending-transfers-table th {
@@ -107,6 +113,14 @@
   padding: 10px;
   border-bottom: 1px solid #ccc;
 }
+
+.badge-expired {
+  background-color: red;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
 
 /* Style for loader */
 /* .loader {

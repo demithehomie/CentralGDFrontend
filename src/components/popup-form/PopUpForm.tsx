@@ -32,7 +32,7 @@ const PopupForm = ({ updateAmount, closePopup }: { closePopup: any, updateAmount
       };
 
       // Fazer a requisição POST para o endpoint
-      const response = await axios.post('http://localhost:3001/inserir-cliente', data);
+      const response = await axios.post('https://gdcompanion-prod.onrender.com/inserir-cliente', data);
 
       console.log('Resposta do servidor:', response.data);
       closePopup();

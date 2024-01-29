@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import './PrintsTheMagicTool.css';
 
 import ImageViewer, { Image } from '../../../components/image-viewer-content/ImageViewerContent';
+import SearchBarPrintsTheMagicTool from '../../../components/search-components/SearchBarPrintsTheMagicTool';
 
 
 export default function PrintsTheMagicTool() {
@@ -12,31 +13,34 @@ export default function PrintsTheMagicTool() {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [currentPage, setCurrentPage] = useState<number>(1);
+    const [totalPages, setTotalPages] = useState<number>(0);
     const [itemsPerPage] = useState<number>(4);
     const apiurldev = `https://gdcompanion-prod.onrender.com`;
 
     const fetchAndUpdateImages = async () => {
-      const endpoint = `${apiurldev}/prints-with-pagination?page=${currentPage}&limit=${itemsPerPage}`;
       try {
-        setIsLoading(true);
-        const response = await fetch(endpoint);
-        if (!response.ok) {
-          throw new Error('Erro na requisição: ' + response.statusText);
-        }
-        const data = await response.json();
+          setIsLoading(true);
+          const response = await fetch(`${apiurldev}/prints-with-pagination?page=${currentPage}&limit=${itemsPerPage}`);
+          if (!response.ok) {
+              throw new Error('Erro na requisição: ' + response.statusText);
+          }
+          const data = await response.json();
+          
+          // Aqui você ajusta para usar os dados recebidos
+          const reversedData = data.posts.reverse(); // Agora, os posts estão em data.posts
+          setImages(reversedData);
   
-        // Inverter a ordem dos dados aqui
-        const reversedData = data.reverse();
+          // Calcule o número total de páginas com base no totalPosts recebido
+          const totalPages = Math.ceil(data.totalPosts / itemsPerPage);
+          setTotalPages(totalPages); // Supondo que você tem um estado para armazenar o total de páginas
   
-        setImages(reversedData);
       } catch (err) {
-        if (err instanceof Error) {
-          setError(err.message);
-        }
+          // ... manipulação de erros
       } finally {
-        setIsLoading(false);
+          setIsLoading(false);
       }
   };
+  
   
     
       useEffect(() => {
@@ -60,6 +64,61 @@ export default function PrintsTheMagicTool() {
       const handlePageChange = (newPage: number) => {
         setCurrentPage(newPage);
       };
+
+      const Pagination = () => {
+        return (
+            <div>
+                {/* Botão para a primeira página */}
+                <button onClick={() => handlePageChange(1)} disabled={currentPage === 1}>
+                    Primeira
+                </button>
+    
+                {/* Botão para duas páginas antes da atual */}
+                {currentPage > 2 && (
+                    <button onClick={() => handlePageChange(currentPage - 2)}>
+                        {currentPage - 2}
+                    </button>
+                )}
+    
+                {/* Botão para a página anterior */}
+                {currentPage > 1 && (
+                    <button onClick={() => handlePageChange(currentPage - 1)}>
+                        {currentPage - 1}
+                    </button>
+                )}
+    
+                {/* Input numérico para a página atual */}
+                <input 
+                    type="number" 
+                    value={currentPage} 
+                    onChange={(e) => handlePageChange(Number(e.target.value))} 
+                    min={1} 
+                    max={totalPages} 
+                    style={{ width: '48px', textAlign: 'center', fontSize: '1rem', borderRadius: '8px', padding: '4px',marginLeft: '3px', marginRight: '2px', border: '3px solid #ffffff'}} 
+                />
+    
+                {/* Botão para a próxima página textAlign: 'center',marginLeft: '2px', marginRight: '2px', border: '2px solid #ffffff' */}
+                {currentPage < totalPages && (
+                    <button onClick={() => handlePageChange(currentPage + 1)}>
+                        {currentPage + 1}
+                    </button>
+                )}
+    
+                {/* Botão para duas páginas após a atual */}
+                {currentPage < totalPages - 1 && (
+                    <button onClick={() => handlePageChange(currentPage + 2)}>
+                        {currentPage + 2}
+                    </button>
+                )}
+    
+                {/* Botão para a última página */}
+                <button onClick={() => handlePageChange(totalPages)} disabled={currentPage === totalPages}>
+                    Última
+                </button>
+            </div>
+        );
+    };
+    
     
       const backToDashboard = () => {
         navigate('/dashboard');
@@ -79,7 +138,10 @@ export default function PrintsTheMagicTool() {
               <button className='title-table-black' disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>Anterior</button>
               <span style={{ color: '#ffffff'}}>Página {currentPage}</span>
               <button className='title-table-black' onClick={() => handlePageChange(currentPage + 1)}>Próxima</button>
+             
             </div>
+            <br />
+            <Pagination/>
           </>
         );
       };
@@ -87,9 +149,9 @@ export default function PrintsTheMagicTool() {
       return (
         <div>
           <h2 className='title-table'>Todos os Reports em The Magic Tool</h2>
-          {/* <div>
-            <SearchBar/>
-          </div> */}
+          <div>
+            <SearchBarPrintsTheMagicTool/>
+          </div>
           <br />
           {renderContent()}
           <br />

@@ -18,6 +18,8 @@ import PrintsGuerraTool from './screens/prints-screen/guerratool/PrintsGuerraToo
 import PrintsTheMagicTool from './screens/prints-screen/themagictool/PrintsTheMagicTool';
 import MiniTargetTable from './components/mni-target-table/MiniTargetTable';
 import PaymentMenu from './screens/payment-menu/PaymentMenu';
+import PrivateRoute from './context/auth/PrivateRoute';
+import SearchPrintsResults from './screens/search-prints-results/SearchPrintsResults';
 
 //import { User } from './components/user-table/UserTable';
 //import User from './components/user-table/UserTable';
@@ -41,26 +43,22 @@ function App() {
 
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<LoginForm />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/payments" element={<PaymentMenu />} />
-            <Route path="/profile" element={<Profile nomeInicial={'Demetrius'} funcaoInicial={'Admin'}/>} />
-            <Route path="/activity" element={<Activity />} />
-            <Route path="/scheduling" element={<Scheduling />} />
-            <Route path="/configure" element={<Configure />} />
-            <Route path="/users" element={<Users/>}/>
-            <Route path="/search-results" element={<SearchResults/>}/>
-            <Route path="/user-profile/:userId" element={<UserProfile />} />
-            <Route path="/payment-screen/:userId" element={<PaymentScreen />} />
-            <Route path="/get-prints-guerra-tool" element={<PrintsGuerraTool />} />
-            <Route path="/get-prints-themagictool" element={<PrintsTheMagicTool />} />
-            <Route path="/target" element={<MiniTargetTable />} />
-            {/* get-all-prints */}
-
-            {/* <Route path="/user-profile" element={
-      userData ? <UserProfile user={userData} onSendCredits={() => {}} onSendMoney={() => {}} /> : <div>Loading...</div>
-    }/> */}
-
+          <Route path="/" element={<LoginForm />} />
+          <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+          <Route path="/profile" element={<PrivateRoute><Profile nomeInicial={'Demetrius'} funcaoInicial={'Admin'}/></PrivateRoute>} />
+          <Route path="/activity" element={<PrivateRoute><Activity /></PrivateRoute>} />
+          <Route path="/scheduling" element={<PrivateRoute><Scheduling /></PrivateRoute>} />
+          <Route path="/configure" element={<PrivateRoute><Configure /></PrivateRoute>} />
+          <Route path="/users" element={<PrivateRoute><Users /></PrivateRoute>} />
+          <Route path="/search-results" element={<PrivateRoute><SearchResults /></PrivateRoute>} />
+          <Route path="/search-prints-results" element={<PrivateRoute><SearchPrintsResults /></PrivateRoute>} />
+          <Route path="/user-profile/:userId" element={<PrivateRoute><UserProfile /></PrivateRoute>} />
+          <Route path="/payment-screen/:userId" element={<PrivateRoute><PaymentScreen /></PrivateRoute>} />
+          <Route path="/get-prints-guerra-tool" element={<PrivateRoute><PrintsGuerraTool /></PrivateRoute>} />
+          <Route path="/get-prints-themagictool" element={<PrivateRoute><PrintsTheMagicTool /></PrivateRoute>} />
+          <Route path="/target" element={<PrivateRoute><MiniTargetTable /></PrivateRoute>} />
+          <Route path="/payments" element={<PrivateRoute><PaymentMenu /></PrivateRoute>} />
+            {/* Outras rotas privadas aqui */}
           </Routes>
         </BrowserRouter>
       </AuthProvider>

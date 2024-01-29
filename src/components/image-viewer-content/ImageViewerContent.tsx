@@ -97,6 +97,7 @@ const ImageViewer: React.FC<ImageViewerProps> = ({ images }) => {
     // };
 
       // Inverta a ordem das imagens aqui
+
       const processedImages = [...images].map((image, index) => ({
         ...image, 
         uid: uuidv4(), 
@@ -127,7 +128,9 @@ const ImageViewer: React.FC<ImageViewerProps> = ({ images }) => {
                       <TableCell>{image.user_id}</TableCell>
                         {/* <TableCell>{image.reason}</TableCell> */}
                         {/* <TableCell>{image.details}</TableCell> */}
-                        <TableCell>{userNames[image.user_id] || 'Carregando...'}</TableCell>
+                        <TableCell onClick={() => alert(userNames[image.user_id])}>
+                            {userNames[image.user_id] || 'Carregando...'}
+                        </TableCell>
                         {/* <TableCell>{image.fingerprint}</TableCell> */}
                   </TableRow>
               ))}

@@ -1,6 +1,11 @@
 import  /*React,*/{ createContext, useState, useContext } from 'react';
 import axios from 'axios';
 
+interface User {
+    username: string | null;
+  }
+  
+
 interface AuthContextType {
   currentUser: any;  // Substitua 'any' pelo tipo apropriado
   login: (username: string, password: string) => void;
@@ -21,16 +26,28 @@ const apiurldev = `https://gdcompanion-prod.onrender.com`;
 //const apiurl = `https://gdcompanion-prod.onrender.com`
 
 export const AuthProvider = ({ children }: any) => {
-    const [currentUser, setCurrentUser] = useState(null);
+    const [currentUser, setCurrentUser] = useState<User | null>(null);
    // const [isLoading, setIsLoading] = useState(false);
-    
-    const login = (username: string, password: string): Promise<any> => {
-    // Note que estamos retornando a chamada axios diretamente, que retorna uma Promise
-    return axios.post(`${apiurldev}/login-individual`, {
+
+// No seu contexto de autenticação
+const login = async (username: string, password: string): Promise<boolean> => {
+    try {
+      const response = await axios.post(`${apiurldev}/login-individual`, {
         username,
         password,
-    });
-};  
+      });
+      if (response.status === 200) {
+        setCurrentUser({ username: username });
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error("Erro de login", error);
+      return false;
+    }
+  };
+  
+  
 
     const logout = () => {
         // Lógica de logout

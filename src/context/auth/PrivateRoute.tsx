@@ -1,18 +1,15 @@
-import React, { ComponentType } from 'react';
-import { Route, Navigate } from 'react-router-dom';
-import { useAuth } from './AuthContext';
+import React, { ReactNode } from 'react';
+import { Navigate } from 'react-router-dom';
+import { useAuth } from './AuthContext' // Ajuste o caminho conforme necessário
 
 interface PrivateRouteProps {
-    component: ComponentType;
-    path: string;
+    children: ReactNode;
 }
 
-const PrivateRoute: React.FC<PrivateRouteProps> = ({ component: Component, ...rest }) => {
+const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
     const { currentUser } = useAuth();
 
-    return (
-        <Route {...rest} path={rest.path} element={currentUser ? <Component /> : <Navigate to="/login" />} />
-    );
+    return currentUser ? <>{children}</> : <Navigate to="/" />;
 };
 
 export default PrivateRoute;

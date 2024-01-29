@@ -82,31 +82,41 @@ const Message = styled.p`
 `;
 
 const LoginForm = () => {
+  const { login } = useAuth();
   const navigate = useNavigate();
+  //const [error, ] = useState<string | null>(null);
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, ] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   let timer: number | undefined;
 
-  const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
-
+    setError(null);
+  
     try {
-        const response = await login(username, password);
-        console.log(response);
-        navigate('/dashboard');
+      const isLoginSuccessful = await login(username, password);
+      if (isLoginSuccessful !== null && isLoginSuccessful !== undefined) {
+        navigate('/dashboard'); // Redireciona em caso de sucesso
+      } else {
+        setError("Login falhou. Tente novamente."); // Define erro em caso de falha
+      }
     } catch (error) {
-        console.error('Erro no login:', error);
+      console.error('Erro no login:', error);
+      setError("Ocorreu um erro durante o login.");
     } finally {
-        setIsLoading(false);
+      setIsLoading(false);
     }
-};
+  };
+  
+
+
 
 
   const handleMouseEnter = () => {

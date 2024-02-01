@@ -1,5 +1,4 @@
 import React from 'react';
-import './UserTable.css';
 import styled from 'styled-components';
 
 export interface User {
@@ -9,36 +8,42 @@ export interface User {
     username: string;
     credit: number;
     is_reseller: number;
-    email: string
+    email: string;
 }
 
-interface TableRowProps {
-    index: number;
-}
-
-const TableRow = styled.tr<TableRowProps>`
-    background-color: ${props => props.index % 2 === 0 ? 'white' : 'gray'};
+const TableContainer = styled.div`
+    overflow-x: auto;
+    max-width: 100%;
 `;
 
 const Table = styled.table`
     width: 100%;
     border-collapse: collapse;
     color: #000000;
+    margin-bottom: 20px;
+`;
+
+const TableRow = styled.tr`
+    background-color: #f2f2f2;
+
+    &:nth-child(even) {
+        background-color: #ffffff;
+    }
+`;
+
+const TableHeader = styled.th`
+    background-color: #333;
+    color: #ffffff;
+    padding: 10px;
+    text-align: left;
 `;
 
 const TableCell = styled.td`
-    padding: 8px 38px;
+    padding: 8px 10px;
     border: 1px solid #ddd;
     color: #000000;
+    white-space: nowrap;
 `;
-
-// const ProfileImage = styled.img`
-//     width: 50px;
-//     height: 50px;
-//     border-radius: 50%;
-// `;
-
-
 
 export type UserTableProps = {
     users: User[];
@@ -46,35 +51,36 @@ export type UserTableProps = {
 };
 
 const UserTable: React.FC<UserTableProps> = ({ users, onToggleResellerStatus }) => {
-  return (
-      <Table>
-          <thead className='border'>
-              <tr>
-                  {/* <th className='table-titles'>Foto de Perfil</th> */}
-                  <th className='table-titles'>Nome</th>
-                  <th className='table-titles'>Nome de Usuário</th>
-                  <th className='table-titles'>Créditos</th>
-                  <th className='table-titles'>Revendedor</th>
-              </tr>
-          </thead>
-          <tbody>
-              {users.map((user, index) => (
-                  <TableRow key={user.user_id} index={index}>
-                      {/* <TableCell><ProfileImage src={user.profilePicture} alt="Profile" /></TableCell> */}
-                      <TableCell>{user.name}</TableCell>
-                      <TableCell>{user.username}</TableCell>
-                      <TableCell>{user.credit}</TableCell>
-                      <TableCell>
-                          <input
-                              type="checkbox"
-                              checked={user.is_reseller === 1} // Aqui estamos verificando se isReseller é igual a 1
-                              onChange={() => onToggleResellerStatus(user.user_id)}
-                          />
-                      </TableCell>
-                  </TableRow>
-              ))}
-          </tbody>
-      </Table>
-  );
+    return (
+        <TableContainer>
+            <Table>
+                <thead>
+                    <TableRow>
+                        <TableHeader>Nome</TableHeader>
+                        <TableHeader>Nome de Usuário</TableHeader>
+                        <TableHeader>Créditos</TableHeader>
+                        <TableHeader>Revendedor</TableHeader>
+                    </TableRow>
+                </thead>
+                <tbody>
+                    {users.map((user) => (
+                        <TableRow key={user.user_id}>
+                            <TableCell>{user.name}</TableCell>
+                            <TableCell>{user.username}</TableCell>
+                            <TableCell>{user.credit}</TableCell>
+                            <TableCell>
+                                <input
+                                    type="checkbox"
+                                    checked={user.is_reseller === 1}
+                                    onChange={() => onToggleResellerStatus(user.user_id)}
+                                />
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </tbody>
+            </Table>
+        </TableContainer>
+    );
 };
+
 export default UserTable;

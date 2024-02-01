@@ -1,0 +1,13 @@
+.link {
+    color: #000000;
+}
+
+/* Adicione este estilo no seu arquivo CSS */
+/* Adicione este estilo no seu arquivo CSS */
+.zoomed-image {
+    position: absolute;
+    z-index: 999;
+    transition: transform 0.3s ease-in-out;
+    transform-origin: top right;
+}
+

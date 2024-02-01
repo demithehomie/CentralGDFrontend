@@ -6,10 +6,69 @@
 }
 
 
+
 .dashboard-container {
     display: flex;
     height: 100vh;
     justify-content: space-between;
+}
+/* CONTAINER PARA VISTA DE TELEFONES */
+  
+.dashboard-container-phone label {
+ color: #ffffff;
+ text-align: flex-start;
+ font-size: 20px;
+ font-weight: 900;
+ flex-direction: column;
+ /* border: 2px solid #ffffff; */
+ /* margin: auto;
+ display: flex; */
+}
+
+.button-mobile {
+  margin: 5px 10px;
+  width: 70%;
+  min-width: 150px;
+  border: 2px solid white;
+  border-radius: 5px;
+  padding: 10px 20px;
+  background-color: transparent;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s; /* Adicionando uma transição suave */
+}
+
+.button-mobile:hover {
+  background-color: #302F50;
+  color: white;
+}
+
+
+.dashboard-container-phone {
+  display: flex;
+  height: 100vh;
+  justify-content: space-between;
+}
+
+.dashboard-container-tablet {
+  display: flex;
+  height: 100vh;
+  justify-content: space-between;
+}
+
+
+  @media screen and (max-width: 620px) {
+    .dashboard-container {
+      display: none;
+    }
+    
+  }
+
+  @media screen and (min-width: 431px) and (max-width: 1024px) {
+    .dashboard-container-phone {
+      display: none;
+    }
+    
   }
   
   .sidebar {
@@ -34,10 +93,36 @@
   
 
   .cards-container {
+    
     display: flex;
     flex-wrap: wrap;
     gap: 30px;
   }
+
+  @media screen and (max-width: 431px) {
+    .cards-container {
+      width: 300px;
+      height: 250px;
+      display: flex;
+      flex-wrap: nowrap; /* Mudança para nowrap para evitar a quebra de linha */
+      gap: 30px;
+      overflow-y: hidden;
+      overflow-x: auto; 
+      -ms-overflow-style: none; /* Para Internet Explorer e Edge */
+      scrollbar-width: none; /* Para Firefox *//* Usar auto em vez de scroll para ocultar a barra de rolagem quando não for necessária */
+      /* scroll-snap-type: x mandatory;  */
+    }
+  
+    /* .cards-container:: -webkit-scrollbar {
+      display: none; 
+    }
+   */
+    .card {
+      flex: 0 0 auto; /* Adicionado para garantir que os cartões não encolham ou cresçam */
+      /* Adicione mais estilos aqui conforme necessário */
+    }
+  }
+  
 
   .dashboard-card {
     flex: 1;
@@ -45,8 +130,45 @@
    /* Faz com que o card ocupe toda a largura da célula da grade */
     /* Restante dos estilos do card */
   }
+
+  .logo {
+    width: 185px;
+    height: 100px;
+    border-radius: 50px;
+    margin-bottom: 20px;
+  }
+
+  .logo img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50px;  
+  }
+
+  @media screen and (min-width: 421px)  and (max-width: 2800px) {
+    .dashboard-container-phone {
+      display: none;
+    }
+    
+  }
+
+  @media screen and (max-width: 431px ){
+    .logo {
+      display: flex;
+      margin: auto;
+      width: 85px;
+      height: 45px;
+      border-radius: 50px;
+      margin-bottom: 20px;
+    }
   
-  .logo, .avatar, .name,  .button {
+    .logo img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50px;  
+    }
+  }
+  
+   .avatar, .name,  .button {
     margin-bottom: 10px;
     color: #ffffff;
     font-weight: 900;
@@ -113,3 +235,79 @@
     
     overflow-y: hidden;
   }
+
+  /* Estilos para o menu hamburguer */
+.hamburger-button {
+  display: none; /* Inicialmente oculto em telas grandes */
+  cursor: pointer;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30px;
+  height: 24px;
+  margin-left: 10px;
+}
+
+.bar {
+  background-color: #333;
+  height: 4px;
+  width: 100%;
+  transition: transform 0.2s;
+}
+
+/* Estilos para o menu aberto em telas pequenas */
+.sidebar.open {
+  transform: translateX(0);
+}
+
+/* Estilos para o menu fechado em telas pequenas */
+.sidebar {
+  transform: translateX(-100%);
+  /* ... outros estilos ... */
+
+  /* Estilos para os botões do menu */
+  button {
+    display: block; /* Mostrar os botões */
+  }
+}
+
+/* Estilos para ocultar os botões em telas grandes */
+@media (max-width: 768px) {
+  .hamburger-button {
+    display: flex; /* Mostrar o botão hamburguer */
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .sidebar {
+ button {
+      display: none;
+    } 
+  }
+}
+
+@media (max-width: 768px) {
+  .hamburger-button {
+    display: flex; /* Mostrar o botão hamburguer */
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .sidebar {
+    /* ... outros estilos ... */
+    button {
+      display: none; /* Ocultar os botões */
+    }
+  }
+}
+
+/* Estilo para a seção de conteúdo principal */
+.main-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between; /* Ajusta os cards ao espaço disponível */
+  padding: 20px; /* Espaçamento entre os cards */
+}

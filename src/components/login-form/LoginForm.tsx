@@ -2,7 +2,7 @@ import  { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { useNavigate } from 'react-router-dom';
-import logo from '../../assets/logoo.png'; // Substitua pelo caminho correto do seu logo
+import logo from '../../assets/fGuerra.png'; // Substitua pelo caminho correto do seu logo
 import { useAuth } from '../../context/auth/AuthContext';
 
 const LoginContainer = styled.div`
@@ -62,6 +62,7 @@ const Button = styled.button`
   width: 205px;
   position: absolute;
   margin-top: 180px;
+  color: #000000;
 `;
 
 const OutlineButton = styled(Button)`
@@ -180,7 +181,7 @@ const LoginForm = () => {
         style={{marginTop:50}}
       />
     
-      <Button type="submit">Login</Button>
+      <Button  type="submit">Login</Button>
       <OutlineButton>Cadastro</OutlineButton>
       {showMessage && (
         <Message>To hide the password, please put the cursor outside the input.</Message>

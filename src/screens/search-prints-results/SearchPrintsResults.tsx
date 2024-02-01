@@ -23,7 +23,8 @@ const SearchPrintsResults = () => {
   const fetchResults = async (query: string) => {
     setIsLoading(true);
     try {
-      const response = await axios.get(`http://localhost:3001/search-screenshots-at-the-magic-tool`, {
+      const response = await axios.get(`npm run build
+      `, {
         params: { keyword: query }
       });
       setResults(response.data);
@@ -42,13 +43,13 @@ const SearchPrintsResults = () => {
     navigate('/dashboard');
   };
 
-  const getAllUsers = async () => {
-    navigate('/users')
+  const getAllPrintsGuerraTool = async () => {
+    navigate('/get-prints-guerra-tool')
   }
 
-//   const getAllPrints = async () => {
-//     navigate('/prints')
-//   }
+  const getAllPrints = async () => {
+    navigate('/get-prints-themagictool')
+  }
 
   const navigateToUserProfile = (user_id: string) => {
     // Implemente a navegação para o perfil do usuário aqui
@@ -59,27 +60,34 @@ const SearchPrintsResults = () => {
   return (
     <div>
       <h2 className='title-fonts'>Resultados da pesquisa</h2>
-      {results.length > 0 ? (
+      {Array.isArray(results) && results.length > 0 ? (
         <ul className="results-list">
           {results.map((user) => (
-          <li
-          className='title-fonts'
-          key={user.user_id}
-          onClick={() => navigateToUserProfile(user.user_id.toString())}
-        >
-          {user.name} - {user.email}
-        </li>
-        
+            <li
+              className='title-fonts'
+              key={user.user_id}
+              onClick={() => navigateToUserProfile(user.user_id.toString())}
+            >
+              {user.name} - {user.email}
+            </li>
           ))}
         </ul>
       ) : (
-        <div>Nenhum usuário encontrado.</div>
+        <div style={{ color: "#ffffff", margin: 30, fontSize: 25}}>
+          <label style={{ color: "#ffffff"}}>
+          Nenhum usuário encontrado.
+          </label>
+       
+        </div>
       )}
-      <button className="button-filled-large" onClick={getAllUsers}>Voltar ao Todos os Usuários</button>
+      <button className="button-filled-large" onClick={getAllPrints}>Voltar a Todos os Prints - The Magic Tool</button>
+      <br /><br />
+      <button className="button-filled-large" onClick={getAllPrintsGuerraTool}>Voltar a Todos os Prints - GuerraTool</button>
       <br /><br />
       <button className="button" onClick={backToDashboard}>Voltar ao Início</button>
     </div>
   );
+  
 };
 
 

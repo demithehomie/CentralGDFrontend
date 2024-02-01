@@ -69,20 +69,20 @@ export default function PrintsTheMagicTool() {
         return (
             <div>
                 {/* Botão para a primeira página */}
-                <button onClick={() => handlePageChange(1)} disabled={currentPage === 1}>
+                <button className='pagination-button'  onClick={() => handlePageChange(1)} disabled={currentPage === 1}>
                     Primeira
                 </button>
     
                 {/* Botão para duas páginas antes da atual */}
                 {currentPage > 2 && (
-                    <button onClick={() => handlePageChange(currentPage - 2)}>
+                    <button className='pagination-button'  onClick={() => handlePageChange(currentPage - 2)}>
                         {currentPage - 2}
                     </button>
                 )}
     
                 {/* Botão para a página anterior */}
                 {currentPage > 1 && (
-                    <button onClick={() => handlePageChange(currentPage - 1)}>
+                    <button className='pagination-button'  onClick={() => handlePageChange(currentPage - 1)}>
                         {currentPage - 1}
                     </button>
                 )}
@@ -99,20 +99,20 @@ export default function PrintsTheMagicTool() {
     
                 {/* Botão para a próxima página textAlign: 'center',marginLeft: '2px', marginRight: '2px', border: '2px solid #ffffff' */}
                 {currentPage < totalPages && (
-                    <button onClick={() => handlePageChange(currentPage + 1)}>
+                    <button className='pagination-button'  onClick={() => handlePageChange(currentPage + 1)}>
                         {currentPage + 1}
                     </button>
                 )}
     
                 {/* Botão para duas páginas após a atual */}
                 {currentPage < totalPages - 1 && (
-                    <button onClick={() => handlePageChange(currentPage + 2)}>
+                    <button className='pagination-button'  onClick={() => handlePageChange(currentPage + 2)}>
                         {currentPage + 2}
                     </button>
                 )}
     
                 {/* Botão para a última página */}
-                <button onClick={() => handlePageChange(totalPages)} disabled={currentPage === totalPages}>
+                <button className='pagination-button'  onClick={() => handlePageChange(totalPages)} disabled={currentPage === totalPages}>
                     Última
                 </button>
             </div>
@@ -136,7 +136,7 @@ export default function PrintsTheMagicTool() {
             <ImageViewer images={images} onToggleResellerStatus={toggleResellerStatus} />
             <div className="pagination">
               <button className='title-table-black' disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>Anterior</button>
-              <span style={{ color: '#ffffff'}}>Página {currentPage}</span>
+              <span className='pagination-page'>Página {currentPage}</span>
               <button className='title-table-black' onClick={() => handlePageChange(currentPage + 1)}>Próxima</button>
              
             </div>

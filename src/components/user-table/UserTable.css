@@ -1,8 +1,47 @@
-.table-titles {
-    color: #ffffff;
-    padding: 8px;
+/* Estilos para telas de celular */
+@media (max-width: 768px) {
+    th {
+        font-size: 14px;
+    }
+
+    td {
+        font-size: 12px;
+        padding: 5px;
+    }
 }
 
-.border {
-    border-radius: 90px;
+/* Estilos para telas de tablet */
+@media (min-width: 769px) and (max-width: 1024px) {
+    th {
+        font-size: 16px;
+    }
+
+    td {
+        font-size: 14px;
+        padding: 8px 10px;
+    }
+}
+
+/* Estilos para telas de notebook */
+@media (min-width: 1025px) and (max-width: 1440px) {
+    th {
+        font-size: 18px;
+    }
+
+    td {
+        font-size: 16px;
+        padding: 8px 15px;
+    }
+}
+
+/* Estilos para telas de desktop */
+@media (min-width: 1441px) {
+    th {
+        font-size: 20px;
+    }
+
+    td {
+        font-size: 18px;
+        padding: 8px 20px;
+    }
 }

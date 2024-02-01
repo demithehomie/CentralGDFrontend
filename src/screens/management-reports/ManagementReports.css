@@ -1,0 +1,100 @@
+/* Estilos para telas maiores que 431px */
+.title {
+  color: #ffffff;
+}
+
+.subtitle {
+  padding: 10px;
+  color: #ffffff;
+  font-size: 30px;
+  font-weight: 500;
+  line-height: 1.2;
+  margin: 0;
+  padding: 0;
+}
+
+.report-table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 5%;
+  margin-bottom: 5%;
+}
+
+.report-table th,
+.report-table td {
+  border: 1px solid white;
+  padding: 8px;
+  text-align: left;
+  color: white;
+}
+
+.report-table th {
+  background-color: #333;
+}
+
+.report-table tbody tr:nth-child(even) {
+  background-color: #555;
+}
+
+.report-table tbody tr:nth-child(odd) {
+  background-color: #444;
+}
+
+.buttons-row-rel {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 5%;
+  margin-bottom: 5%;
+  padding: 3px;
+  width: 80%;
+  margin: auto;
+ 
+}
+
+/* Estilos para telas de até 431px */
+@media (max-width: 431px) {
+  .title {
+      font-size: 20px;
+  }
+
+  .subtitle {
+      font-size: 20px;
+  }
+
+  .report-table {
+      font-size: 14px;
+  }
+
+.button-report {
+  font-size: 14px;
+  display: flex;
+  flex-direction: row;
+
+  margin-top: 5%;
+  margin-bottom: 5%;
+  padding: 5px;
+  background-color: blue;
+  color:#ffffff;
+  border: 2px solid white;
+  
+  }
+
+  /* Adicione estilos para a rolagem horizontal aqui */
+  .report-table {
+      width: 300px;
+      flex-direction: column;
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 30px;
+      overflow-y: hidden;
+      overflow-x: auto;
+      -ms-overflow-style: none; /* Para Internet Explorer e Edge */
+      scrollbar-width: none;
+  
+      
+ 
+  }
+  
+}

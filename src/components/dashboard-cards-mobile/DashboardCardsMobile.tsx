@@ -1,4 +1,5 @@
 
+import { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
 interface DashboardCardProps {
@@ -22,30 +23,33 @@ const Card = styled.div<{ backgroundColor: string, color: string }>`
   background-color: ${(props) => props.backgroundColor || '#fff'};
   color: ${(props) => props.color || '#fffff'}; // Adicionando cor do texto
   padding: 20px;
-  border-radius: 20px;
+  border-radius: 10px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   text-align: left;
   flex-direction: column;
   align-items: center;
   font-size: 23px;
-  
+  min-width: 200px;
   width: 250px;
-  height: 250px;
+  height: 180px;
 
 `;
 
 const Title = styled.h3`
-  max-width: 200px; // Define um max-width para o texto
-  margin: 35px 0;
+  max-width: 200px;
+  margin: 15px 0;
   align-self: flex-start;
   justify-self: flex-start;
-   // Garante que o texto quebra de linha se for muito longo
+
+  line-height: 1.2;
+  font-size: 7vw; // ajusta com base na largura da viewport
 `;
 
+
 const Icon = styled.img`
-  width: 35px;
-  height: 35px;
+  width: 20px;
+  height: 20px;
   position: absolute;
   bottom: 10px; // Posição do ícone no canto inferior direito
   right: 20px;
@@ -53,8 +57,10 @@ const Icon = styled.img`
 `;
 
 const CtaButton = styled.button`
+font-size: 15px;
+font-weight: bold;
   margin-top: 10px;
-  padding: 10px 20px;
+  padding: 5px 10px;
   border: none;
   border-radius: 5px;
   background-color: #333;
@@ -76,10 +82,33 @@ const Badge = styled.span`
 `;
 
 
-const DashboardCard: React.FC<DashboardCardProps> = ({ color, backgroundColor, title, icon, ctaText, onCtaClick, badge }) => {
+const DashboardCardMobile: React.FC<DashboardCardProps> = ({ color, backgroundColor, title, icon, ctaText, onCtaClick, badge }) => {
+
+    const titleRef = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    const adjustFontSize = () => {
+      const element = titleRef.current;
+      if (!element) return;
+
+      let fontSize = parseFloat(window.getComputedStyle(element, null).getPropertyValue('font-size'));
+      while (element.scrollHeight > element.offsetHeight) {
+        fontSize -= 1;
+        element.style.fontSize = `${fontSize}px`;
+      }
+    };
+
+    adjustFontSize();
+    window.addEventListener('resize', adjustFontSize);
+
+    return () => {
+      window.removeEventListener('resize', adjustFontSize);
+    };
+  }, [title]);
+
   return (
     <Card color={color} backgroundColor={backgroundColor} onClick={onCtaClick}>
-      <Title>{title}</Title>
+      <Title ref={titleRef}>{title}</Title>
       {icon && <Icon src={icon} alt="Icon" />}
       <CtaButton style={{backgroundColor: backgroundColor, color: color, border: color}} onClick={onCtaClick}>{ctaText}</CtaButton>
       {badge && <Badge>{badge}</Badge>}
@@ -87,4 +116,4 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ color, backgroundColor, t
   );
 };
 
-export default DashboardCard;
+export default DashboardCardMobile;

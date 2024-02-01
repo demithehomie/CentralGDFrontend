@@ -20,6 +20,10 @@ import MiniTargetTable from './components/mni-target-table/MiniTargetTable';
 import PaymentMenu from './screens/payment-menu/PaymentMenu';
 import PrivateRoute from './context/auth/PrivateRoute';
 import SearchPrintsResults from './screens/search-prints-results/SearchPrintsResults';
+import UserPrintsPage from './screens/user-prints-page/UserPrintsPage';
+import ManagementReports from './screens/management-reports/ManagementReports';
+import ReportDetailsPage from './components/detail-modal-reports/ReportDetailsPage';
+//import ReportsDashboard from './screens/reports-dashboard/ReportsDashboard';
 
 //import { User } from './components/user-table/UserTable';
 //import User from './components/user-table/UserTable';
@@ -58,7 +62,10 @@ function App() {
           <Route path="/get-prints-themagictool" element={<PrivateRoute><PrintsTheMagicTool /></PrivateRoute>} />
           <Route path="/target" element={<PrivateRoute><MiniTargetTable /></PrivateRoute>} />
           <Route path="/payments" element={<PrivateRoute><PaymentMenu /></PrivateRoute>} />
-            {/* Outras rotas privadas aqui */}
+          <Route path="/user-prints-page/:userId" element={<PrivateRoute><UserPrintsPage /></PrivateRoute>} />
+          <Route path="/mgmt-reports" element={<PrivateRoute><ManagementReports /></PrivateRoute>} />
+          {/* <Route path="/reports-dashboard/:typeOfReport" element={<PrivateRoute><ReportsDashboard /></PrivateRoute>} /> */}
+          <Route path="/reports-data" element={<PrivateRoute><ReportDetailsPage /></PrivateRoute>} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>

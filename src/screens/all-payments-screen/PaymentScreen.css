@@ -48,6 +48,23 @@
    align-items: center;
 }
 
+.outline-button {
+
+    padding: 10px 20px;
+    border: 2px solid #007bff;
+    border-radius: 8px;
+    background-color: transparent;
+    color: #ffffff;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
+    max-width: 200%;
+}
+
 .payment-buttons-danger {
   margin: 40px;
   color: #ffffff;
@@ -80,6 +97,11 @@
 .pending-transfers-table-container {
   max-height: 250px; /* Altura máxima desejada */
   overflow-y: auto;
+  display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Ajuste a altura conforme necessário */
 }
 
 .pending-transfers-table {

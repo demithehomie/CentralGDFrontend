@@ -11,3 +11,24 @@
     transform-origin: top right;
 }
 
+.table-titles {
+    font-weight: bold;
+    font-size: 20px;
+    color: #ffffff;
+    padding: 10px;
+}
+
+.compressedDiv {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 150px; /* ou qualquer largura que você deseje */
+    cursor: pointer; /* opcional, para indicar que é interativo */
+  }
+  
+  /* Estilo para expandir a div no hover */
+  .compressedDiv:hover {
+    white-space: normal;
+    max-width: 300px; /* remove a largura máxima no hover */
+  }
+  

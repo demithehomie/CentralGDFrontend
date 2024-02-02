@@ -16,13 +16,17 @@ export default function PaymentMenu() {
         navigate('/dashboard');
     }
 
+    const goToAllReports = () => {
+        navigate('/mgmt-reports');
+    }
+
     return (
         <>
             <div className="payment-menu">
                 <h1 className="title">Pagamentos</h1>
                 <div className="column-of-buttons">
                     <button className='payment-button' onClick={goToPaymentScreen}>Receber Pix</button>
-                    <button className='payment-button' onClick={showAlert}>Todos os Pagamentos</button>
+                    <button className='payment-button' onClick={goToAllReports}>Todos os Relatórios</button>
                     <button className='payment-button' onClick={showAlert}>Agendar Pagamento</button>
                 </div>
                 <button className='back-button' onClick={goBackToDashboard}>Voltar ao Início</button>

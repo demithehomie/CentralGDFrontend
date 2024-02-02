@@ -103,7 +103,7 @@ const shouldRenderItem = (transfer: TransferData) => {
         const clientId = localStorage.getItem(`clienteId`)/* ID do cliente */;
         
         // Fazer a requisição POST para atualizar o status do pagamento do cliente
-        await axios.post('https://gdcompanion-prod.onrender.com/atualizar-status-pagamento-cliente', { clientId });
+        await axios.post('https://gdcompanion-prod.onrender.com/atualizar-status-pagamento', { clientId });
 
         // Aguardar 5 segundos antes de recarregar a página
         setTimeout(() => {
@@ -181,7 +181,7 @@ const shouldRenderItem = (transfer: TransferData) => {
   
   const getStatusPaymentViaMercadoPago = async () => {
     try {
-      const paymentId = selectedTransfer?.payment_link; // Usar selectedTransfer.payment_link como paymentId
+      const paymentId = selectedTransfer?.payment_id; 
       if (paymentId) {
         const token = 'APP_USR-5220412533742046-011815-549eea6144946c47d1c330d299e6fb6a-419577621'; // Replace with your MercadoPago API access token
         const response = await axios.get(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
@@ -334,6 +334,7 @@ const shouldRenderItem = (transfer: TransferData) => {
   };
   
 
+
   useEffect(() => {
     if (linkBuyMercadoPago && statusPaymentPending) {
       // Forçar recarga da página
@@ -350,9 +351,25 @@ const shouldRenderItem = (transfer: TransferData) => {
     }
   };
  
-  // Chama a função inicialmente
-  checkAndMarkExpiredPayments();
-  setInterval(checkAndMarkExpiredPayments, 300000);
+  useEffect(() => {
+    // Idealmente, essa função só deve ser chamada se você tem certeza de que há pagamentos pendentes que possam ter expirado
+    // Se você puder verificar essa condição no frontend, faça isso antes de chamar a função
+    const verificarEAtualizarPagamentosExpirados = async () => {
+      try {
+        await checkAndMarkExpiredPayments();
+      } catch (error) {
+        console.error("Erro ao verificar/atualizar pagamentos expirados:", error);
+      }
+    };
+  
+    verificarEAtualizarPagamentosExpirados();
+  
+    // Você também pode utilizar setInterval aqui, mas certifique-se de limpar isso quando o componente desmontar
+    const intervalId = setInterval(verificarEAtualizarPagamentosExpirados, 300000); // 5 minutos
+  
+    return () => clearInterval(intervalId); // Limpeza na desmontagem do componente
+  }, []); // Dependências vazias indicam que isso roda apenas na montagem do componente
+  
 
   useEffect(() => {
     // Calcular os IDs que devem ser renderizados e atualizar o estado de uma só vez
@@ -371,7 +388,29 @@ const shouldRenderItem = (transfer: TransferData) => {
   const openPaymentLinkInNewTab = (url: string | URL | undefined) => {
     window.open(url, '_blank');
   };
+
+  useEffect(() => {
+    // Verifica se o status do pagamento é aprovado
+    if (statusPaymentApproved) {
+      // Chama as funções para verificar o status do pagamento via Mercado Pago
+      getStatusPaymentViaMercadoPagoWithResponse();
+      getStatusPaymentViaMercadoPago();
+    }
+  }, [statusPaymentApproved]); 
+
+  useEffect(() => {
+    // Função para recarregar os dados de pagamentos pendentes
+    const recarregarDados = async () => {
+      // Aqui, você chamaria a função para buscar os dados atualizados, como 'fetchPendingTransfers'
+      await fetchPendingTransfers();
+    };
   
+    recarregarDados();
+  }, [statusPaymentApproved]); // Dependendo de como você rastreia a aprovação de pagamentos
+  
+  const navigateToReports = () => {
+    navigate('/mgmt-reports');
+  }
 
   return (
     <div className="App">
@@ -459,7 +498,7 @@ const shouldRenderItem = (transfer: TransferData) => {
 
         <div className="pix-payment-container">
           {responsePayment && (
-            <button className="payment-buttons-danger" onClick={getStatusPaymentViaMercadoPagoWithResponse}>
+            <button className="payment-buttonstransferênc-danger" onClick={getStatusPaymentViaMercadoPagoWithResponse}>
               Verificar status de pagamento
             </button>
           )}
@@ -479,23 +518,31 @@ const shouldRenderItem = (transfer: TransferData) => {
 
       <div className="PixPendentes">
       <hr />
-      <h3 style={{ color: '#ffffff', fontSize: '20px' }}>Pix Pendentes</h3>
+     
       <div className="pending-transfers-list">
         {pendingTransfers && Array.isArray(pendingTransfers) && pendingTransfers.length > 0 ? (
           <div className="pending-transfers-table-container">
+            <h3 style={{ color: '#ffffff', fontSize: '20px' }}>Pix Pendentes </h3>
             <table className="pending-transfers-table">
+              <br />
+              <div style={{ display: "flex", margin: "auto", alignItems: "center", justifyContent: "center"}}>
+                  <button className='outline-button' onClick={navigateToReports}>Ver todos os relatórios</button>
+              </div>
+           
               <thead>
                 <tr>
                   <th style={{ color: 'white', textAlign: 'center' }}>Quantia</th>
                   <th style={{ color: 'white', textAlign: 'center' }}>Nome</th>
                   <th style={{ color: 'white', textAlign: 'center' }}>PIX</th>
                   <th style={{ color: 'white', textAlign: 'center' }}>Pendente</th>
+                  <th style={{ color: 'white', textAlign: 'center' }}>Iniciado em</th>
                 </tr>
               </thead>
               <tbody>
                 {pendingTransfers.map((transfer) => {
                   if (shouldRenderItem(transfer)) {
                     return (
+                  
                       <tr key={transfer.id} className="pending-transfer-row">
                         <td style={{ color: 'black' }}>{transfer.amount}</td>
                         <td style={{ color: 'black' }}>{transfer.name}</td>
@@ -507,16 +554,20 @@ const shouldRenderItem = (transfer: TransferData) => {
                           {/* {transfer.qr_code_cec} */}
                         </td>
                         <td style={{ color: 'black' }}>
-                          {transfer.pending_payments === 'true' ||
-                          transfer.pending_payments === true ? (
-                            <div className="loader"></div>
-                          ) : transfer.pending_payments === 'expired' || transfer.pending_payments === 'expired' ? (
-                            <div className="badge badge-expired">EXPIRED</div>
-                          ) : transfer.pending_payments === 'false' || transfer.pending_payments === false  ? (
+                          {statusPaymentApproved || transfer.pending_payments === 'false' ? (
                             <div className="badge badge-success">DONE</div>
+                          ) : transfer.pending_payments === 'true' || transfer.pending_payments === true ? (
+                            <div className="loader"></div>
+                          ) : transfer.pending_payments === 'expired' ? (
+                            <div className="badge badge-expired">EXPIRED</div>
                           ) : null}
                         </td>
+                        <td>
+                        <td style={{ color: 'black' }}>{transfer.created_at}</td>
+                        </td>
+
                       </tr>
+               
                     );
                   }
 

@@ -30,10 +30,65 @@
   }
   
 
-  .requestsList {
-    max-height: 300px; /* Exemplo de altura máxima */
-    overflow: auto;
-    justify-content: space-between;
-    display: flex;
+  .requestsTable {
+    display: block;
+    max-height: 400px; /* Altura máxima antes de rolar */
+    overflow-y: auto;
+    width: 100%; /* Ocupa toda a largura disponível */
+    border-collapse: collapse; /* Remove o espaçamento entre as bordas das células */
+    background-color: #fff; /* Cor de fundo padrão branca */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil para a tabela */
+    border-radius: 8px; /* Bordas arredondadas */
+   
+    margin: 20px 0; /* Margem para espaçamento */
+    font-size: 16px; /* Tamanho da fonte */
   }
   
+  .requestsTable th, .requestsTable td {
+    text-align: left; /* Alinha o texto à esquerda */
+    padding: 12px 16px; /* Espaçamento interno para células */
+    border-bottom: 1px solid #eee; /* Linha separadora sutil para as células */
+  }
+  
+  .requestsTable th {
+    background-color: #f9f9f9; /* Cor de fundo do cabeçalho */
+    color: #333; /* Cor da fonte do cabeçalho */
+  }
+  
+  .requestsTable tr:nth-child(odd) {
+    background-color: #f2f2f2; /* Cor de fundo para linhas ímpares */
+  }
+  
+  .requestsTable tr:hover {
+    background-color: #e8e8e8; /* Cor de fundo ao passar o mouse */
+  }
+  
+  .requestsTable button {
+    cursor: pointer; /* Muda o cursor para indicar que é clicável */
+    padding: 8px 12px; /* Espaçamento interno */
+    margin-right: 8px; /* Margem à direita para separar os botões */
+    border: none; /* Remove a borda */
+    border-radius: 4px; /* Bordas arredondadas para os botões */
+    background-color: #007bff; /* Cor de fundo do botão */
+    color: white; /* Cor da fonte */
+    transition: background-color 0.3s; /* Transição suave da cor de fundo */
+  }
+  
+  .requestsTable button:hover {
+    background-color: #0056b3; /* Cor de fundo do botão ao passar o mouse */
+  }
+  
+  .requestsTable input {
+    padding: 8px; /* Espaçamento interno */
+    margin-right: 8px; /* Margem à direita */
+    border: 1px solid #ccc; /* Borda sutil */
+    border-radius: 4px; /* Bordas arredondadas para os inputs */
+  }
+  
+  .requestsTable tbody tr td:first-child {
+    max-width: 200px; /* Limita a largura da primeira célula (target) */
+    white-space: nowrap; /* Evita quebra de linha */
+    overflow: hidden; /* Esconde texto que excede o max-width */
+    text-overflow: ellipsis; /* Adiciona "..." ao final do texto se for muito longo */
+    cursor: pointer; /* Indica que o texto pode ser clicado */
+  }

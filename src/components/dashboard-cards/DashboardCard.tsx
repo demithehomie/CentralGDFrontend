@@ -13,9 +13,6 @@ interface DashboardCardProps {
   onCtaClick: () => void; // Tipo para uma função sem retorno
 }
 
-//
-
-
 
 const Card = styled.div<{ backgroundColor: string, color: string }>`
   position: relative; // Importante para o posicionamento absoluto dos filhos

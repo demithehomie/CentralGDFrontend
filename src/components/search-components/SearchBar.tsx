@@ -46,12 +46,15 @@ const SearchBar = () => {
 
   return (
     <form onSubmit={handleSearch}>
+            <h4 style={{ color: "#ffffff"}}>Pesquisa e adição de créditos</h4>
       <SearchInput
         type="text"
         placeholder="Pesquisar..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
+        
       />
+      
     </form>
   );
 };

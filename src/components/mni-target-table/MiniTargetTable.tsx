@@ -68,6 +68,15 @@ const MiniTargetTable = () => {
     navigate('/dashboard');
   };
 
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+      // Mostra uma mensagem ou faz algo para indicar que o texto foi copiado
+      alert("Texto copiado para a área de transferência!");
+    }, (err) => {
+      console.error('Erro ao copiar texto: ', err);
+    });
+  };
+
   return (
     <div className="miniTargetTable">
         <h3 style={{ color: '#ffffff'}}>Inserir Alvo</h3>
@@ -81,19 +90,31 @@ const MiniTargetTable = () => {
         <br /><br />
       </div>
       <ul >
-        {requests.map((request) => (
-          <li key={request.id} className="requestsList">
-            {request.target}{' '}
-            <input
-             value={editTargets[request.id] || ''}
-             onChange={(e) => handleEditChange(request.id, e.target.value)}
-              placeholder="Editar Target"
-            />
-            <button onClick={() => handleUpdate(request.id)}>Editar</button>
-            <button onClick={() => handleDelete(request.id)}>Deletar</button>
-          </li>
-       
-        ))}
+      <table className="requestsTable">
+  <thead>
+    <tr>
+      <th>Target</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {requests.map((request) => (
+      <tr key={request.id}>
+        <td title={request.target} onClick={() => copyToClipboard(request.target)}>{request.target}</td>
+        <td>
+          <input
+            value={editTargets[request.id] || ''}
+            onChange={(e) => handleEditChange(request.id, e.target.value)}
+            placeholder="Editar Target"
+          />
+          <button onClick={() => handleUpdate(request.id)}>Editar</button>
+          <button onClick={() => handleDelete(request.id)}>Deletar</button>
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
       </ul>
       <br /><br />
       <button className="button" onClick={backToDashboard}>Voltar ao Início</button>

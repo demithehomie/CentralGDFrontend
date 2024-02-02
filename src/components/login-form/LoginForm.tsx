@@ -65,14 +65,14 @@ const Button = styled.button`
   color: #000000;
 `;
 
-const OutlineButton = styled(Button)`
-  background-color: transparent;
-  border: 2px solid white;
-  color: white;
+// const OutlineButton = styled(Button)`
+//   background-color: transparent;
+//   border: 2px solid white;
+//   color: white;
   
-  position: absolute;
-  margin-top: 290px;
-`;
+//   position: absolute;
+//   margin-top: 290px;
+// `;
 
 const Message = styled.p`
   color: white;
@@ -182,7 +182,7 @@ const LoginForm = () => {
       />
     
       <Button  type="submit">Login</Button>
-      <OutlineButton>Cadastro</OutlineButton>
+      {/* <OutlineButton>Cadastro</OutlineButton> */}
       {showMessage && (
         <Message>To hide the password, please put the cursor outside the input.</Message>
       )}

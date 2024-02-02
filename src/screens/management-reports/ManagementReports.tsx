@@ -135,8 +135,8 @@ const emitPdf = async (reportType: any) => {
                         <th>WhatsApp</th>
                         <th>Serviço Fornecido</th>
                         <th>Quantidade</th>
-                        <th>Nome de Usuário</th>
-                        <th>Status</th>
+                         {/* <th>Nome de Usuário</th> */}
+                        <th>É Devedor?</th>
                         <th>Data de Criação</th>
                         <th>ID do Pagamento</th>
                         {/* Adicione mais colunas conforme necessário */}
@@ -149,10 +149,23 @@ const emitPdf = async (reportType: any) => {
                             <td>{item.name}</td>
                             <td>{item.whatsapp}</td>
                             <td>{item.service_provided}</td>
-                            <td>{item.amount}</td>
-                            <td>{item.username}</td>
+                            <td>R$ {item.amount.toFixed(2).replace('.', ',')}</td> 
+                               {/* <td>{item.username}</td> */}
                             <td>{item.pending_payments}</td>
-                            <td>{item.created_at}</td>
+                              <td>
+                            {
+                                new Date(new Date(item.created_at).getTime() )
+                                .toLocaleString('pt-BR', {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                    year: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    second: '2-digit',
+                                    hour12: false
+                                })
+                            }
+                            </td>
                             <td>{item.payment_id}</td>
                             {/* Adicione mais colunas conforme necessário */}
                         </tr>
@@ -160,7 +173,7 @@ const emitPdf = async (reportType: any) => {
                 </tbody>
             </table>
         <div className='buttons-row-rel'>
-           <button className='button-report'>Exibir detalhes</button> <button className='button-report' onClick={() => emitPdf('daily')}>Emitir PDF</button> <button className='button-report' onClick={() => emitDocx('daily')}>Emitir DOCX</button> <button className='button-report' onClick={() => emitExcel('daily')}>Emitir Excel</button>
+           {/* <button className='button-report'>Exibir detalhes</button>*/}  <button className='button-report' onClick={() => emitPdf('daily')}>Emitir PDF</button> <button className='button-report' onClick={() => emitDocx('daily')}>Emitir DOCX</button> <button className='button-report' onClick={() => emitExcel('daily')}>Emitir Excel</button>
         </div>
         <br />
         <hr />
@@ -175,8 +188,8 @@ const emitPdf = async (reportType: any) => {
                         <th>WhatsApp</th>
                         <th>Serviço Fornecido</th>
                         <th>Quantidade</th>
-                        <th>Nome de Usuário</th>
-                        <th>Status</th>
+                         {/* <th>Nome de Usuário</th> */}
+                        <th>É Devedor?</th>
                         <th>Data de Criação</th>
                         <th>ID do Pagamento</th>
                         {/* Adicione mais colunas conforme necessário */}
@@ -189,10 +202,23 @@ const emitPdf = async (reportType: any) => {
                             <td>{item.name}</td>
                             <td>{item.whatsapp}</td>
                             <td>{item.service_provided}</td>
-                            <td>{item.amount}</td>
-                            <td>{item.username}</td>
+                            <td>R$ {item.amount.toFixed(2).replace('.', ',')}</td> 
+                               {/* <td>{item.username}</td> */}
                             <td>{item.pending_payments}</td>
-                            <td>{item.created_at}</td>
+                              <td>
+                            {
+                                new Date(new Date(item.created_at).getTime() )
+                                .toLocaleString('pt-BR', {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                    year: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    second: '2-digit',
+                                    hour12: false
+                                })
+                            }
+                            </td>
                             <td>{item.payment_id}</td>
                             {/* Adicione mais colunas conforme necessário */}
                         </tr>
@@ -200,7 +226,7 @@ const emitPdf = async (reportType: any) => {
                 </tbody>
             </table>
         <div className='buttons-row-rel'>
-           <button className='button-report'>Exibir detalhes</button> <button className='button-report' onClick={() => emitPdf('weekly')}>Emitir PDF</button> <button className='button-report' onClick={() => emitDocx('weekly')}>Emitir DOCX</button> <button className='button-report' onClick={() => emitExcel('weekly')}>Emitir Excel</button>
+           {/* <button className='button-report'>Exibir detalhes</button>*/}   <button className='button-report' onClick={() => emitPdf('weekly')}>Emitir PDF</button> <button className='button-report' onClick={() => emitDocx('weekly')}>Emitir DOCX</button> <button className='button-report' onClick={() => emitExcel('weekly')}>Emitir Excel</button>
         </div>
         <br />
         <hr />
@@ -214,8 +240,8 @@ const emitPdf = async (reportType: any) => {
                         <th>WhatsApp</th>
                         <th>Serviço Fornecido</th>
                         <th>Quantidade</th>
-                        <th>Nome de Usuário</th>
-                        <th>Status</th>
+                         {/* <th>Nome de Usuário</th> */}
+                        <th>É Devedor?</th>
                         <th>Data de Criação</th>
                         <th>ID do Pagamento</th>
                         {/* Adicione mais colunas conforme necessário */}
@@ -228,10 +254,24 @@ const emitPdf = async (reportType: any) => {
                             <td>{item.name}</td>
                             <td>{item.whatsapp}</td>
                             <td>{item.service_provided}</td>
-                            <td>{item.amount}</td>
-                            <td>{item.username}</td>
+                            <td>R$ {item.amount.toFixed(2).replace('.', ',')}</td> 
+                               {/* <td>{item.username}</td> */}
                             <td>{item.pending_payments}</td>
-                            <td>{item.created_at}</td>
+                            <td>
+                            {
+                                new Date(new Date(item.created_at).getTime() )
+                                .toLocaleString('pt-BR', {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                    year: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    second: '2-digit',
+                                    hour12: false
+                                })
+                            }
+                            </td>
+
                             <td>{item.payment_id}</td>
                             {/* Adicione mais colunas conforme necessário */}
                         </tr>
@@ -239,12 +279,12 @@ const emitPdf = async (reportType: any) => {
                 </tbody>
             </table>
         <div className='buttons-row-rel'>
-           <button className='button-report'>Exibir detalhes</button> <button className='button-report' onClick={() => emitPdf('monthly')}>Emitir PDF</button> <button className='button-report' onClick={() => emitDocx('monthly')}>Emitir DOCX</button> <button className='button-report' onClick={() => emitExcel('monthly')}>Emitir Excel</button>
+           {/* <button className='button-report'>Exibir detalhes</button>*/}  <button className='button-report' onClick={() => emitPdf('monthly')}>Emitir PDF</button> <button className='button-report' onClick={() => emitDocx('monthly')}>Emitir DOCX</button> <button className='button-report' onClick={() => emitExcel('monthly')}>Emitir Excel</button>
         </div>
         <br />
         <hr />
         <br />
-            <h3 className="subtitle">Relatório |Trimestral</h3>
+            <h3 className="subtitle">Relatório Trimestral</h3>
             <table className="report-table">
                 <thead>
                     <tr>
@@ -253,8 +293,8 @@ const emitPdf = async (reportType: any) => {
                         <th>WhatsApp</th>
                         <th>Serviço Fornecido</th>
                         <th>Quantidade</th>
-                        <th>Nome de Usuário</th>
-                        <th>Status</th>
+                         {/* <th>Nome de Usuário</th> */}
+                        <th>É Devedor?</th>
                         <th>Data de Criação</th>
                         <th>ID do Pagamento</th>
                         {/* Adicione mais colunas conforme necessário */}
@@ -267,10 +307,23 @@ const emitPdf = async (reportType: any) => {
                             <td>{item.name}</td>
                             <td>{item.whatsapp}</td>
                             <td>{item.service_provided}</td>
-                            <td>{item.amount}</td>
-                            <td>{item.username}</td>
+                            <td>R$ {item.amount.toFixed(2).replace('.', ',')}</td> 
+                               {/* <td>{item.username}</td> */}
                             <td>{item.pending_payments}</td>
-                            <td>{item.created_at}</td>
+                              <td>
+                            {
+                                new Date(new Date(item.created_at).getTime() )
+                                .toLocaleString('pt-BR', {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                    year: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    second: '2-digit',
+                                    hour12: false
+                                })
+                            }
+                            </td>
                             <td>{item.payment_id}</td>
                             {/* Adicione mais colunas conforme necessário */}
                         </tr>
@@ -278,7 +331,7 @@ const emitPdf = async (reportType: any) => {
                 </tbody>
             </table>
         <div className='buttons-row-rel'>
-           <button className='button-report'>Exibir detalhes</button> <button className='button-report' onClick={() => emitPdf('quarterly')}>Emitir PDF</button> <button className='button-report' onClick={() => emitDocx('quarterly')}>Emitir DOCX</button> <button className='button-report' onClick={() => emitExcel('quarterly')}>Emitir Excel</button>
+           {/* <button className='button-report'>Exibir detalhes</button>*/}  <button className='button-report' onClick={() => emitPdf('quarterly')}>Emitir PDF</button> <button className='button-report' onClick={() => emitDocx('quarterly')}>Emitir DOCX</button> <button className='button-report' onClick={() => emitExcel('quarterly')}>Emitir Excel</button>
         </div>
         <br />
         <hr />
@@ -292,8 +345,8 @@ const emitPdf = async (reportType: any) => {
                         <th>WhatsApp</th>
                         <th>Serviço Fornecido</th>
                         <th>Quantidade</th>
-                        <th>Nome de Usuário</th>
-                        <th>Status</th>
+                         {/* <th>Nome de Usuário</th> */}
+                        <th>É Devedor?</th>
                         <th>Data de Criação</th>
                         <th>ID do Pagamento</th>
                         {/* Adicione mais colunas conforme necessário */}
@@ -306,10 +359,23 @@ const emitPdf = async (reportType: any) => {
                             <td>{item.name}</td>
                             <td>{item.whatsapp}</td>
                             <td>{item.service_provided}</td>
-                            <td>{item.amount}</td>
-                            <td>{item.username}</td>
+                            <td>R$ {item.amount.toFixed(2).replace('.', ',')}</td> 
+                               {/* <td>{item.username}</td> */}
                             <td>{item.pending_payments}</td>
-                            <td>{item.created_at}</td>
+                              <td>
+                            {
+                                new Date(new Date(item.created_at).getTime() )
+                                .toLocaleString('pt-BR', {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                    year: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    second: '2-digit',
+                                    hour12: false
+                                })
+                            }
+                            </td>
                             <td>{item.payment_id}</td>
                             {/* Adicione mais colunas conforme necessário */}
                         </tr>
@@ -317,7 +383,7 @@ const emitPdf = async (reportType: any) => {
                 </tbody>
             </table>
         <div className='buttons-row-rel'>
-           <button className='button-report'>Exibir detalhes</button> <button className='button-report' onClick={() => emitPdf('semiannual')}>Emitir PDF</button> <button className='button-report' onClick={() => emitDocx('semiannual')}>Emitir DOCX</button> <button className='button-report' onClick={() => emitExcel('semiannual')}>Emitir Excel</button>
+           {/* <button className='button-report'>Exibir detalhes</button>*/}  <button className='button-report' onClick={() => emitPdf('semiannual')}>Emitir PDF</button> <button className='button-report' onClick={() => emitDocx('semiannual')}>Emitir DOCX</button> <button className='button-report' onClick={() => emitExcel('semiannual')}>Emitir Excel</button>
         </div>
         <br />
         <br />
@@ -330,8 +396,8 @@ const emitPdf = async (reportType: any) => {
                         <th>WhatsApp</th>
                         <th>Serviço Fornecido</th>
                         <th>Quantidade</th>
-                        <th>Nome de Usuário</th>
-                        <th>Status</th>
+                         {/* <th>Nome de Usuário</th> */}
+                        <th>É Devedor?</th>
                         <th>Data de Criação</th>
                         <th>ID do Pagamento</th>
                         {/* Adicione mais colunas conforme necessário */}
@@ -344,10 +410,23 @@ const emitPdf = async (reportType: any) => {
                             <td>{item.name}</td>
                             <td>{item.whatsapp}</td>
                             <td>{item.service_provided}</td>
-                            <td>{item.amount}</td>
-                            <td>{item.username}</td>
+                            <td>R$ {item.amount.toFixed(2).replace('.', ',')}</td> 
+                               {/* <td>{item.username}</td> */}
                             <td>{item.pending_payments}</td>
-                            <td>{item.created_at}</td>
+                              <td>
+                            {
+                                new Date(new Date(item.created_at).getTime() )
+                                .toLocaleString('pt-BR', {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                    year: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    second: '2-digit',
+                                    hour12: false
+                                })
+                            }
+                            </td>
                             <td>{item.payment_id}</td>
                             {/* Adicione mais colunas conforme necessário */}
                         </tr>
@@ -355,7 +434,7 @@ const emitPdf = async (reportType: any) => {
                 </tbody>
             </table>
         <div className='buttons-row-rel'>
-           <button className='button-report'>Exibir detalhes</button> <button className='button-report' onClick={() => emitPdf('annual')}>Emitir PDF</button> <button className='button-report' onClick={() => emitDocx('annual')}>Emitir DOCX</button> <button className='button-report' onClick={() => emitExcel('annual')}>Emitir Excel</button>
+           {/* <button className='button-report'>Exibir detalhes</button>*/}  <button className='button-report' onClick={() => emitPdf('annual')}>Emitir PDF</button> <button className='button-report' onClick={() => emitDocx('annual')}>Emitir DOCX</button> <button className='button-report' onClick={() => emitExcel('annual')}>Emitir Excel</button>
         </div>
         <br />
         <hr />

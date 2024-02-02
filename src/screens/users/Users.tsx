@@ -58,6 +58,14 @@ export default function Users() {
     navigate('/dashboard');
   };
 
+  const prints = async () => {
+    navigate('/get-prints-themagictool')
+  }
+
+  const targets = async () => {
+    navigate('/target')
+  }
+
   const renderContent = () => {
     if (isLoading) {
       return <center><div className="loader"></div><h3 className='loading-messages'>Carregando usuários..</h3></center>;
@@ -79,14 +87,20 @@ export default function Users() {
 
   return (
     <div>
-      <h2 className='title-table'>Todos os Usuários</h2>
+      <h2 className='title-table'>Todos os Usuários em The Magic Tool</h2>
       <div>
         <SearchBar/>
+  
       </div>
       <br />
       {renderContent()}
       <br />
-      <button className="button" onClick={backToDashboard}>Voltar ao Início</button>
+      <div style={{ display: "flex", flexDirection: "row"}}>
+        <button className="button" onClick={prints}  >Prints</button>
+        <button className="button" onClick={targets}  >Targets</button>
+      </div>
+        
+        <button  onClick={backToDashboard}>Voltar ao Início</button>
     </div>
   );
 }

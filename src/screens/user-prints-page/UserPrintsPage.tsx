@@ -17,33 +17,34 @@ interface UserPrintsPageProps {
 interface Print {
   id: number;
   file_name: string;
+  created_at: string;
 }
 
 const UserPrintsPage: React.FC<UserPrintsPageProps> = () => {
   const navigate = useNavigate();
  
 
-  const [totalPrints, setTotalPrints] = useState<number>(0);
+    const [totalPrints, setTotalPrints] = useState<number>(0);
     const [isFullSizeModalOpen, setIsFullSizeModalOpen] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true); // Adicione o estado isLoading
-  const { userId } = useParams<{ userId: string }>();
-  const [userPrints, setUserPrints] = useState<Print[]>([]);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const itemsPerPage: number = 4;
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [inputPage, setInputPage] = useState<number>(currentPage);
-  const openFullSizeModal = () => {
-    setIsFullSizeModalOpen(true);
-  };
+    const { userId } = useParams<{ userId: string }>();
+    const [userPrints, setUserPrints] = useState<Print[]>([]);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const itemsPerPage: number = 4;
+    const [selectedImage, setSelectedImage] = useState<string | null>(null);
+    const [inputPage, setInputPage] = useState<number>(currentPage);
+    const openFullSizeModal = () => {
+      setIsFullSizeModalOpen(true);
+    };
   
-  const closeFullSizeModal = () => {
-    setIsFullSizeModalOpen(false);
-  };
+    const closeFullSizeModal = () => {
+      setIsFullSizeModalOpen(false);
+    };
 
-  const handleInputPageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newPage = parseInt(event.target.value);
-    setInputPage(newPage);
-  };
+    const handleInputPageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      const newPage = parseInt(event.target.value);
+      setInputPage(newPage);
+    };
   
   
   useEffect(() => {
@@ -89,10 +90,37 @@ const UserPrintsPage: React.FC<UserPrintsPageProps> = () => {
 //     setSelectedImage(null);
 //   };
 
+function formatDate(dateString: string) {
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric', // ou '2-digit'
+    month: '2-digit', // ou 'numeric'
+    day: '2-digit', // ou 'numeric'
+    hour: '2-digit', // ou 'numeric'
+    minute: '2-digit', // ou 'numeric'
+    hour12: false
+  };
+  
+  // Cria um objeto de data com base na string fornecida
+  let date = new Date(dateString);
+  
+  // Ajusta a data adicionando 3 horas para compensar o fuso horário
+
+  date = new Date(date.getTime() + (3 * 60 * 60 * 1000)); // Adiciona 3 horas
+
+  // Utiliza o fuso horário local para a formatação
+  return new Intl.DateTimeFormat('pt-BR', options).format(date);
+}
+
+
+// O restante do componente permanece o mesmo
+
+
+
   return (
     <div>
       <FloatingButtons/>
     <h2 style={{ color: '#ffffff' }}>Prints do usuário {userId} </h2>
+    
     {isLoading ? (
       <Loader />
     ) : (
@@ -113,11 +141,15 @@ const UserPrintsPage: React.FC<UserPrintsPageProps> = () => {
         openFullSizeModal();
       }}
     >
+      <h3>Criado em {formatDate(print.created_at)}</h3>
       <img
         src={`https://ewr1.vultrobjects.com/screen/THEMAGICT_2102255/${print.file_name}`}
         alt={print.file_name}
         className="carousel-image"
+        title={print.created_at}
       />
+
+     
     </div>
   )) : [<p key="no-prints">No prints available.</p>]}
 </Carousel>

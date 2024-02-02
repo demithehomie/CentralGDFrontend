@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import /*React,*/ { useEffect, useState } from 'react';
 import axios from 'axios';
 import {
-  LineChart,
-  Line,
+  //LineChart,
+//Line,
   XAxis,
   YAxis,
   CartesianGrid,

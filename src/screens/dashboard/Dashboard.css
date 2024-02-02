@@ -9,8 +9,8 @@
 
 .dashboard-container {
     display: flex;
-    height: 100vh;
-    justify-content: space-between;
+    
+    justify-content: center;
 }
 /* CONTAINER PARA VISTA DE TELEFONES */
   
@@ -231,8 +231,7 @@
 
   .separador {
     border: 2px solid #ffffff;
-    margin: 25px;
-    
+ 
     overflow-y: hidden;
   }
 

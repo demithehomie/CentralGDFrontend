@@ -74,6 +74,21 @@ export type ImageViewerProps = {
 const ImageViewer: React.FC<ImageViewerProps> = ({ images }) => {
     const [isZoomed, setIsZoomed] = useState<number | null>(null);
     const [userNames, setUserNames] = useState<{ [key: number]: string }>({});
+    const [isPopupVisible, setPopupVisible] = useState(false);
+    const [selectedImage, setSelectedImage] = useState<Image | null>(null); // Novo estado para controlar a imagem selecionada
+
+    const showPopup = (image: Image) => {
+      setSelectedImage(image); // Define a imagem selecionada
+      setPopupVisible(true); // Abre o popup
+  };
+
+  const closePopup = () => {
+      setSelectedImage(null); // Limpa a imagem selecionada
+      setPopupVisible(false); // Fecha o popup
+  };
+  
+    // Função para copiar o texto
+ 
 
     const apiurldev = `https://gdcompanion-prod.onrender.com`;
 
@@ -126,6 +141,20 @@ const ImageViewer: React.FC<ImageViewerProps> = ({ images }) => {
         index: images.length - 1 - index
     }));
 
+// Exemplo: Copiando os detalhes do primeiro item do array 'images'
+const copyText = async () => {
+  if (!selectedImage) return; // Verifica se há uma imagem selecionada
+
+  try {
+    await navigator.clipboard.writeText(selectedImage.details);
+    alert('Detalhes copiados com sucesso!');
+  } catch (error) {
+    console.error('Falha ao copiar os detalhes:', error);
+    alert('Falha ao copiar os detalhes.');
+  }
+};
+
+
     return (
         <>
          {/* <TableContainer> */}
@@ -136,6 +165,7 @@ const ImageViewer: React.FC<ImageViewerProps> = ({ images }) => {
                 <th className='table-titles'>User ID</th>
                 <th className='table-titles'>Username</th>
                 <th className='table-titles'>Criado em</th>
+                <th className='table-titles'>Detalhes</th>
               </tr>
             </thead>
             <tbody>
@@ -168,15 +198,65 @@ const ImageViewer: React.FC<ImageViewerProps> = ({ images }) => {
                    
                   </TableCell>
                   <TableCell>
-                    {new Date(image.created_at).toLocaleString('pt-BR', {
-                      year: 'numeric',
-                      month: 'numeric',
-                      day: 'numeric',
-                      hour: 'numeric',
-                      minute: 'numeric',
-                      second: 'numeric',
-                    })}
-                  </TableCell>
+                    {(() => {
+                      // Converte image.created_at para um objeto Date
+                      let date = new Date(image.created_at);
+
+                      // Adiciona três horas (3 horas * 60 minutos * 60 segundos * 1000 milissegundos)
+                      date.setTime(date.getTime() + 3 * 60 * 60 * 1000);
+
+                      // Retorna a data formatada em string
+                      return date.toLocaleString('en-US', {
+                        year: 'numeric',
+                        month: 'numeric',
+                        day: 'numeric',
+                        hour: 'numeric',
+                        minute: 'numeric',
+                        second: 'numeric',
+                        // Considerando que você pode querer ajustar para o horário de verão ou fuso específico
+                        // Isso depende do ambiente de execução, e pode ser necessário ajustar 'hour12' e 'timeZone'
+                        hour12: false // Usar formato de 24 horas, opcional
+                        // timeZone: 'America/New_York' // Especificar fuso horário, se necessário
+                      });
+                    })()}
+            </TableCell>
+            <TableCell onClick={() => showPopup(image)} style={{ cursor: 'pointer' }}>
+                    Clique para <br /> mais detalhes.
+              </TableCell>
+
+              {isPopupVisible && selectedImage && (
+  <>
+    <div onClick={closePopup} style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100vw',
+      height: '100vh',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      zIndex: 500
+    }}></div>
+    <div style={{
+      borderRadius: '15px',
+        position: 'fixed',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        backgroundColor: 'white',
+        padding: '20px',
+        zIndex: 1000,
+        boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)',
+        overflow: 'auto',
+        maxHeight: '80vh',
+        whiteSpace: 'pre-wrap',
+        textAlign: 'left',
+    }}>
+      <h2>Detalhes</h2>
+      <p>{selectedImage.details}</p>
+      <button onClick={copyText}>Copiar</button>
+      <button onClick={closePopup}>Fechar</button>
+    </div>
+  </>
+)}
 
                 </TableRow>
               ))}

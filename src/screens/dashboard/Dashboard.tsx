@@ -7,15 +7,74 @@
  import report from '../../assets/icons/report.png';
  import warning from '../../assets/icons/warning.png';
    import bell from '../../assets/icons/bell.png';
- import DashboardCard from '../../components/dashboard-cards/DashboardCard';
+ //import DashboardCard from '../../components/dashboard-cards/DashboardCard';
 import DashboardCardMobile from '../../components/dashboard-cards-mobile/DashboardCardsMobile';
+import { useAuth } from '../../context/auth/AuthContext';
 
   //import someIcon from './path-to/some-icon.png';
 
+  interface SummaryData {
+    daily: {
+      totalServices: number;
+      totalRevenue: number;
+    };
+    weekly: {
+      totalServices: number;
+      totalRevenue: number;
+    };
+    monthly: {
+      totalServices: number;
+      totalRevenue: number;
+    };
+  }
+  
+
   const Dashboard: React.FC = () => {
+    const { currentUser, logout } = useAuth();
     const [cards, setCards] = useState<CardData[]>([]);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [summaryData, setSummaryData] = useState<SummaryData>({ 
+      daily: { totalServices: 0, totalRevenue: 0 }, 
+      weekly: { totalServices: 0, totalRevenue: 0 }, 
+      monthly: { totalServices: 0, totalRevenue: 0 } 
+    });
+    
     const navigate = useNavigate();
+
+    useEffect(() => {
+      const fetchSummaryData = async () => {
+        try {
+          const dailyResponse = await axios.get('https://gdcompanion-prod.onrender.com/report/json?type=daily');
+          const weeklyResponse = await axios.get('https://gdcompanion-prod.onrender.com/report/json?type=weekly');
+          const monthlyResponse = await axios.get('https://gdcompanion-prod.onrender.com/report/json?type=monthly');
+    
+          // Calcula os totais para o relatório diário
+          const totalServicesDaily = dailyResponse.data.reduce((acc: any, curr: { amount: any; }) => acc + curr.amount, 0);
+          const totalRevenueDaily = dailyResponse.data.reduce((acc: number, curr: { amount: number; }) => acc + (curr.amount * 1), 0);
+
+          const totalServicesWeekly = weeklyResponse.data.reduce((acc: any, curr: { amount: any; }) => acc + curr.amount, 0);
+          const totalRevenueWeekly = weeklyResponse.data.reduce((acc: number, curr: { amount: number; }) => acc + (curr.amount * 1), 0);
+
+          const totalServicesMonthly = monthlyResponse.data.reduce((acc: any, curr: { amount: any; }) => acc + curr.amount, 0);
+          const totalRevenueMonthly = monthlyResponse.data.reduce((acc: number, curr: { amount: number; }) => acc + (curr.amount * 1), 0);
+    
+          // Similar para semanal e mensal...
+          // Supõe-se que você repetirá o processo acima para weeklyResponse.data e monthlyResponse.data
+    
+          // Atualiza o estado com os novos totais
+          setSummaryData({
+            daily: { totalServices: totalServicesDaily, totalRevenue: totalRevenueDaily },
+            weekly: { totalServices: totalServicesWeekly, totalRevenue: totalRevenueWeekly },
+            monthly: { totalServices: totalServicesMonthly, totalRevenue: totalRevenueMonthly }
+          });
+        } catch (error) {
+          console.error('Error fetching summary data:', error);
+        }
+      };
+    
+      fetchSummaryData();
+    }, []);
+    
 
     
   useEffect(() => {
@@ -71,7 +130,7 @@ import DashboardCardMobile from '../../components/dashboard-cards-mobile/Dashboa
     interface CardData {
       id: number;
       // badge: string;
-      //category: string;
+      category: string;
       backgroundColor: string;
       badge: string;
       color: string;
@@ -115,6 +174,10 @@ import DashboardCardMobile from '../../components/dashboard-cards-mobile/Dashboa
       setIsMenuOpen(!isMenuOpen);
     };
     
+    const handleLogout = () => {
+      // Chame a função de logout do contexto de autenticação
+      logout();
+    };
 
     return (
       <>
@@ -167,21 +230,24 @@ import DashboardCardMobile from '../../components/dashboard-cards-mobile/Dashboa
               <img src={logo_profile} alt="logo_profile" className='profile-picture' />
             </div>
             <div className="name">
-              Leandro Guerra
+            {currentUser.username}
             </div>
         <div className="role">Admin</div>
-            <button className="button" onClick={getAllMGMTReports}>Relatórios</button>
+            
             <button className="button" onClick={getAllUsers}>Usuários</button>
-            <button className="button" onClick={prints}  >Prints</button>
-            <button className="button" onClick={targets}  >Targets</button>
+            {/* <button className="button" onClick={prints} >Prints</button>
+          <button className="button" onClick={targets}>Targets</button> */}
             <button className="button" onClick={payments}>Pagamentos</button>
+            <button className="button" onClick={getAllMGMTReports}>Relatórios</button>
+            <button className='button-filled' onClick={handleLogout}>Sair</button>
+            
         {isMenuOpen && (
           <>
-            <button className="button" onClick={getAllMGMTReports}>Relatórios</button>
+           
             <button className="button" onClick={getAllUsers}>Usuários</button>
-            <button className="button" onClick={prints}  >Prints</button>
-            <button className="button" onClick={targets}  >Targets</button>
             <button className="button" onClick={payments}>Pagamentos</button>
+            <button className="button" onClick={getAllMGMTReports}>Relatórios</button>
+            <button className='button-filled' onClick={handleLogout}>Sair</button>
           </>
         )}
       </div>
@@ -196,7 +262,7 @@ import DashboardCardMobile from '../../components/dashboard-cards-mobile/Dashboa
 
         <hr className='separador'/>
 
-        <div className="main-content">
+        {/* <div className="main-content">
           
         <div className="cards-container">
         {cards.map((card) => (
@@ -210,10 +276,39 @@ import DashboardCardMobile from '../../components/dashboard-cards-mobile/Dashboa
             ctaText={card.ctaText}
             onCtaClick={() => handleCtaClick(card.id)}
             className="dashboard-card"
-    />
-  ))}
-</div>
-        </div>
+              />
+            ))}
+          </div>
+        </div> */}
+        <div style={{
+          alignItems: 'left',
+          textAlign: 'left',
+          //display: 'flex',
+          //flexDirection: 'column',
+        }}>
+           <div style={{ 
+            backgroundColor: "yellow",
+            borderRadius: "30px 30px 30px 0",
+            paddingLeft: "30px",
+            paddingRight: "30px",
+            paddingTop: "10px",
+            paddingBottom: "10px",
+            }}>
+            <h1 style={{ color: "#000000" }}>Relatório Diário</h1>
+            {/* Supondo que dailySummary contém campos como totalServices e totalRevenue */}
+            <h2 style={{ color: "#000000" }}>Total de Serviços: R$: {summaryData.daily.totalServices.toFixed(2).replace('.', ',')}</h2>
+            <h2 style={{ color: "#000000" }}>Receita Total: R$: {summaryData.daily.totalRevenue.toFixed(2).replace('.', ',')}</h2>
+          </div>
+            <br />
+            <h2 style={{ color: "#ffffff" }}>Relatório Semanal</h2>
+            <p style={{ color: "#ffffff" }}>Total de Serviços: R$: {summaryData.weekly.totalServices.toFixed(2).replace('.', ',')}</p>
+            <p style={{ color: "#ffffff" }}>Receita Total: R$: {summaryData.weekly.totalRevenue.toFixed(2).replace('.', ',')}</p>
+            <br />
+            <h2 style={{ color: "#ffffff" }}>Relatório Mensal</h2>
+            <p style={{ color: "#ffffff" }}>Total de Serviços: R$: {summaryData.monthly.totalServices.toFixed(2).replace('.', ',')}</p>
+            <p style={{ color: "#ffffff" }}>Receita Total: R$: {summaryData.monthly.totalRevenue.toFixed(2).replace('.', ',')}</p>
+          </div>
+
       </div>
       </>
     );  

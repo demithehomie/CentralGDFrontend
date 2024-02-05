@@ -206,7 +206,7 @@ const copyText = async () => {
                       date.setTime(date.getTime() + 3 * 60 * 60 * 1000);
 
                       // Retorna a data formatada em string
-                      return date.toLocaleString('en-US', {
+                      return date.toLocaleString('pt-BR', {
                         year: 'numeric',
                         month: 'numeric',
                         day: 'numeric',

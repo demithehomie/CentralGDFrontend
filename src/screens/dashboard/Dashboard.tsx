@@ -31,6 +31,7 @@ import { useAuth } from '../../context/auth/AuthContext';
 
   const Dashboard: React.FC = () => {
     const { currentUser, logout } = useAuth();
+    const [isLoading, setIsLoading] = useState(true);
     const [cards, setCards] = useState<CardData[]>([]);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [summaryData, setSummaryData] = useState<SummaryData>({ 
@@ -43,6 +44,7 @@ import { useAuth } from '../../context/auth/AuthContext';
 
     useEffect(() => {
       const fetchSummaryData = async () => {
+        setIsLoading(true);
         try {
           const dailyResponse = await axios.get('https://gdcompanion-prod.onrender.com/report/json?type=daily');
           const weeklyResponse = await axios.get('https://gdcompanion-prod.onrender.com/report/json?type=weekly');
@@ -67,7 +69,9 @@ import { useAuth } from '../../context/auth/AuthContext';
             weekly: { totalServices: totalServicesWeekly, totalRevenue: totalRevenueWeekly },
             monthly: { totalServices: totalServicesMonthly, totalRevenue: totalRevenueMonthly }
           });
+          setIsLoading(false);
         } catch (error) {
+          setIsLoading(false);
           console.error('Error fetching summary data:', error);
         }
       };
@@ -178,6 +182,29 @@ import { useAuth } from '../../context/auth/AuthContext';
       // Chame a função de logout do contexto de autenticação
       logout();
     };
+    
+    if (isLoading) {
+      return (
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          height: '100vh' }}>
+
+            <div className="logo">
+              <img src={logo} alt="logo"  />
+            </div>
+
+          <h2 className='loading-text'>
+              Carregando todos os dados...
+          </h2>
+
+
+
+        </div>
+      );
+    }
+    
 
     return (
       <>
@@ -293,20 +320,26 @@ import { useAuth } from '../../context/auth/AuthContext';
             paddingRight: "30px",
             paddingTop: "10px",
             paddingBottom: "10px",
-            }}>
+            }} onClick={getAllMGMTReports} >
             <h1 style={{ color: "#000000" }}>Relatório Diário</h1>
             {/* Supondo que dailySummary contém campos como totalServices e totalRevenue */}
             <h2 style={{ color: "#000000" }}>Total de Serviços: R$: {summaryData.daily.totalServices.toFixed(2).replace('.', ',')}</h2>
             <h2 style={{ color: "#000000" }}>Receita Total: R$: {summaryData.daily.totalRevenue.toFixed(2).replace('.', ',')}</h2>
           </div>
             <br />
-            <h2 style={{ color: "#ffffff" }}>Relatório Semanal</h2>
-            <p style={{ color: "#ffffff" }}>Total de Serviços: R$: {summaryData.weekly.totalServices.toFixed(2).replace('.', ',')}</p>
-            <p style={{ color: "#ffffff" }}>Receita Total: R$: {summaryData.weekly.totalRevenue.toFixed(2).replace('.', ',')}</p>
+            <div onClick={getAllMGMTReports}>
+              <h2  style={{ color: "#ffffff" }}>Relatório Semanal</h2>
+              <p style={{ color: "#ffffff" }}>Total de Serviços: R$: {summaryData.weekly.totalServices.toFixed(2).replace('.', ',')}</p>
+              <p style={{ color: "#ffffff" }}>Receita Total: R$: {summaryData.weekly.totalRevenue.toFixed(2).replace('.', ',')}</p>
+            </div>
+           
             <br />
-            <h2 style={{ color: "#ffffff" }}>Relatório Mensal</h2>
-            <p style={{ color: "#ffffff" }}>Total de Serviços: R$: {summaryData.monthly.totalServices.toFixed(2).replace('.', ',')}</p>
-            <p style={{ color: "#ffffff" }}>Receita Total: R$: {summaryData.monthly.totalRevenue.toFixed(2).replace('.', ',')}</p>
+            <div onClick={getAllMGMTReports}>
+              <h2 style={{ color: "#ffffff" }}>Relatório Mensal</h2>
+              <p style={{ color: "#ffffff" }}>Total de Serviços: R$: {summaryData.monthly.totalServices.toFixed(2).replace('.', ',')}</p>
+              <p style={{ color: "#ffffff" }}>Receita Total: R$: {summaryData.monthly.totalRevenue.toFixed(2).replace('.', ',')}</p>
+            </div>
+          
           </div>
 
       </div>

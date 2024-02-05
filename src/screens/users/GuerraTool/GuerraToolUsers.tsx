@@ -1,10 +1,10 @@
 import  { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import UserTable, { User } from '../../components/user-table/UserTable';
-import './Users.css';
-import SearchBar from '../../components/search-components/SearchBar';
+import UserTable, { User } from '../../../components/user-table/UserTable';
+import './GuerraToolUsers.css';
+import SearchBarUsersGuerraTool from '../../../components/search-components/SearchBarUsersGuerraTool';
 
-export default function Users() {
+export default function GuerraToolUsers() {
   const navigate = useNavigate();
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -14,7 +14,7 @@ export default function Users() {
   const apiurldev = `https://gdcompanion-prod.onrender.com`;
 
   const fetchAndUpdateUsers = async () => {
-    const endpoint = `${apiurldev}/users-with-pagination?page=${currentPage}&limit=${itemsPerPage}`;
+    const endpoint = `${apiurldev}/users-with-pagination-guerratool?page=${currentPage}&limit=${itemsPerPage}`;
     try {
       setIsLoading(true);
       const response = await fetch(endpoint);
@@ -62,12 +62,12 @@ export default function Users() {
     navigate('/get-prints-themagictool')
   }
 
-  const usersGuerraTool = async () => {
-    navigate('/guerratool-users')
-  }
-
   const targets = async () => {
     navigate('/target')
+  }
+
+  const usersTheMagicTool = async () => {
+    navigate('/users')
   }
 
   const renderContent = () => {
@@ -91,10 +91,10 @@ export default function Users() {
 
   return (
     <div>
-      <h2 className='title-table'>Todos os Usuários em The Magic Tool</h2> 
-      <button onClick={usersGuerraTool}>Checar usuários no GuerraTool</button>
+      <h2 className='title-table'>Todos os Usuários em GUERRATOOL</h2>
+      <button onClick={usersTheMagicTool}>Checar usuários no The Magic Tool</button>
       <div>
-        <SearchBar/>
+        <SearchBarUsersGuerraTool/>
   
       </div>
       <br />

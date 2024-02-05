@@ -8,9 +8,9 @@ export default function PaymentMenu() {
         navigate('/payment-screen/:userId');
     }
 
-    const showAlert = () => {
-        alert('Em breve');
-    }
+    // const showAlert = () => {
+    //     alert('Em breve');
+    // }
 
     const goBackToDashboard = () => {
         navigate('/dashboard');
@@ -27,7 +27,7 @@ export default function PaymentMenu() {
                 <div className="column-of-buttons">
                     <button className='payment-button' onClick={goToPaymentScreen}>Receber Pix</button>
                     <button className='payment-button' onClick={goToAllReports}>Todos os Relatórios</button>
-                    <button className='payment-button' onClick={showAlert}>Agendar Pagamento</button>
+                    {/* <button className='payment-button' onClick={showAlert}>Agendar Pagamento</button> */}
                 </div>
                 <button className='back-button' onClick={goBackToDashboard}>Voltar ao Início</button>
             </div>

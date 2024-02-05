@@ -23,6 +23,9 @@ import SearchPrintsResults from './screens/search-prints-results/SearchPrintsRes
 import UserPrintsPage from './screens/user-prints-page/UserPrintsPage';
 import ManagementReports from './screens/management-reports/ManagementReports';
 import ReportDetailsPage from './components/detail-modal-reports/ReportDetailsPage';
+import GuerraToolUsers from './screens/users/GuerraTool/GuerraToolUsers';
+import SearchResultsGuerraTool from './screens/search-results/SearchResultsGuerraTool/SearchResultsGuerraTool';
+import UserProfileGuerraTool from './screens/user-profile/GuerraTool/UserProfileGuerraTool';
 //import ReportsDashboard from './screens/reports-dashboard/ReportsDashboard';
 
 //import { User } from './components/user-table/UserTable';
@@ -54,9 +57,12 @@ function App() {
           <Route path="/scheduling" element={<PrivateRoute><Scheduling /></PrivateRoute>} />
           <Route path="/configure" element={<PrivateRoute><Configure /></PrivateRoute>} />
           <Route path="/users" element={<PrivateRoute><Users /></PrivateRoute>} />
+          <Route path="/guerratool-users" element={<PrivateRoute><GuerraToolUsers /></PrivateRoute>} />
           <Route path="/search-results" element={<PrivateRoute><SearchResults /></PrivateRoute>} />
+          <Route path="/search-results-guerratool" element={<PrivateRoute><SearchResultsGuerraTool /></PrivateRoute>} />
           <Route path="/search-prints-results" element={<PrivateRoute><SearchPrintsResults /></PrivateRoute>} />
           <Route path="/user-profile/:userId" element={<PrivateRoute><UserProfile /></PrivateRoute>} />
+          <Route path="/user-profile-guerratool/:userId" element={<PrivateRoute><UserProfileGuerraTool /></PrivateRoute>} />
           <Route path="/payment-screen/:userId" element={<PrivateRoute><PaymentScreen /></PrivateRoute>} />
           <Route path="/get-prints-guerra-tool" element={<PrivateRoute><PrintsGuerraTool /></PrivateRoute>} />
           <Route path="/get-prints-themagictool" element={<PrivateRoute><PrintsTheMagicTool /></PrivateRoute>} />

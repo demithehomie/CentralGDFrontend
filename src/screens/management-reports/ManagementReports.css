@@ -3,13 +3,19 @@
   color: #ffffff;
 }
 
+.report-table-container.scrollable {
+  max-height: 300px; /* Ajuste a altura máxima conforme necessário */
+  overflow-y: auto;
+}
+
+
 .subtitle {
   padding: 10px;
   color: #ffffff;
   font-size: 30px;
   font-weight: 500;
   line-height: 1.2;
-  margin: 0;
+  margin: 15px;
   padding: 0;
 }
 
@@ -45,7 +51,7 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin-top: 5%;
+  margin-top: 10px;
   margin-bottom: 5%;
   padding: 3px;
   width: 80%;

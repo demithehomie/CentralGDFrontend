@@ -127,6 +127,7 @@ const emitPdf = async (reportType: any) => {
         <div>
             <h3 className="title"> Todos Os Relatórios </h3>   
             <h3 className="subtitle">Relatório Diário</h3>
+        
             <table className="report-table">
                 <thead>
                     <tr>
@@ -231,7 +232,9 @@ const emitPdf = async (reportType: any) => {
         <br />
         <hr />
         <br />
-            <h3 className="subtitle">Relatório Mensal</h3>
+        <h3 className="subtitle">Relatório Mensal</h3>
+        <div className={`report-table-container ${monthlyReportData.length > 4 ? 'scrollable' : ''}`}>
+            
             <table className="report-table">
                 <thead>
                     <tr>
@@ -278,6 +281,7 @@ const emitPdf = async (reportType: any) => {
                     ))}
                 </tbody>
             </table>
+            </div>
         <div className='buttons-row-rel'>
            {/* <button className='button-report'>Exibir detalhes</button>*/}  <button className='button-report' onClick={() => emitPdf('monthly')}>Emitir PDF</button> <button className='button-report' onClick={() => emitDocx('monthly')}>Emitir DOCX</button> <button className='button-report' onClick={() => emitExcel('monthly')}>Emitir Excel</button>
         </div>
@@ -285,6 +289,7 @@ const emitPdf = async (reportType: any) => {
         <hr />
         <br />
             <h3 className="subtitle">Relatório Trimestral</h3>
+            <div className={`report-table-container ${quarterlyReportData.length > 4 ? 'scrollable' : ''}`}>
             <table className="report-table">
                 <thead>
                     <tr>
@@ -330,6 +335,7 @@ const emitPdf = async (reportType: any) => {
                     ))}
                 </tbody>
             </table>
+            </div>
         <div className='buttons-row-rel'>
            {/* <button className='button-report'>Exibir detalhes</button>*/}  <button className='button-report' onClick={() => emitPdf('quarterly')}>Emitir PDF</button> <button className='button-report' onClick={() => emitDocx('quarterly')}>Emitir DOCX</button> <button className='button-report' onClick={() => emitExcel('quarterly')}>Emitir Excel</button>
         </div>
@@ -337,6 +343,7 @@ const emitPdf = async (reportType: any) => {
         <hr />
         <br />
             <h3 className="subtitle">Relatório Semestral</h3>
+            <div className={`report-table-container ${semiAnnualyReportData.length > 4 ? 'scrollable' : ''}`}>
             <table className="report-table">
                 <thead>
                     <tr>
@@ -382,12 +389,14 @@ const emitPdf = async (reportType: any) => {
                     ))}
                 </tbody>
             </table>
+            </div>
         <div className='buttons-row-rel'>
            {/* <button className='button-report'>Exibir detalhes</button>*/}  <button className='button-report' onClick={() => emitPdf('semiannual')}>Emitir PDF</button> <button className='button-report' onClick={() => emitDocx('semiannual')}>Emitir DOCX</button> <button className='button-report' onClick={() => emitExcel('semiannual')}>Emitir Excel</button>
         </div>
         <br />
         <br />
             <h3 className="subtitle">Relatório Anual</h3>
+            <div className={`report-table-container ${annualReportData.length > 4 ? 'scrollable' : ''}`}>
             <table className="report-table">
                 <thead>
                     <tr>
@@ -433,6 +442,7 @@ const emitPdf = async (reportType: any) => {
                     ))}
                 </tbody>
             </table>
+            </div>
         <div className='buttons-row-rel'>
            {/* <button className='button-report'>Exibir detalhes</button>*/}  <button className='button-report' onClick={() => emitPdf('annual')}>Emitir PDF</button> <button className='button-report' onClick={() => emitDocx('annual')}>Emitir DOCX</button> <button className='button-report' onClick={() => emitExcel('annual')}>Emitir Excel</button>
         </div>

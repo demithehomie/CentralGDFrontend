@@ -1,4 +1,4 @@
-  import React, { useEffect, useState } from 'react';
+  import  { useEffect, useState } from 'react';
   import './Dashboard.css';
   import { useNavigate } from 'react-router-dom';
   import logo from '../../assets/fGuerra.png';
@@ -257,7 +257,7 @@ import { useAuth } from '../../context/auth/AuthContext';
               <img src={logo_profile} alt="logo_profile" className='profile-picture' />
             </div>
             <div className="name">
-            {currentUser.username}
+            {currentUser?.username}
             </div>
         <div className="role">Admin</div>
             
@@ -307,37 +307,33 @@ import { useAuth } from '../../context/auth/AuthContext';
             ))}
           </div>
         </div> */}
-        <div style={{
+
+
+{/* style={{
           alignItems: 'left',
           textAlign: 'left',
-          //display: 'flex',
-          //flexDirection: 'column',
-        }}>
-           <div style={{ 
-            backgroundColor: "yellow",
-            borderRadius: "30px 30px 30px 0",
-            paddingLeft: "30px",
-            paddingRight: "30px",
-            paddingTop: "10px",
-            paddingBottom: "10px",
-            }} onClick={getAllMGMTReports} >
-            <h1 style={{ color: "#000000" }}>Relatório Diário</h1>
+          display: 'flex',
+          flexDirection: 'row',
+        }} */}
+        <div className='row-of-frontal-buttons'>
+           <div className='little-cards-gd' onClick={getAllMGMTReports} >
+            <h2 >GUERRADONE</h2>
             {/* Supondo que dailySummary contém campos como totalServices e totalRevenue */}
-            <h2 style={{ color: "#000000" }}>Total de Serviços: R$: {summaryData.daily.totalServices.toFixed(2).replace('.', ',')}</h2>
-            <h2 style={{ color: "#000000" }}>Receita Total: R$: {summaryData.daily.totalRevenue.toFixed(2).replace('.', ',')}</h2>
+            <p >Total de Serviços: R$: {summaryData.daily.totalServices.toFixed(2).replace('.', ',')}</p>
+            <p >Receita Total: R$: {summaryData.daily.totalRevenue.toFixed(2).replace('.', ',')}</p>
           </div>
             <br />
-            <div onClick={getAllMGMTReports}>
-              <h2  style={{ color: "#ffffff" }}>Relatório Semanal</h2>
-              <p style={{ color: "#ffffff" }}>Total de Serviços: R$: {summaryData.weekly.totalServices.toFixed(2).replace('.', ',')}</p>
-              <p style={{ color: "#ffffff" }}>Receita Total: R$: {summaryData.weekly.totalRevenue.toFixed(2).replace('.', ',')}</p>
+            <div className='little-cards-tmt' onClick={getAllMGMTReports}>
+              <h2  >The Magic Tool</h2>
+              <p >Total de Serviços: R$: {summaryData.weekly.totalServices.toFixed(2).replace('.', ',')}</p>
+              <p >Receita Total: R$: {summaryData.weekly.totalRevenue.toFixed(2).replace('.', ',')}</p>
             </div>
            
             <br />
-            <div onClick={getAllMGMTReports}>
-              <h2 style={{ color: "#ffffff" }}>Relatório Mensal</h2>
-              <p style={{ color: "#ffffff" }}>Total de Serviços: R$: {summaryData.monthly.totalServices.toFixed(2).replace('.', ',')}</p>
-              <p style={{ color: "#ffffff" }}>Receita Total: R$: {summaryData.monthly.totalRevenue.toFixed(2).replace('.', ',')}</p>
+            <div className='little-cards-gt' onClick={getAllMGMTReports}>
+              <h2 >GuerraTool</h2>
+              <p >Total de Serviços: R$: {summaryData.monthly.totalServices.toFixed(2).replace('.', ',')}</p>
+              <p >Receita Total: R$: {summaryData.monthly.totalRevenue.toFixed(2).replace('.', ',')}</p>
             </div>
           
           </div>

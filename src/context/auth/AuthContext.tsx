@@ -1,27 +1,33 @@
-import  /*React,*/{ createContext, useState, useContext } from 'react';
+import  /*React,*/{ createContext, useState, useContext, useEffect } from 'react';
+
+//import jwt, { JwtPayload } from 'jsonwebtoken';
+//import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
 
 interface User {
-    username: string | null;
-  }
-  
+  username: string;
+  token: string;
+}
 
 interface AuthContextType {
-  currentUser: any;  // Substitua 'any' pelo tipo apropriado
-  login: (username: string, password: string) => void;
+  currentUser: User | null; // Substitua 'any' pelo tipo apropriado
+  login: (username: string, password: string) => Promise<boolean>;
   logout: () => void;
+ // verifyToken: () => Promise<void>; // Adicione esta linha
 }
+
 
 const AuthContext = createContext<AuthContextType>({
   currentUser: null,
-  login: () => {},
-  logout: () => {}
+  login: async () => false,
+  logout: () => {},
+  //verifyToken: async () => {} // Adicione esta linha: Implementação stub para verifyToken
 });
 
 
 export const useAuth = () => useContext(AuthContext);
 
-const apiurldev = `https://gdcompanion-prod.onrender.com`;
+const apiurldev = `http://localhost:3001`;
 
 //const apiurl = `https://gdcompanion-prod.onrender.com`
 
@@ -30,34 +36,56 @@ export const AuthProvider = ({ children }: any) => {
    // const [isLoading, setIsLoading] = useState(false);
 
 // No seu contexto de autenticação
+
+useEffect(() => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    // If a token is found in localStorage, you can consider the user as logged in
+
+
+  }
+}, []);
+
+
+
 const login = async (username: string, password: string): Promise<boolean> => {
-    try {
-      const response = await axios.post(`${apiurldev}/login-individual`, {
-        username,
-        password,
-      });
-      if (response.status === 200) {
-        setCurrentUser({ username: username });
-        return true;
-      }
-      return false;
-    } catch (error) {
-      console.error("Erro de login", error);
+  try {
+    const loginResponse = await axios.post(`${apiurldev}/login-individual`, {
+      username,
+      password,
+    });
+
+    if (loginResponse.status === 200) {
+      const { token, username } = loginResponse.data.data;
+      localStorage.setItem('token', token); // Save token for persistence on the client
+      setCurrentUser({ username, token });
+      return true;
+    } else {
+      console.error('Failed to login');
       return false;
     }
-  };
-  
+  } catch (error) {
+    console.error('Error during login operation:', error);
+    return false;
+  }
+};
+
+
+
+// Incluir a chamada de verifyToken no PrivateRoute ou de maneira apropriada
+
   
 
     const logout = () => {
-        // Lógica de logout
+        localStorage.removeItem('token');
         setCurrentUser(null);
     };
 
     const value = {
         currentUser,
         login,
-        logout
+        logout,
+       
     };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

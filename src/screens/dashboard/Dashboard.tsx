@@ -204,7 +204,7 @@ import { useAuth } from '../../context/auth/AuthContext';
         </div>
       );
     }
-    
+    /////
 
     return (
       <>
@@ -258,7 +258,7 @@ import { useAuth } from '../../context/auth/AuthContext';
             </div>
             <div className="name">
             {currentUser?.username}
-            </div>
+            </div> 
         <div className="role">Admin</div>
             
             <button className="button" onClick={getAllUsers}>Usuários</button>

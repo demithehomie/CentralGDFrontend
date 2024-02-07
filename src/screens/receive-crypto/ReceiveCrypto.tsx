@@ -1,22 +1,32 @@
 import { useState } from 'react';
 import MainNavbar from '../../components/main-navbar/MainNavbar';
+import Swal from 'sweetalert2';
 import './ReceiveCrypto.css';
 
 export default function ReceiveCrypto() {
   const [sendAmount, setSendAmount] = useState('');
   const [receiveAddress, setReceiveAddress] = useState('');
-
   const handleSendCrypto = () => {
     // Lógica para enviar criptomoedas via Binance API
-    console.log('Enviando criptomoedas...');
+    // Substitua o console.log por um alerta do SweetAlert
+    Swal.fire({
+      title: 'Sucesso!',
+      text: 'Criptomoedas enviadas com sucesso.',
+      icon: 'success',
+      confirmButtonText: 'Ok'
+    });
   };
-
-  // Função para lidar com o recebimento de criptomoedas
+  
   const handleReceiveCrypto = () => {
     // Lógica para receber criptomoedas via Binance API
-    console.log('Recebendo criptomoedas...');
+    // Substitua o console.log por um alerta do SweetAlert
+    Swal.fire({
+      title: 'Sucesso!',
+      text: 'Criptomoedas recebidas com sucesso.',
+      icon: 'success',
+      confirmButtonText: 'Ok'
+    });
   };
-
 
   return (
     <>
@@ -24,7 +34,7 @@ export default function ReceiveCrypto() {
     <div className="receive-crypto-container">
         <h2>Enviar/Receber Criptomoedas</h2>
         <form className="crypto-form">
-          <label htmlFor="sendAmount">Quantidade a ser enviada:</label>
+          <label className="label" htmlFor="sendAmount">Quantidade a ser enviada:</label>
           <input
           className="input"
             type="text"
@@ -32,7 +42,7 @@ export default function ReceiveCrypto() {
             value={sendAmount}
             onChange={(e) => setSendAmount(e.target.value)}
           />
-          <label htmlFor="receiveAddress">Endereço de recebimento:</label>
+          <label className="label" htmlFor="receiveAddress">Endereço de recebimento:</label>
           <input
           className="input"
             type="text"
@@ -40,9 +50,9 @@ export default function ReceiveCrypto() {
             value={receiveAddress}
             onChange={(e) => setReceiveAddress(e.target.value)}
           />
-          <div className="button-group">
-            <button onClick={handleSendCrypto}>Enviar</button>
-            <button onClick={handleReceiveCrypto}>Receber</button>
+          <div className="rc-button-group">
+            <button className="rc-button" onClick={handleSendCrypto}>Enviar</button>
+            <button className="rc-button" onClick={handleReceiveCrypto}>Receber</button>
           </div>
         </form>
       </div>

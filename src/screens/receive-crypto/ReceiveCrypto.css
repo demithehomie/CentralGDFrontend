@@ -22,7 +22,7 @@
     align-items: center;
   }
   
-  label {
+  .label {
     margin-bottom: 8px;
     color: #666;
   }
@@ -41,12 +41,12 @@
     border-color: #007bff;
   }
   
-  .button-group {
+  .rc-button-group {
     display: flex;
     justify-content: center;
   }
   
-  button {
+ .rc-button {
     padding: 10px 20px;
     margin: 0 10px;
     border: none;
@@ -59,7 +59,7 @@
     z-index: 1999;
   }
   
-  button:hover {
+  .rc-button:hover {
     background-color: #0056b3;
   }
   
@@ -78,7 +78,7 @@
     }
   }
   
-  .button-group button:nth-child(odd) {
+  .rc-button-group button:nth-child(odd) {
     animation: pulse 1.5s infinite ease-in-out;
   }
   

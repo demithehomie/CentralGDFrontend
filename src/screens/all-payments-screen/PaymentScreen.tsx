@@ -540,10 +540,15 @@ const shouldRenderItem = (transfer: TransferData) => {
                         <td style={{ color: 'black' }}>{transfer.amount}</td>
                         <td style={{ color: 'black' }}>{transfer.name}</td>
                         <td
-                          style={{ color: 'black', cursor: 'pointer' }}
+                          style={{ 
+                            color: "#ffffff", 
+                            cursor: 'pointer',
+                            backgroundColor: 'blue',
+                            fontWeight: 'bold',
+                          }}
                           onClick={() => handleCellClick(transfer)}
                         >
-                          COPIAR
+                          INFO
                           {/* {transfer.qr_code_cec} */}
                         </td>
                         <td style={{ color: 'black' }}>

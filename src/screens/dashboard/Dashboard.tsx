@@ -4,13 +4,13 @@
   import logo from '../../assets/fGuerra.png';
   import axios from 'axios';
   import logo_profile from '../../assets/user_logo.jpg';
- import report from '../../assets/icons/report.png';
- import warning from '../../assets/icons/warning.png';
-   import bell from '../../assets/icons/bell.png';
- //import DashboardCard from '../../components/dashboard-cards/DashboardCard';
-import DashboardCardMobile from '../../components/dashboard-cards-mobile/DashboardCardsMobile';
-import { useAuth } from '../../context/auth/AuthContext';
-import MainNavbar from '../../components/main-navbar/MainNavbar';
+  import report from '../../assets/icons/report.png';
+  import warning from '../../assets/icons/warning.png';
+  import bell from '../../assets/icons/bell.png';
+  //import DashboardCard from '../../components/dashboard-cards/DashboardCard';
+  import DashboardCardMobile from '../../components/dashboard-cards-mobile/DashboardCardsMobile';
+  import { useAuth } from '../../context/auth/AuthContext';
+  import MainNavbar from '../../components/main-navbar/MainNavbar';
 
   //import someIcon from './path-to/some-icon.png';
 

@@ -1,12 +1,5 @@
 
-//import { initMercadoPago } from '@mercadopago/sdk-react'
-// initMercadoPago('TEST-9eec9374-8ba1-419b-80e7-295a8c55343c');
-
-
-// const token = `APP_USR-5220412533742046-011815-549eea6144946c47d1c330d299e6fb6a-419577621`
-   
-// const idempotencyKey = `0d5020ed-1af6-469c-ae06-c3bec19954bb`;
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { useNavigate, /*useParams*/ } from 'react-router-dom';
 import './PaymentScreen.css';

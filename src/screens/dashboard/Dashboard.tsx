@@ -10,6 +10,7 @@
  //import DashboardCard from '../../components/dashboard-cards/DashboardCard';
 import DashboardCardMobile from '../../components/dashboard-cards-mobile/DashboardCardsMobile';
 import { useAuth } from '../../context/auth/AuthContext';
+import MainNavbar from '../../components/main-navbar/MainNavbar';
 
   //import someIcon from './path-to/some-icon.png';
 
@@ -208,6 +209,15 @@ import { useAuth } from '../../context/auth/AuthContext';
 
     return (
       <>
+    
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        flexDirection: 'column',
+      }}>
+       <MainNavbar/>
       <div className="dashboard-container-phone">
 
     
@@ -250,9 +260,9 @@ import { useAuth } from '../../context/auth/AuthContext';
       <div className="dashboard-container">
         
         <div className={`sidebar ${isMenuOpen ? 'open' : ''}`}>
-            <div className="logo">
+            {/* <div className="logo">
               <img src={logo} alt="logo"  />
-            </div>
+            </div> */}
             <div className="avatar" onClick={profile}>
               <img src={logo_profile} alt="logo_profile" className='profile-picture' />
             </div>
@@ -322,7 +332,7 @@ import { useAuth } from '../../context/auth/AuthContext';
             <p >Total de Serviços: R$: {summaryData.daily.totalServices.toFixed(2).replace('.', ',')}</p>
             <p >Receita Total: R$: {summaryData.daily.totalRevenue.toFixed(2).replace('.', ',')}</p>
           </div>
-            <br />
+            {/* <br />
             <div className='little-cards-tmt' onClick={getAllMGMTReports}>
               <h2  >The Magic Tool</h2>
               <p >Total de Serviços: R$: {summaryData.weekly.totalServices.toFixed(2).replace('.', ',')}</p>
@@ -334,9 +344,11 @@ import { useAuth } from '../../context/auth/AuthContext';
               <h2 >GuerraTool</h2>
               <p >Total de Serviços: R$: {summaryData.monthly.totalServices.toFixed(2).replace('.', ',')}</p>
               <p >Receita Total: R$: {summaryData.monthly.totalRevenue.toFixed(2).replace('.', ',')}</p>
-            </div>
+            </div> */}
           
           </div>
+
+      </div>
 
       </div>
       </>

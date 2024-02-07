@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './UserProfile.css';
 // import { useLocation, useParams } from 'react-router-dom';
 
@@ -23,11 +23,13 @@ const UserProfile: React.FC<UserProfileProps> = ({  }) => {
   const [addAmount, setAddAmount] = useState<string>('');
   const [subtractAmount, setSubtractAmount] = useState<string>('');
   
-  const apiurldev = `https://gdcompanion-prod.onrender.com`;
+   const apiurl = `https://gdcompanion-prod.onrender.com`;
+  //const apiurldev = `http://localhost:3001`;
 
   const handleAddCredits = async () => {
     try {
-      const response = await axios.put(`${apiurldev}/add-credits/${userId}`, { amount: addAmount  });
+      const response = await axios.put(`${apiurl}/add-credits/${userId}`, { amount: addAmount  });
+      console.log(addAmount); // Exiba a resposta do servidor
       console.log(response.data); // Exiba a resposta do servidor
     } catch (error) {
       console.error(error);
@@ -36,7 +38,7 @@ const UserProfile: React.FC<UserProfileProps> = ({  }) => {
   
   const handleSubtractCredits = async () => {
     try {
-      const response = await axios.put(`${apiurldev}/subtract-credits/${userId}`, { amount: subtractAmount });
+      const response = await axios.put(`${apiurl}/subtract-credits/${userId}`, { amount: subtractAmount });
       console.log(response.data); // Exiba a resposta do servidor
     } catch (error) {
       console.error(error);
@@ -52,7 +54,7 @@ const UserProfile: React.FC<UserProfileProps> = ({  }) => {
   //   e.preventDefault();
   
   //   try {
-  //     const response = await axios.post(`${apiurldev}/update-credits?action=${action}&amount=${amount}`, { action, amount });
+  //     const response = await axios.post(`${apiurl}/update-credits?action=${action}&amount=${amount}`, { action, amount });
   //     console.log(response.data); // Exiba a resposta do servidor
   //   } catch (error) {
   //     console.error(error);
@@ -71,20 +73,22 @@ const UserProfile: React.FC<UserProfileProps> = ({  }) => {
   //   }
   // };
 
+  // if (!response.ok) {
+  //   throw new Error('Failed to fetch user');
+  // }
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetch(`https://gdcompanion-prod.onrender.com/users/${userId}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch user');
-        }
-        const userData = await response.json();
-        setUserData(userData);
+        const response = await axios.get(`https://gdcompanion-prod.onrender.com/users/${userId}`);
+        console.log(userId)
+     
+          setUserData(response.data);
       } catch (error) {
-        console.error((error as any).message);
+        console.error((error as Error).message);
       }
     };
-
+  
     fetchUser();
   }, [userId]);
 

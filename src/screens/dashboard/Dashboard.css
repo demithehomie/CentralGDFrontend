@@ -338,11 +338,11 @@
 .little-cards-gd {
   background-color: #08055b;
   border: 1px solid #ffffff;
-  max-height: 180px;
-  min-width: 40%;
+  max-height: 220px;
+  min-width: 60%;
   border-radius: 15px;
-  padding: 2%;
-  margin: 4%;
+  padding: 3%;
+  margin: 2%;
 }
 
 .little-cards-gd, h2, p{

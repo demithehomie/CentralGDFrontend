@@ -26,6 +26,7 @@
     "react-responsive-carousel": "^3.2.23",
     "recharts": "^2.11.0",
     "styled-components": "^6.1.8",
+    "sweetalert2": "^11.10.5",
     "uuidv4": "^6.2.13"
   },
   "devDependencies": {
@@ -45,6 +46,6 @@
     "typescript": "^5.2.2",
     "uuid": "^9.0.1",
     "vite": "^5.0.8"
-  },
-  "proxy": "http://localhost:5173/"
+  }
+
 }

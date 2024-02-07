@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios'; // Import Axios
 import './ManagementReports.css'
 import { useEffect, useState } from 'react';
+import MainNavbar from '../../components/main-navbar/MainNavbar';
 
 export interface ReportData {
   id: number;
@@ -124,7 +125,9 @@ const emitPdf = async (reportType: any) => {
     
   return (
     <>
+    <MainNavbar/>
         <div>
+            <br /><br /><br /><br />
             <h3 className="title"> Todos Os Relatórios </h3>   
             <h3 className="subtitle">Relatório Diário</h3>
         

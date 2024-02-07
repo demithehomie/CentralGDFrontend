@@ -55,7 +55,7 @@ const SearchBarPrintsTheMagicTool = () => {
         type="text"
         placeholder="Pesquisar..."
         value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
+        onChange={(e: any) => setSearchTerm(e.target.value)}
       />
     </form>
   );

@@ -1,4 +1,4 @@
-import React from 'react';
+
 import styled from 'styled-components';
 
 export interface User {
@@ -48,9 +48,10 @@ const TableCell = styled.td`
 export type UserTableProps = {
     users: User[];
     onToggleResellerStatus: (userId: number) => Promise<void>;
+    onUserClick: (user: User) => void; // Adicione essa prop
 };
 
-const UserTable: React.FC<UserTableProps> = ({ users, onToggleResellerStatus }) => {
+const UserTable: React.FC<UserTableProps> = ({ users, onToggleResellerStatus, onUserClick }) => {
     return (
         <TableContainer>
             <Table>
@@ -65,8 +66,9 @@ const UserTable: React.FC<UserTableProps> = ({ users, onToggleResellerStatus }) 
                 <tbody>
                     {users.map((user) => (
                         <TableRow key={user.user_id}>
-                            <TableCell>{user.name}</TableCell>
-                            <TableCell>{user.username}</TableCell>
+                          <TableCell onClick={() => onUserClick(user)}>{user.name}</TableCell>
+                          <TableCell onClick={() => onUserClick(user)}>{user.username}</TableCell>
+                     
                             <TableCell>{user.credit}</TableCell>
                             <TableCell>
                                 <input

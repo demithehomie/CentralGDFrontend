@@ -144,9 +144,9 @@ const LoginForm = () => {
       if (isLoading) {
           return (
               <center>
-                     <br />
+                    <br />
                     <div className="loader"></div> 
-                    <h3 className='loading-messages'>Carregando usuarios..</h3>
+                    <h3 className='loading-messages'>Carregando...</h3>
                     <br /><br />
               </center>
           );
@@ -169,7 +169,7 @@ const LoginForm = () => {
         type="text"
         placeholder="Login"
         value={username}
-        onChange={(e) => setUsername(e.target.value)}
+        onChange={(e: any) => setUsername(e.target.value)}
       />
       <br /><br /><br />
       <InputPassword
@@ -177,7 +177,7 @@ const LoginForm = () => {
         placeholder="Senha"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        onChange={(e) => setPassword(e.target.value)}
+        onChange={(e: any) => setPassword(e.target.value)}
         style={{marginTop:50}}
       />
     

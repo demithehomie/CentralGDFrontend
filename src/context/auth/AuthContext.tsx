@@ -27,9 +27,9 @@ const AuthContext = createContext<AuthContextType>({
 
 export const useAuth = () => useContext(AuthContext);
 
-const apiurldev = `http://localhost:3001`;
+//const apiurldev = `http://localhost:3001`;
 
-//const apiurl = `https://gdcompanion-prod.onrender.com`
+const apiurl = `https://gdcompanion-prod.onrender.com`
 
 export const AuthProvider = ({ children }: any) => {
     const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -50,7 +50,7 @@ useEffect(() => {
 
 const login = async (username: string, password: string): Promise<boolean> => {
   try {
-    const loginResponse = await axios.post(`${apiurldev}/login-individual`, {
+    const loginResponse = await axios.post(`${apiurl}/login-individual`, {
       username,
       password,
     });

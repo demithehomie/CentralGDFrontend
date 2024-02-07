@@ -1,6 +1,6 @@
 // useSendFunctions.js
 
-import React from 'react';
+
 
 const useSendFunctions = (onSendCredits: (arg0: number) => void, onSendMoney: (arg0: number) => void) => {
     const handleSendCredits = (event: React.FormEvent<HTMLFormElement>) => {

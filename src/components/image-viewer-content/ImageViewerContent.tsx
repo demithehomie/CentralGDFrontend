@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './ImageViewer.css';
 import axios from 'axios'
 import styled from 'styled-components';

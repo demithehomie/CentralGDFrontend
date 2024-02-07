@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './UserProfileGuerraTool.css';
 // import { useLocation, useParams } from 'react-router-dom';
 
@@ -27,7 +27,7 @@ const UserProfileGuerraTool: React.FC<UserProfileProps> = ({  }) => {
 
   const handleAddCredits = async () => {
     try {
-      const response = await axios.put(`${apiurldev}/add-credits/${userId}`, { amount: addAmount  });
+      const response = await axios.put(`${apiurldev}/add-credits-guerratool/${userId}`, { amount: addAmount  });
       console.log(response.data); // Exiba a resposta do servidor
     } catch (error) {
       console.error(error);
@@ -36,7 +36,7 @@ const UserProfileGuerraTool: React.FC<UserProfileProps> = ({  }) => {
   
   const handleSubtractCredits = async () => {
     try {
-      const response = await axios.put(`${apiurldev}/subtract-credits/${userId}`, { amount: subtractAmount });
+      const response = await axios.put(`${apiurldev}/subtract-credits-guerratool/${userId}`, { amount: subtractAmount });
       console.log(response.data); // Exiba a resposta do servidor
     } catch (error) {
       console.error(error);

@@ -26,6 +26,7 @@ import ReportDetailsPage from './components/detail-modal-reports/ReportDetailsPa
 import GuerraToolUsers from './screens/users/GuerraTool/GuerraToolUsers';
 import SearchResultsGuerraTool from './screens/search-results/SearchResultsGuerraTool/SearchResultsGuerraTool';
 import UserProfileGuerraTool from './screens/user-profile/GuerraTool/UserProfileGuerraTool';
+import ReceiveCrypto from './screens/receive-crypto/ReceiveCrypto';
 //import ReportsDashboard from './screens/reports-dashboard/ReportsDashboard';
 
 //import { User } from './components/user-table/UserTable';
@@ -61,8 +62,8 @@ function App() {
           <Route path="/search-results" element={<PrivateRoute><SearchResults /></PrivateRoute>} />
           <Route path="/search-results-guerratool" element={<PrivateRoute><SearchResultsGuerraTool /></PrivateRoute>} />
           <Route path="/search-prints-results" element={<PrivateRoute><SearchPrintsResults /></PrivateRoute>} />
-          <Route path="/user-profile/:userId" element={<PrivateRoute><UserProfile /></PrivateRoute>} />
-          <Route path="/user-profile-guerratool/:userId" element={<PrivateRoute><UserProfileGuerraTool /></PrivateRoute>} />
+          <Route path="/user-profile/:userId" element={ /* <PrivateRoute> */ <UserProfile /> /* </PrivateRoute > */} />
+          <Route path="/user-profile-guerratool/:userId" element={ /*<PrivateRoute>*/ <UserProfileGuerraTool /> /*</PrivateRoute> */}/>
           <Route path="/payment-screen/:userId" element={<PrivateRoute><PaymentScreen /></PrivateRoute>} />
           <Route path="/get-prints-guerra-tool" element={<PrivateRoute><PrintsGuerraTool /></PrivateRoute>} />
           <Route path="/get-prints-themagictool" element={<PrivateRoute><PrintsTheMagicTool /></PrivateRoute>} />
@@ -70,6 +71,7 @@ function App() {
           <Route path="/payments" element={<PrivateRoute><PaymentMenu /></PrivateRoute>} />
           <Route path="/user-prints-page/:userId" element={<PrivateRoute><UserPrintsPage /></PrivateRoute>} />
           <Route path="/mgmt-reports" element={<PrivateRoute><ManagementReports /></PrivateRoute>} />
+          <Route path="/receive-crypto" element={<PrivateRoute><ReceiveCrypto /></PrivateRoute>} />
           {/* <Route path="/reports-dashboard/:typeOfReport" element={<PrivateRoute><ReportsDashboard /></PrivateRoute>} /> */}
           <Route path="/reports-data" element={<PrivateRoute><ReportDetailsPage /></PrivateRoute>} />
           </Routes>

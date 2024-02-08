@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import './PrintsGuerraTool.css';
 
 import ImageViewer, { Image } from '../../../components/image-viewer-content/ImageViewerContent';
+import MainNavbar from '../../../components/main-navbar/MainNavbar';
 
 
 export default function PrintsGuerraTool() {
@@ -81,6 +82,8 @@ export default function PrintsGuerraTool() {
     
       return (
         <div>
+           <MainNavbar/>
+         <br /><br /><br /><br /><br /><br />
           <h2 className='title-table'>Todos os Reports em GuerraTool</h2>
           {/* <div>
             <SearchBar/>

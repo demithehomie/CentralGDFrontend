@@ -1,6 +1,7 @@
 import  { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import axios from 'axios';
 
 interface PaymentInfo {
     paymentAddress: string;
@@ -10,17 +11,19 @@ interface PaymentInfo {
   
 
 const CryptoPaymentPage = () => {
-    const { paymentId } = useParams<{ paymentId: string }>();
+  const { paymentId } = useParams<{ paymentId: string }>();
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo | null>(null);
   const [expired, setExpired] = useState(false);
 
-  const fetchPaymentInfo = async (paymentId: string): Promise<PaymentInfo> => {
+  const apiurldev = 'http://localhost:3001';
+
+  const fetchPaymentInfo = async ( /*paymentId: string*/): Promise<PaymentInfo> => {
     // Substitua a URL pela sua API endpoint que retorna as informações do pagamento
-    const response = await fetch(`https://yourapi.com/payments/${paymentId}`);
-    if (!response.ok) {
-      throw new Error('Problema ao buscar informações de pagamento');
-    }
-    return await response.json();
+    const response = await axios.get(`${apiurldev}/binance-usdt-deposit-address`);
+    // if (!response.ok) {
+    //   throw new Error('Problema ao buscar informações de pagamento');
+    // }
+    return response.data;
   };
 
   const copyToClipboard = (text: string) => {
@@ -38,7 +41,7 @@ const CryptoPaymentPage = () => {
   };
   
   useEffect(() => {
-    fetchPaymentInfo(paymentId ?? '').then((info: PaymentInfo) => {
+    fetchPaymentInfo( /*paymentId ?? '' */).then((info: PaymentInfo) => {
         if (new Date() > new Date(info.expirationDate)) {
             setExpired(true);
             Swal.fire({

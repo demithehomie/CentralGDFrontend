@@ -5,6 +5,7 @@ import './PrintsTheMagicTool.css';
 
 import ImageViewer, { Image } from '../../../components/image-viewer-content/ImageViewerContent';
 import SearchBarPrintsTheMagicTool from '../../../components/search-components/SearchBarPrintsTheMagicTool';
+import MainNavbar from '../../../components/main-navbar/MainNavbar';
 
 
 export default function PrintsTheMagicTool() {
@@ -148,6 +149,8 @@ export default function PrintsTheMagicTool() {
     
       return (
         <div>
+           <MainNavbar/>
+      <br /><br /><br /><br /><br /><br />
           <h2 className='title-table'>Todos os Reports em The Magic Tool</h2>
           <div>
             <SearchBarPrintsTheMagicTool/>

@@ -7,6 +7,7 @@ import Modal from 'react-modal';
 import './UserPrintsPage.css';
 import Loader from '../../components/loader/Loader';
 import FloatingButtons from '../../components/floating-button/FloatingButton';
+import MainNavbar from '../../components/main-navbar/MainNavbar';
 
 Modal.setAppElement('#root');
 
@@ -118,6 +119,8 @@ function formatDate(dateString: string) {
 
   return (
     <div>
+      <MainNavbar/>
+      <br /><br /><br /><br /><br /><br />
       <FloatingButtons/>
     <h2 style={{ color: '#ffffff' }}>Prints do usuário {userId} </h2>
     

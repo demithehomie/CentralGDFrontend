@@ -1,5 +1,6 @@
 import  { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, /*useParams*/ } from 'react-router-dom';
+import axios from 'axios';
 import UserTable, { User } from '../../components/user-table/UserTable';
 import './Users.css';
 import SearchBar from '../../components/search-components/SearchBar';
@@ -7,7 +8,7 @@ import MainNavbar from '../../components/main-navbar/MainNavbar';
 
 function UserCreditsPopup(
   { 
-    user, onClose, onAddCredits, onSubtractCredits,  onInsertCredits 
+    user, onClose, //onAddCredits, onSubtractCredits,  onInsertCredits 
   } : { 
     user: User, onClose: () => void, 
     onAddCredits: (user: User, amount: number) => void, 
@@ -15,18 +16,93 @@ function UserCreditsPopup(
     onInsertCredits: (user: User, amount: string) => void 
   }) {
 
-  const [amount, setAmount] = useState('');
+    const [ /*userData,*/, setUserData] = useState<User | null>(null);
+ // const { userId } = useParams<{ userId: string }>();
+ // const [amount, setAmount] = useState('');
+  const [addAmount, setAddAmount] = useState<string>('');
+  const [subtractAmount, setSubtractAmount] = useState<string>('');
+
+  const apiurl = `https://gdcompanion-prod.onrender.com`;
+  //const apiurldev = `http://localhost:3001`;
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get(`https://gdcompanion-prod.onrender.com/users/${user.user_id}`);
+        console.log(user.user_id)
+     
+          setUserData(response.data);
+      } catch (error) {
+        console.error((error as Error).message);
+      }
+    };
+  
+    fetchUser();
+  }, [user.user_id]);
+
+  const handleAddCredits = async () => {
+    try {
+      const response = await axios.put(`${apiurl}/add-credits/${user.user_id}`, { amount: addAmount  });
+      console.log(addAmount); // Exiba a resposta do servidor
+      console.log(response.data); // Exiba a resposta do servidor
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
+  const handleSubtractCredits = async () => {
+    try {
+      const response = await axios.put(`${apiurl}/subtract-credits/${user.user_id}`, { amount: subtractAmount });
+      console.log(response.data); // Exiba a resposta do servidor
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+
 
   return (
     <>
     <div className="background-overlay"></div>
     <div className="credit-popup-container">
       <h2 className="credit-popup-title">Gerenciar Créditos: {user.name}</h2>
-      <div>
+      {/* <div>
         <button onClick={() => onAddCredits(user, 1)}>+</button>
         <button onClick={() => onSubtractCredits(user, 1)}>-</button>
         <input type="number" className="popup-input" value={amount} onChange={e => setAmount(e.target.value)} />
         <button onClick={() => onInsertCredits(user, amount)}>Inserir</button>
+      </div> */}
+      <div>
+      <div className='new-text-alignment-credit-data'>
+            {/* <label className='main-title-color'>Gestão de Créditos</label> */}
+            <p className='title-color'>
+              <b>Total de Créditos:</b> {user && user.credit}
+            </p>
+         </div>
+      <form onSubmit={handleAddCredits}>
+                      <label className='title-color'>
+                        Quantidade para Adicionar: <br />
+                        <input 
+                          type="number" 
+                          value={addAmount} 
+                          onChange={(e) => setAddAmount(e.target.value)} 
+                        />
+                      </label>
+                    <button type="submit" >Adicionar</button>
+                  </form>
+      </div>
+      <div>
+      <form onSubmit={handleSubtractCredits}>
+                    <label className='title-color'>
+                      Quantidade para Subtrair: <br />
+                      <input 
+                        type="number" 
+                        value={subtractAmount} 
+                        onChange={(e) => setSubtractAmount(e.target.value)} 
+                      />
+                      </label>
+                      <button type="submit" >Subtrair</button>
+                  </form>
       </div>
       <br />
       <button className="credit-popup-button" onClick={onClose}>Fechar</button>

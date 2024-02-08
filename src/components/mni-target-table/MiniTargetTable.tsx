@@ -2,6 +2,7 @@ import  { useState, useEffect } from 'react';
 import axios from 'axios';
 import './MiniTargettable.css';
 import { useNavigate } from 'react-router-dom';
+import MainNavbar from '../main-navbar/MainNavbar';
 
 interface ScreenShotRequest {
     id: number;
@@ -78,6 +79,9 @@ const MiniTargetTable = () => {
   };
 
   return (
+    <>
+     <MainNavbar/>
+      <br /><br /><br /><br /><br /><br />
     <div className="miniTargetTable">
         <h3 style={{ color: '#ffffff'}}>Inserir Alvo</h3>
       <div>
@@ -119,6 +123,7 @@ const MiniTargetTable = () => {
       <br /><br />
       <button className="button" onClick={backToDashboard}>Voltar ao Início</button>
     </div>
+    </>
   );
 };
 

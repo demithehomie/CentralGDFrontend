@@ -6,7 +6,7 @@ import react from '@vitejs/plugin-react-swc'
 export default defineConfig({
   plugins: [react(), sentryVitePlugin({
     org: "tripleavb",
-    project: "javascript-react"
+    project: "gd-companion-web"
   })],
 
   build: {

@@ -1,93 +1,122 @@
-/* CryptoPaymentPage.css */
+.qr-code-binance {
+  display: block;
+  margin: 0 auto 30px; /* Adicionei um margin-bottom de 30px */
+  border-radius: 30px;
+}
 
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f0f4f8;
-    color: #333;
-    margin: 0;
-    padding: 20px;
-    box-sizing: border-box;
-  }
-  
-  .ccontainer {
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 20px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
-  }
-  
-  .ccontainer:hover {
-    transform: translateY(-5px);
-  }
-  
-  .ctitle {
-    text-align: center;
-    color: #007bff;
-    margin-bottom: 20px;
-  }
-  
-  .expired {
-    color: #ff4757;
-    text-align: center;
-  }
-  
-  .c-payment-address {
-    position: relative;
-    background: #ecf0f1;
-    padding: 10px;
-    border-radius: 5px;
-    word-break: break-all;
-    margin-bottom: 20px;
-  }
-  
-  .c-copy-btn {
-    position: absolute;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 5px 10px;
-    cursor: pointer;
-    outline: none;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.3s, transform 0.2s;
-  }
-  
-  .c-copy-btn:hover {
-    background-color: #0056b3;
-  }
-  
-  .c-copy-btn:active {
-    transform: scale(0.95);
-  }
-  
-  @keyframes fadeIn {
-    from {
+.c-copy-btn {
+  background-color: #ffee00;
+  color: black;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  outline: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s, transform 0.2s;
+  margin-top: 10px; /* Adicionei um margin-top para separar o botão do QR code */
+}
+
+.c-copy-btn:hover {
+  background-color: #b30000;
+  color: white;
+}
+
+.ccontainer {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.ccontainer:hover {
+  transform: translateY(-5px);
+}
+
+.ctitle {
+  text-align: center;
+  color: #007bff;
+  margin-bottom: 20px;
+}
+
+.expired {
+  color: #ff4757;
+  text-align: center;
+}
+
+.c-payment-address {
+  border-radius: 30px;
+  position: relative;
+  background: #ecf0f1;
+  padding: 10px;
+  border-radius: 5px;
+  word-break: break-all;
+  margin-bottom: 20px;
+}
+
+@keyframes fadeIn {
+  from {
       opacity: 0;
-    }
-    to {
+  }
+  to {
       opacity: 1;
-    }
   }
-  
-  .ccontainer {
-    animation: fadeIn 0.5s ease-out;
-  }
-  
-  /* Adiciona um pouco de estilo extra para links */
-  a {
-    color: #007bff;
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-  
-  a:hover {
-    color: #0056b3;
-  }
-  
+}
+
+.ccontainer {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Adiciona um pouco de estilo extra para links */
+a {
+  color: #007bff;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: #0056b3;
+}
+
+.binance-data {
+  background-color: rgb(0, 0, 0);
+  padding-bottom: 20px;
+  border-radius: 30px;
+  border: 4px solid #F3BA2F;
+}
+
+.binance-data-text {
+  color:#F3BA2F
+}
+
+.binance-logo {
+  width: 100px;
+  display: block;
+  margin: 0 auto;
+}
+
+.binance-wide{
+  width: 20%;
+  padding: 1.5%;
+}
+
+.big-button {
+  padding: 10px 20px;
+  margin: 0 10px;
+  border: none;
+  color: #000000;
+  border-radius: 4px;
+  border: 2px solid #00ff3c;
+  background-color: #00ff04;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.big-button:hover {
+  background-color: #b30000;
+  color: white;
+  border: 2px solid #b30000;
+}

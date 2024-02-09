@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { useNavigate, /*useParams*/ } from 'react-router-dom';
 import './PaymentScreen.css';
+import { Helmet } from 'react-helmet-async';
+import MainNavbar from '../../components/main-navbar/MainNavbar';
 
 
 interface UserData {
@@ -407,6 +409,11 @@ const shouldRenderItem = (transfer: TransferData) => {
 
   return (
     <div className="App">
+      <MainNavbar />
+      <br /><br /><br /><br /><br />
+       <Helmet>
+        <title>Recebendo PIX</title>
+      </Helmet>
       <div className="App-header">
         <h3 style={{ color: '#ffffff', fontSize: '30px' }}>Gerar PIX</h3>
         <h4>Destino: Leandro Guerra - Mercado Pago</h4>

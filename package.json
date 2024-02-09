@@ -25,6 +25,7 @@
     "latest": "^0.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-helmet-async": "^2.0.4",
     "react-modal": "^3.16.1",
     "react-responsive-carousel": "^3.2.23",
     "recharts": "^2.11.0",

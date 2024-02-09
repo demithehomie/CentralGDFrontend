@@ -11,6 +11,7 @@
   import DashboardCardMobile from '../../components/dashboard-cards-mobile/DashboardCardsMobile';
   import { useAuth } from '../../context/auth/AuthContext';
   import MainNavbar from '../../components/main-navbar/MainNavbar';
+import { Helmet } from 'react-helmet-async';
 
   //import someIcon from './path-to/some-icon.png';
 
@@ -186,6 +187,8 @@
     
     if (isLoading) {
       return (
+     
+   
         <div style={{ 
           display: 'flex', 
           justifyContent: 'center', 
@@ -209,6 +212,9 @@
 
     return (
       <>
+      <Helmet>
+         <title>Dashboard</title>
+      </Helmet>
     
       <div style={{
         display: 'flex',

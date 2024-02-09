@@ -2,9 +2,11 @@ import { useEffect, useState } from 'react';
 import MainNavbar from '../../components/main-navbar/MainNavbar';
 import Swal from 'sweetalert2';
 import './ReceiveCrypto.css';
-//import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import copyIcon from '../../../src/assets/icons/copy.png';
+
+import { Helmet } from 'react-helmet-async';
 
 // interface UserData {
 //   user_id : string;
@@ -39,7 +41,7 @@ interface ClientFormData {
 const ReceiveCrypto: React.FC = () => {
  // const apiurldev = 'http://localhost:3001';
   const apiurlprod = 'https://gdcompanion-prod.onrender.com';
- // const navigate = useNavigate();
+  const navigate = useNavigate();
   const [paymentAddress, setPaymentAddress] = useState<string | null>(null);
   const [clientFormData, setClientFormData] = useState<ClientFormData>({
     name: '',
@@ -55,8 +57,9 @@ const ReceiveCrypto: React.FC = () => {
 
   const fetchPaymentAddress = async () => {
     try {
-      const { data } = await axios.get(`${apiurlprod}/binance-usdt-deposit-address`);
-      setPaymentAddress(data.deposit_address);
+      const { data } = await axios.get(`${apiurlprod}/binance-user-id`);
+      setPaymentAddress(data.id_to_receive_payment );
+      console.log( `Isso é o que está vindo do backend => ${data}`)
     } catch (error) {
       console.error("Failed to fetch payment address:", error);
       Swal.fire('Erro!', 'Falha ao buscar o endereço de pagamento.', 'error');
@@ -83,22 +86,44 @@ const ReceiveCrypto: React.FC = () => {
     }
   };
 
-  // const navigateToPaymentLink = () => {
-  //   navigate('/crypto-payments/:paymentId');
-  // };
+  const navigateToPaymentLink = () => {
+    const paymentId = localStorage.getItem('payment_id');
+    navigate(`/crypto-payments/${paymentId}`);
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const payment_id = Math.floor(Math.random() * 100000000);
     try {
       const response = await axios.post(`${apiurlprod}/inserir-cliente-com-crypto`, {
         ...clientFormData,
-        wallet_address: paymentAddress, // Enviar wallet_address no formulário
+        payment_id: payment_id,
+        wallet_address: paymentAddress, 
       });
       console.log(clientFormData)
       console.log(paymentAddress)
-      console.log(response.data); // Se quiser fazer algo com a resposta do backend
-      Swal.fire('Sucesso!', 'Cliente inserido com sucesso.', 'success');
-      // Aqui você pode redirecionar o usuário para outra página, se desejar
+      console.log(response.data); 
+     // Swal.fire('Sucesso!', 'Cliente inserido com sucesso.', 'success');
+      localStorage.setItem('payment_id', JSON.stringify(response.data.payment_id));
+      const paymentLink = `https://gd-companion-fm.web.app/crypto-payments/${response.data.payment_id}`;
+    // Swal popup to show the payment link
+    Swal.fire({
+      title: 'Payment Link Generated',
+      html: `<p>Use the link below to access the payment page:</p><pre>${paymentLink}</pre>`,
+      showCancelButton: true,
+      confirmButtonText: 'Copy Link',
+      cancelButtonText: 'Access Page',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        navigator.clipboard.writeText(paymentLink).then(() => {
+          Swal.fire('Copied!', 'The link has been copied to your clipboard.', 'success');
+        });
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        navigate(`/crypto-payments/${response.data.payment_id}`);
+      }
+    });
+    // Rest of your success handling...
+    //Swal.fire('Sucesso!', 'Cliente inserido com sucesso.', 'success');
     } catch (error) {
       console.error('Erro ao inserir cliente:', error);
       Swal.fire('Erro!', 'Falha ao inserir cliente.', 'error');
@@ -174,12 +199,13 @@ const ReceiveCrypto: React.FC = () => {
           {/* Campo invisível para enviar wallet_address */}
           <input type="hidden" name="wallet_address" value={paymentAddress || ''} />
            
-          <label className="label" htmlFor="receiveAddress">Endereço de recebimento:</label>
+          <label className="label" htmlFor="receiveAddress">ID para recebimento:</label>
           <div className='row-of-icons-01'>
               <h5>{paymentAddress ? paymentAddress : 'Link de Pagamento não encontrado'}</h5> 
                 <div onClick={() => copyToClipboard(paymentAddress || '')}>
                   <img className='copy-icon-01' src={copyIcon} alt="icone-copiar" style={{cursor: 'pointer'}} />
                 </div>
+               
           </div>
           {/* <input
           className="input"
@@ -191,7 +217,7 @@ const ReceiveCrypto: React.FC = () => {
           <div className="rc-button-group">
             {/* <button className="rc-button" onClick={handleSendCrypto}>Enviar</button>
             <button className="rc-button" onClick={handleReceiveCrypto}>Receber</button> */}
-            {/* <button className="rc-button" onClick={navigateToPaymentLink}>Gerar Link</button> */}
+            <button className="rc-button" onClick={navigateToPaymentLink}>Gerar Link</button>
             <button type="submit" className="rc-button">Enviar</button>
           </div>
           <h6>Powered By <strong>Binance</strong> </h6>
@@ -202,6 +228,9 @@ const ReceiveCrypto: React.FC = () => {
         // }}
         >Todas as transferências</button>
       </div>
+      <Helmet>
+        <title>Recebendo Crypto</title>
+      </Helmet>
   
     </>
   )

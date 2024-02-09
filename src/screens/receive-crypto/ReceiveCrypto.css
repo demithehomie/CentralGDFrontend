@@ -34,7 +34,7 @@ input[type=number] {
   }
   
   .label {
-    margin-bottom: 8px;
+   margin-bottom: -18px;
     color: #666;
   }
   

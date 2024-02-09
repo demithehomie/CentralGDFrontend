@@ -35,6 +35,7 @@ import CryptoPaymentPage from './screens/crypto-payment-page/CryptoPaymentPage';
 //import { User } from './components/user-table/UserTable';
 //import User from './components/user-table/UserTable';
 //import { useParams } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 
 
 
@@ -76,6 +77,7 @@ function App() {
   
 
       <AuthProvider>
+        <HelmetProvider>
         <GlobalStyle />
 
         <BrowserRouter>
@@ -106,6 +108,7 @@ function App() {
           <Route path="/crypto-payments/:paymentId" element={<CryptoPaymentPage />} />
           </Routes>
         </BrowserRouter>
+        </HelmetProvider>
       </AuthProvider>
     </>
   );

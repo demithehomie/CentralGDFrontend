@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react';
 import MainNavbar from '../../components/main-navbar/MainNavbar';
 import Swal from 'sweetalert2';
 import './ReceiveCrypto.css';
-import { useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import copyIcon from '../../../src/assets/icons/copy.png';
+import usdtlogo from '../../../src/assets/icons/USDT-ICON.png';
 
 import { Helmet } from 'react-helmet-async';
 
@@ -41,7 +42,7 @@ interface ClientFormData {
 const ReceiveCrypto: React.FC = () => {
  // const apiurldev = 'http://localhost:3001';
   const apiurlprod = 'https://gdcompanion-prod.onrender.com';
-  const navigate = useNavigate();
+ // const navigate = useNavigate();
   const [paymentAddress, setPaymentAddress] = useState<string | null>(null);
   const [clientFormData, setClientFormData] = useState<ClientFormData>({
     name: '',
@@ -86,13 +87,17 @@ const ReceiveCrypto: React.FC = () => {
     }
   };
 
-  const navigateToPaymentLink = () => {
-    const paymentId = localStorage.getItem('payment_id');
-    navigate(`/crypto-payments/${paymentId}`);
-  };
+  // const navigateToPaymentLink = () => {
+  //   const paymentId = localStorage.getItem('payment_id');
+  //   navigate(`/crypto-payments/${paymentId}`);
+  // };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!clientFormData.amount || clientFormData.amount <= 0) {
+      Swal.fire('Erro!', 'A quantia a ser recebida deve ser maior que zero.', 'error');
+      return; // Interrompe a execução da função
+    }
     const payment_id = Math.floor(Math.random() * 100000000);
     try {
       const response = await axios.post(`${apiurlprod}/inserir-cliente-com-crypto`, {
@@ -105,7 +110,7 @@ const ReceiveCrypto: React.FC = () => {
       console.log(response.data); 
      // Swal.fire('Sucesso!', 'Cliente inserido com sucesso.', 'success');
       localStorage.setItem('payment_id', JSON.stringify(response.data.payment_id));
-      const paymentLink = `https://gd-companion-fm.web.app/crypto-payments/${response.data.payment_id}`;
+      const paymentLink = `http://localhost:5173/crypto-payments/${response.data.payment_id}`;
     // Swal popup to show the payment link
     Swal.fire({
       title: 'Payment Link Generated',
@@ -119,7 +124,8 @@ const ReceiveCrypto: React.FC = () => {
           Swal.fire('Copied!', 'The link has been copied to your clipboard.', 'success');
         });
       } else if (result.dismiss === Swal.DismissReason.cancel) {
-        navigate(`/crypto-payments/${response.data.payment_id}`);
+        //navigate(`/crypto-payments/${response.data.payment_id}`);
+        window.open(paymentLink, '_blank');
       }
     });
     // Rest of your success handling...
@@ -139,8 +145,12 @@ const ReceiveCrypto: React.FC = () => {
 
     <br /><br /><br /><br /><br />
    
-
-        <h2>Receber Criptomoedas</h2>
+      <div className='title-box'>
+      <img src={usdtlogo} alt="usdt-logo" className='usdtlogo' /> 
+      <h2>Receber USDT </h2>
+    
+      </div>
+      
         
         <form className="crypto-form" onSubmit={handleSubmit}>
           <label className="label" htmlFor="amount">Quantidade a ser recebida em <strong>USDT</strong>:</label>
@@ -149,9 +159,9 @@ const ReceiveCrypto: React.FC = () => {
             type="number"
             id="amount"
             name="amount"
-            value={clientFormData.amount}
+            value={clientFormData.amount > 0 ? clientFormData.amount : ''}
             onChange={handleInputChange}
-            placeholder='Insira a quantia a ser recebida em USDT'
+            placeholder='Insira a quantia em USDT'
           />
             <label className="label" htmlFor="name">Nome do Cliente</label>
           <input
@@ -182,7 +192,7 @@ const ReceiveCrypto: React.FC = () => {
               name="whatsapp"
                value={clientFormData.whatsapp}
                onChange={handleInputChange}
-                placeholder='Insira o número do Whatsapp do cliente'
+                placeholder='Insira o Whatsapp do cliente'
             />
 
         <label htmlFor="username">Username (Opcional)</label>
@@ -199,9 +209,9 @@ const ReceiveCrypto: React.FC = () => {
           {/* Campo invisível para enviar wallet_address */}
           <input type="hidden" name="wallet_address" value={paymentAddress || ''} />
            
-          <label className="label" htmlFor="receiveAddress">ID para recebimento:</label>
+          <label className="label" htmlFor="receiveAddress">ID Binance para recebimento:</label>
           <div className='row-of-icons-01'>
-              <h5>{paymentAddress ? paymentAddress : 'Link de Pagamento não encontrado'}</h5> 
+          <h5 className="custom-style-id">{paymentAddress ? paymentAddress : 'Link de Pagamento não encontrado'}</h5> 
                 <div onClick={() => copyToClipboard(paymentAddress || '')}>
                   <img className='copy-icon-01' src={copyIcon} alt="icone-copiar" style={{cursor: 'pointer'}} />
                 </div>
@@ -217,10 +227,13 @@ const ReceiveCrypto: React.FC = () => {
           <div className="rc-button-group">
             {/* <button className="rc-button" onClick={handleSendCrypto}>Enviar</button>
             <button className="rc-button" onClick={handleReceiveCrypto}>Receber</button> */}
-            <button className="rc-button" onClick={navigateToPaymentLink}>Gerar Link</button>
-            <button type="submit" className="rc-button">Enviar</button>
+            {/*
+            
+             <button className="rc-button" onClick={navigateToPaymentLink}>Gerar Link</button>
+            Botão para gerar o link de pagamento */}
+         {}   <button type="submit" className="rc-button">Continuar</button>
           </div>
-          <h6>Powered By <strong>Binance</strong> </h6>
+          <h6 style={{ color: "#000000"}}>Powered By <strong>Binance</strong> </h6>
         </form>
         <button
         // style={{

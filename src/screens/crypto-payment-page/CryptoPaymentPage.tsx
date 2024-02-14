@@ -14,6 +14,7 @@ interface PaymentInfo {
     // Adicione outras propriedades conforme necessário
   }
 interface AllPaymentInfo {
+  status?: string;
   id: string;
   name: string;
   whatsapp: string;
@@ -25,6 +26,8 @@ interface AllPaymentInfo {
     binance_user_id: string;
   }  
 
+
+
 const CryptoPaymentPage = () => {
   const { paymentId } = useParams<{ paymentId: string }>();
   const [ /*paymentInfo,*/, setPaymentInfo] = useState<PaymentInfo | null>(null);
@@ -35,6 +38,10 @@ const CryptoPaymentPage = () => {
   const [serviceProvided, setServiceProvided] = useState<AllPaymentInfo | null>(null);
   const [amount, setAmount] = useState<AllPaymentInfo | null>(null);
   const [expired, setExpired] = useState(false);
+
+  // const [paymentId, setPaymentId] = useState<string>('');
+   const [loading, setLoading] = useState<boolean>(false);
+  // const [message, setMessage] = useState<string>('');
 
   //const apiurldev = 'http://localhost:3001';
   const apiurlprod = 'https://gdcompanion-prod.onrender.com';
@@ -58,6 +65,110 @@ const CryptoPaymentPage = () => {
       throw error; // Add this line to throw the error
     }
   };
+
+  // const atualizarStatusPagamento = async () => {
+  //   setLoading(true);
+  //   try {
+  //     await axios.post(`${apiurlprod}/atualizar-status-pagamento-crypto`, {
+  //       payment_id: paymentId,
+  //     });
+  
+  //     // Aqui você faz uma nova chamada para verificar o status atualizado
+  //     const { data } = await axios.get(`${apiurlprod}/verificar-status-pagamento/${paymentId}`);
+  //     setLoading(false);
+  
+  //     if (data.status === 'approved') {
+  //       Swal.fire('Success!', 'Transfer Completed Successfully', 'success');
+  //       // Atualize o estado conforme necessário para refletir a mudança
+  //     } else {
+  //       Swal.fire('Error!', 'Payment status update failed.', 'error');
+  //     }
+  //   } catch (error) {
+  //     setLoading(false);
+  //     console.error('Error updating payment status:', error);
+  //     Swal.fire('Error!', 'Failed to update the payment status.', 'error');
+  //   }
+  // };
+  
+
+  const atualizarStatusPagamento = async () => {
+    if (!paymentId) {
+      Swal.fire('Error!', 'Payment ID not found.', 'error');
+      return;
+    }
+  
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      html: `
+        Before marking this payment as 'Done', please ensure the transaction was actually completed. Failing to do so may result in:
+        <ul style="text-align: left;">
+          <li>Losing your account with your cryptocurrency exchange</li>
+          <li>Having your assets frozen</li>
+          <li>Being prosecuted</li>
+          <li>Facing legal sanctions</li>
+        </ul>
+      `,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, mark it as Done',
+      cancelButtonText: 'Cancel',
+    });
+  
+    if (result.isConfirmed) {
+      setLoading(true);
+  
+      try {
+        const response = await axios.post(`${apiurlprod}/atualizar-status-pagamento-crypto`, {
+          payment_id: paymentId,
+        });
+  
+        if (response.status === 200 || response.data.success) {
+          const statusResponse = await axios.get(`${apiurlprod}/verificar-status-pagamento/${paymentId}`);
+  
+          if (statusResponse.data.status === 'approved') {
+            let timerInterval: string | number | NodeJS.Timeout | undefined;
+            Swal.fire({
+              title: 'Success!',
+              html: 'Transfer Completed Successfully <br><b></b> seconds.',
+              timer: 15000, // 15 segundos
+              timerProgressBar: true,
+              didOpen: () => {
+                Swal.showLoading();
+                const b = Swal.getHtmlContainer()?.querySelector('b'); // Corrigido aqui
+                timerInterval = setInterval(() => {
+                  if (b) {
+                    b.textContent = Math.round(Swal.getTimerLeft()! / 1000).toString(); // Corrigido aqui
+                  }
+                }, 1000);
+              },
+              willClose: () => {
+                clearInterval(timerInterval);
+              }
+            }).then((result) => {
+              if (result.dismiss === Swal.DismissReason.timer) {
+                console.log('I was closed by the timer');
+                window.close(); // Fecha a página
+              }
+            });
+          } else {
+            Swal.fire('Warning!', 'Payment status not updated to approved yet.', 'warning');
+          }
+        } else {
+          throw new Error('Failed to update payment status.');
+        }
+      } catch (error) {
+        console.error('Error updating payment status:', error);
+        Swal.fire('Error!', 'Failed to update the payment status. Please try again.', 'error');
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+  
+
+  
 
   const copyToClipboard = (text: any) => {
     navigator.clipboard.writeText(text).then(() => {
@@ -125,6 +236,8 @@ const CryptoPaymentPage = () => {
       <Helmet>
         <title>Making the Payment</title>
       </Helmet>
+      {paymentAllInfo ? (
+      <>
       <h2 className="ctitle">Fast Payment via Binance</h2>
     
 
@@ -153,9 +266,9 @@ const CryptoPaymentPage = () => {
        -- CLICK TO COPY USER ID --
       </button>
       <br /><br />
-      <button className='big-button'>
-          Mark as DONE
-      </button>
+      <button className="big-button" onClick={atualizarStatusPagamento} disabled={loading}>
+          {loading ? 'Atualizando...' : 'Mark as DONE'}
+        </button>
       <div style={{
         display: 'flex',
         flexDirection: 'row',
@@ -167,7 +280,10 @@ const CryptoPaymentPage = () => {
       </div>
      
       </div>
- 
+      </>
+    ) : (
+      <p>Carregando informações de pagamento...</p>
+    )}
      
     </div>
     </>

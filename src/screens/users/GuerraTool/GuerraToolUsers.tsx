@@ -8,83 +8,115 @@ import MainNavbar from '../../../components/main-navbar/MainNavbar';
 
 
 function GuerraToolUserCreditsPopup({
-    user,
-    onClose,
-    onUpdateUserCredit,
-  }: {
-    user: User;
-    onClose: () => void;
-    onUpdateUserCredit: (userId: string, newCredit: number) => void;
-  }) {
-    const [amount, setAmount] = useState<string>('');
-    //const [users, setUsers] = useState<User[]>([]);
-  
-    const apiurl = `https://gdcompanion-prod.onrender.com`;
-  
-    // Supondo que User tenha um campo credit e user_id
-    // useEffect para buscar dados do usuário não modificado
-    // const updateCreditForUser = (userId: string, newCredit: number) => {
-    //   setUsers(users.map(user => {
-    //     if (user.user_id === userId) {
-    //       return { ...user, credit: newCredit };
-    //     }
-    //     return user;
-    //   }));
-    // };
-    
-  
-    const handleManageCredits = async (operation: 'add' | 'subtract') => {
-      try {
-        const response = await axios.put(`${apiurl}/manage-credits-guerratool/${user.user_id}`, {
-          amount: amount,
-          operation: operation,
-        });
-        console.log(response.data);
-        // Atualize os créditos do usuário após a operação bem-sucedida
-        const newCredit = operation === 'add' ? user.credit + parseFloat(amount) : user.credit - parseFloat(amount);
-        onUpdateUserCredit(user.user_id, newCredit); // Corrigido aqui
-      } catch (error) {
-        console.error(error);
+  user,
+  onClose,
+  onUpdateUserCredit,
+}: {
+  user: User;
+  onClose: () => void;
+  onUpdateUserCredit: (userId: string, newCredit: number, newUserStatus?: 'on' | 'blocked') => void;
+
+}) {
+  const [amount, setAmount] = useState<string>('');
+  const [userStatus, setUserStatus] = useState(user.user_status);
+  //const [users, setUsers] = useState<User[]>([]);
+
+  const apiurl = `https://gdcompanion-prod.onrender.com`;
+
+  useEffect(() => {
+    // Supondo que o status esteja sendo passado corretamente na prop user
+    setUserStatus(user.user_status);
+  }, [user]);
+
+  const toggleUserStatus = async () => {
+    try {
+      const response = await axios.put(`${apiurl}/block-unblock-users/${user.user_id}`);
+      if (response.status === 200) {
+        const updatedStatus = userStatus === 'on' ? 'blocked' : 'on';
+        setUserStatus(updatedStatus);
+        // Atualiza o status no componente pai também, se necessário
+        onUpdateUserCredit(user.user_id, user.credit, updatedStatus); // Supondo que essa função também possa atualizar o status
       }
-    };
-    
+    } catch (error) {
+      console.error("Erro ao alternar status do usuário", error);
+    }
+  };
   
   
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>, operation: 'add' | 'subtract') => {
-      e.preventDefault(); // Previne o recarregamento da página
-      handleManageCredits(operation);
-    };
+
+  const handleManageCredits = async (operation: 'add' | 'subtract') => {
+    try {
+      const response = await axios.put(`${apiurl}/manage-credits-guerratool/${user.user_id}`, {
+        amount: amount,
+        operation: operation,
+      });
+      console.log(response.data);
+      // Atualize os créditos do usuário após a operação bem-sucedida
+      const newCredit = operation === 'add' ? user.credit + parseFloat(amount) : user.credit - parseFloat(amount);
+      onUpdateUserCredit(user.user_id, newCredit); // Corrigido aqui
+    } catch (error) {
+      console.error(error);
+    }
+  };
   
-    return (
-      <>
-        <div className="background-overlay"></div>
-        <div className="credit-popup-container">
-          <h2 className="credit-popup-title">Gerenciar Créditos: {user.name}</h2>
-          <div>
-            <p className='title-color'>
-              <b>Total de Créditos:</b> {user && user.credit}
-            </p>
-          </div>
-          <form onSubmit={(e) => handleSubmit(e, 'add')}>
-            <label className='title-color'>
-              Quantidade: <br />
-              <input 
-                type="number" 
-                value={amount} 
-                onChange={(e) => setAmount(e.target.value)} 
-              />
-            </label>
-            <div>
-              <button type="submit">Adicionar</button>
-              <button type="button" onClick={(e) => handleSubmit(e as any, 'subtract')}>Subtrair</button>
-            </div>
-          </form>
-          <br />
-          <button className="credit-popup-button" onClick={onClose}>Fechar</button>
+
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>, operation: 'add' | 'subtract') => {
+    e.preventDefault(); // Previne o recarregamento da página
+    handleManageCredits(operation);
+  };
+
+  return (
+    <>
+      <div className="background-overlay"></div>
+      <div className="credit-popup-container">
+        <h2 className="credit-popup-title">Gerenciar Créditos: {user.name}</h2>
+        <div>
+          <p className='title-color'>
+            <b>Total de Créditos:</b> {user && user.credit}
+          </p>
         </div>
-      </>
-    );
-  }
+        <form onSubmit={(e) => handleSubmit(e, 'add')}>
+          <label className='title-color'>
+            Quantidade: <br />
+            <input 
+              type="number" 
+              value={amount} 
+              onChange={(e) => setAmount(e.target.value)} 
+            />
+          </label>
+          <div>
+            <button type="submit">Adicionar</button>
+            <button type="button" onClick={(e) => handleSubmit(e as any, 'subtract')}>Subtrair</button>
+          </div>
+        </form>
+        <br />
+       
+        <hr />
+      
+        <p style={{
+          color: userStatus === 'on' ? 'green' : 'red',
+          fontWeight: 'bold',
+        }}>
+          {userStatus === 'on' ? 'O usuário está Ativo' : 'O usuário está Bloqueado'} 
+
+       </p>
+
+        <button style={{
+          backgroundColor: userStatus === 'on' ? 'red' : 'green',
+          fontWeight: 'bold',
+          color: userStatus === 'on' ? 'white' : 'white',
+        }} onClick={toggleUserStatus}>
+          {userStatus === 'on' ? 'Bloquear' : 'Desbloquear'}
+        </button>
+
+        <hr />
+        <button className="credit-popup-button" onClick={onClose}>Fechar</button>
+
+      </div>
+    </>
+  );
+}
 
 export default function GuerraToolUsers() {
   const navigate = useNavigate();

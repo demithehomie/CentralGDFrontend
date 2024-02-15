@@ -62,6 +62,7 @@ const UserTable: React.FC<UserTableProps> = ({ users, onToggleResellerStatus, on
                         <TableHeader>Nome de Usuário</TableHeader>
                         <TableHeader>Créditos</TableHeader>
                         <TableHeader>Revendedor</TableHeader>
+                        <TableHeader>Status</TableHeader>
                     </TableRow>
                 </thead>
                 <tbody>
@@ -70,13 +71,23 @@ const UserTable: React.FC<UserTableProps> = ({ users, onToggleResellerStatus, on
                           <TableCell onClick={() => onUserClick(user)}>{user.name}</TableCell>
                           <TableCell onClick={() => onUserClick(user)}>{user.username}</TableCell>
                      
-                            <TableCell>{user.credit}</TableCell>
+                            <TableCell onClick={() => onUserClick(user)} >{user.credit}</TableCell>
                             <TableCell>
                                 <input
                                     type="checkbox"
                                     checked={user.is_reseller === 1}
                                     onChange={() => onToggleResellerStatus(user.user_id)}
                                 />
+                            </TableCell>
+                            <TableCell
+                                onClick={() => onUserClick(user)}
+                                style={{
+                                    backgroundColor: user.user_status === 'on' ? 'green' : 'red',
+                                    color: 'white',
+                                    fontWeight: 'bold',
+                                }}
+                            >
+                                {user.user_status === 'on' ? 'ACTIVE' : 'BLOCKED'}
                             </TableCell>
                         </TableRow>
                     ))}

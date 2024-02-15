@@ -21,7 +21,8 @@ function UserCreditsPopup({
 }: {
   user: User;
   onClose: () => void;
-  onUpdateUserCredit: (userId: string, newCredit: number) => void;
+  onUpdateUserCredit: (userId: string, newCredit: number, newUserStatus?: 'on' | 'blocked') => void;
+
 }) {
   const [amount, setAmount] = useState<string>('');
   const [userStatus, setUserStatus] = useState(user.user_status);
@@ -29,16 +30,25 @@ function UserCreditsPopup({
 
   const apiurl = `https://gdcompanion-prod.onrender.com`;
 
-  // Supondo que User tenha um campo credit e user_id
-  // useEffect para buscar dados do usuário não modificado
-  // const updateCreditForUser = (userId: string, newCredit: number) => {
-  //   setUsers(users.map(user => {
-  //     if (user.user_id === userId) {
-  //       return { ...user, credit: newCredit };
-  //     }
-  //     return user;
-  //   }));
-  // };
+  useEffect(() => {
+    // Supondo que o status esteja sendo passado corretamente na prop user
+    setUserStatus(user.user_status);
+  }, [user]);
+
+  const toggleUserStatus = async () => {
+    try {
+      const response = await axios.put(`${apiurl}/block-unblock-users/${user.user_id}`);
+      if (response.status === 200) {
+        const updatedStatus = userStatus === 'on' ? 'blocked' : 'on';
+        setUserStatus(updatedStatus);
+        // Atualiza o status no componente pai também, se necessário
+        onUpdateUserCredit(user.user_id, user.credit, updatedStatus); // Supondo que essa função também possa atualizar o status
+      }
+    } catch (error) {
+      console.error("Erro ao alternar status do usuário", error);
+    }
+  };
+  
   
 
   const handleManageCredits = async (operation: 'add' | 'subtract') => {
@@ -88,7 +98,28 @@ function UserCreditsPopup({
           </div>
         </form>
         <br />
+       
+        <hr />
+      
+        <p style={{
+          color: userStatus === 'on' ? 'green' : 'red',
+          fontWeight: 'bold',
+        }}>
+          {userStatus === 'on' ? 'O usuário está Ativo' : 'O usuário está Bloqueado'} 
+
+       </p>
+
+        <button style={{
+          backgroundColor: userStatus === 'on' ? 'red' : 'green',
+          fontWeight: 'bold',
+          color: userStatus === 'on' ? 'white' : 'white',
+        }} onClick={toggleUserStatus}>
+          {userStatus === 'on' ? 'Bloquear' : 'Desbloquear'}
+        </button>
+
+        <hr />
         <button className="credit-popup-button" onClick={onClose}>Fechar</button>
+
       </div>
     </>
   );
@@ -131,17 +162,29 @@ export default function Users() {
   //   console.log(`Subtraindo ${amount} créditos de ${user.name}`);
   //   handleClosePopup();
   // };
-  const onUpdateUserCredit = (userId: string, newCredit: number) => {
-    // Atualiza o array de usuários
-    const updatedUsers = users.map(user => 
-      user.user_id === userId ? { ...user, credit: newCredit } : user);
-    setUsers(updatedUsers);
+  const onUpdateUserCredit = (userId: string, newCredit: number, newUserStatus?: 'on' | 'blocked') => {
+    setUsers(prevUsers =>
+      prevUsers.map(user =>
+        user.user_id === userId ? { ...user, credit: newCredit, user_status: newUserStatus ?? user.user_status } : user
+      )
+    );
   
-    // Atualiza o usuário selecionado, se aplicável
     if (selectedUser && selectedUser.user_id === userId) {
-      setSelectedUser({ ...selectedUser, credit: newCredit });
+      setSelectedUser(prevSelectedUser => {
+        if (prevSelectedUser === null) return null; // Ou retornar um valor padrão para User se apropriado
+        return {
+          ...prevSelectedUser,
+          credit: newCredit,
+          user_status: newUserStatus ?? prevSelectedUser.user_status,
+          // Garanta que todas as propriedades obrigatórias estejam presentes
+          user_id: prevSelectedUser.user_id, // Agora não é mais opcional
+          // Adicione outras propriedades obrigatórias aqui, conforme necessário
+        };
+      });
     }
+    
   };
+  
   
   
 

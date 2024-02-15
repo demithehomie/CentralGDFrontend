@@ -2,13 +2,14 @@
 import styled from 'styled-components';
 
 export interface User {
-    user_id: number;
+    user_id: any;
     profilePicture: string;
     name: string;
     username: string;
     credit: number;
     is_reseller: number;
     email: string;
+    user_status: 'on' | 'blocked';
 }
 
 const TableContainer = styled.div`

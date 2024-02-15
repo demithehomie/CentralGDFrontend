@@ -38,6 +38,7 @@ const CryptoPaymentPage = () => {
   const [serviceProvided, setServiceProvided] = useState<AllPaymentInfo | null>(null);
   const [amount, setAmount] = useState<AllPaymentInfo | null>(null);
   const [expired, setExpired] = useState(false);
+  const [countdown, setCountdown] = useState(180); // 3 minutes in seconds
 
   // const [paymentId, setPaymentId] = useState<string>('');
    const [loading, setLoading] = useState<boolean>(false);
@@ -197,6 +198,9 @@ const CryptoPaymentPage = () => {
   // }
   
   useEffect(() => {
+
+    
+
     fetchPaymentInfo( /*paymentId ?? '' */).then((info: PaymentInfo) => {
         if (new Date() > new Date(info.expirationDate)) {
             setExpired(true);
@@ -218,9 +222,36 @@ const CryptoPaymentPage = () => {
         confirmButtonText: 'Ok'
       });
     });
-  }, [paymentId]);
+    let timer: NodeJS.Timeout | undefined;
+  if (countdown > 0) {
+    timer = setInterval(() => setCountdown(countdown - 1), 1000);
+  }
+
+  // When countdown reaches 0, close the page
+  if (countdown === 0) {
+    Swal.fire({
+      title: 'Time Out!',
+      text: 'The payment window has expired.',
+      icon: 'warning',
+      confirmButtonText: 'OK'
+    }).then(() => {
+      window.close(); // This might not work in all browsers due to security restrictions
+    });
+  }
+
+  // Your existing logic to handle payment information and expiration
+
+  // Cleanup function
+  return () => {
+    if (timer) clearInterval(timer);
+  };
+  }, [countdown, paymentId]); // Rerun the effect if countdown changes or if component is re-rendered with a new paymentId
 
 
+
+    
+
+  
   if (expired) {
     return (
       <div className="ccontainer expired-message">
@@ -232,14 +263,20 @@ const CryptoPaymentPage = () => {
 
   return paymentAllInfo ? (
     <>
+  
     <div className="ccontainer">
       <Helmet>
         <title>Making the Payment</title>
       </Helmet>
       {paymentAllInfo ? (
       <>
+      
       <h2 className="ctitle">Fast Payment via Binance</h2>
     
+        {/* Display the countdown timer */}
+        <div style={{ textAlign: 'center', padding: '10px', fontSize: '20px' }}>
+          <label>Time Remaining: <strong> {Math.floor(countdown / 60)}:{('0' + countdown % 60).slice(-2)}</strong></label>  
+        </div>
 
       <div className="c-payment-address">
         {paymentAllInfo.payment_id}

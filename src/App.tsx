@@ -36,6 +36,7 @@ import CryptoPaymentPage from './screens/crypto-payment-page/CryptoPaymentPage';
 //import User from './components/user-table/UserTable';
 //import { useParams } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
+import MgmtReportsGuerraTool from './screens/management-reports/guerra-tool/MgmtReportsGuerraTool';
 
 
 
@@ -102,6 +103,7 @@ function App() {
           <Route path="/payments" element={<PrivateRoute><PaymentMenu /></PrivateRoute>} />
           <Route path="/user-prints-page/:userId" element={<PrivateRoute><UserPrintsPage /></PrivateRoute>} />
           <Route path="/mgmt-reports" element={<PrivateRoute><ManagementReports /></PrivateRoute>} />
+          <Route path="/mgmt-reports-guerratool" element={<PrivateRoute><MgmtReportsGuerraTool /></PrivateRoute>} />
           <Route path="/receive-crypto" element={<PrivateRoute><ReceiveCrypto /></PrivateRoute>} />
           {/* <Route path="/reports-dashboard/:typeOfReport" element={<PrivateRoute><ReportsDashboard /></PrivateRoute>} /> */}
           <Route path="/reports-data" element={<PrivateRoute><ReportDetailsPage /></PrivateRoute>} />

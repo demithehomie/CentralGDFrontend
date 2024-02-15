@@ -1,4 +1,5 @@
 import  { useState, useEffect } from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import UserTable, { User } from '../../../components/user-table/UserTable';
 import './GuerraToolUsers.css';
@@ -6,45 +7,90 @@ import SearchBarUsersGuerraTool from '../../../components/search-components/Sear
 import MainNavbar from '../../../components/main-navbar/MainNavbar';
 
 
-function GuerraToolUserCreditsPopup(
-  { 
-    user, onClose, onAddCredits, onSubtractCredits,  onInsertCredits 
-  } : { 
-    user: User, onClose: () => void, 
-    onAddCredits: (user: User, amount: number) => void, 
-    onSubtractCredits: (user: User, amount: number) => void, 
-    onInsertCredits: (user: User, amount: string) => void 
+function GuerraToolUserCreditsPopup({
+    user,
+    onClose,
+    onUpdateUserCredit,
+  }: {
+    user: User;
+    onClose: () => void;
+    onUpdateUserCredit: (userId: string, newCredit: number) => void;
   }) {
-
-  const [amount, setAmount] = useState('');
-
-  return (
-    <>
-    <div className="background-overlay"></div>
-    <div className="credit-popup-container">
-      <h2 className="credit-popup-title">Gerenciar Créditos: {user.name}</h2>
-      <div>
-        <button onClick={() => onAddCredits(user, 1)}>+</button>
-        <button onClick={() => onSubtractCredits(user, 1)}>-</button>
-        <input type="number" className="popup-input" value={amount} onChange={e => setAmount(e.target.value)} />
-        <button onClick={() => onInsertCredits(user, amount)}>Inserir</button>
-      </div>
-      <br />
-      <button className="credit-popup-button" onClick={onClose}>Fechar</button>
-      <br /><br />
-      <div className="gradient-line"></div>
-    <div className="copyright-text">(C) 2024 Família Guerra Software</div>
-    </div>
-   
-    </>
-  );
-}
+    const [amount, setAmount] = useState<string>('');
+    //const [users, setUsers] = useState<User[]>([]);
+  
+    const apiurl = `https://gdcompanion-prod.onrender.com`;
+  
+    // Supondo que User tenha um campo credit e user_id
+    // useEffect para buscar dados do usuário não modificado
+    // const updateCreditForUser = (userId: string, newCredit: number) => {
+    //   setUsers(users.map(user => {
+    //     if (user.user_id === userId) {
+    //       return { ...user, credit: newCredit };
+    //     }
+    //     return user;
+    //   }));
+    // };
+    
+  
+    const handleManageCredits = async (operation: 'add' | 'subtract') => {
+      try {
+        const response = await axios.put(`${apiurl}/manage-credits-guerratool/${user.user_id}`, {
+          amount: amount,
+          operation: operation,
+        });
+        console.log(response.data);
+        // Atualize os créditos do usuário após a operação bem-sucedida
+        const newCredit = operation === 'add' ? user.credit + parseFloat(amount) : user.credit - parseFloat(amount);
+        onUpdateUserCredit(user.user_id, newCredit); // Corrigido aqui
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    
+  
+  
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>, operation: 'add' | 'subtract') => {
+      e.preventDefault(); // Previne o recarregamento da página
+      handleManageCredits(operation);
+    };
+  
+    return (
+      <>
+        <div className="background-overlay"></div>
+        <div className="credit-popup-container">
+          <h2 className="credit-popup-title">Gerenciar Créditos: {user.name}</h2>
+          <div>
+            <p className='title-color'>
+              <b>Total de Créditos:</b> {user && user.credit}
+            </p>
+          </div>
+          <form onSubmit={(e) => handleSubmit(e, 'add')}>
+            <label className='title-color'>
+              Quantidade: <br />
+              <input 
+                type="number" 
+                value={amount} 
+                onChange={(e) => setAmount(e.target.value)} 
+              />
+            </label>
+            <div>
+              <button type="submit">Adicionar</button>
+              <button type="button" onClick={(e) => handleSubmit(e as any, 'subtract')}>Subtrair</button>
+            </div>
+          </form>
+          <br />
+          <button className="credit-popup-button" onClick={onClose}>Fechar</button>
+        </div>
+      </>
+    );
+  }
 
 export default function GuerraToolUsers() {
   const navigate = useNavigate();
   const [showPopup, setShowPopup] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-
+  const [creditUpdateTrigger, /*setCreditUpdateTrigger*/] = useState(0); // Inicializa um contador ou timestamp
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -64,16 +110,28 @@ export default function GuerraToolUsers() {
     setSelectedUser(null);
   };
 
-  const handleAddCredits = async (user: User, amount: any) => {
-    // Implemente a lógica para adicionar créditos aqui
-    console.log(`Adicionando ${amount} créditos para ${user.name}`);
-    handleClosePopup();
-  };
+  // const handleAddCredits = async (user: User, amount: any) => {
+  //   // Implemente a lógica para adicionar créditos aqui
+  //   console.log(`Adicionando ${amount} créditos para ${user.name}`);
+  //   handleClosePopup();
+  // };
   
-  const handleSubtractCredits = async (user: User, amount: any) => {
-    // Implemente a lógica para subtrair créditos aqui
-    console.log(`Subtraindo ${amount} créditos de ${user.name}`);
-    handleClosePopup();
+  // const handleSubtractCredits = async (user: User, amount: any) => {
+  //   // Implemente a lógica para subtrair créditos aqui
+  //   console.log(`Subtraindo ${amount} créditos de ${user.name}`);
+  //   handleClosePopup();
+  // };
+
+  const onUpdateUserCredit = (userId: string, newCredit: number) => {
+    // Atualiza o array de usuários
+    const updatedUsers = users.map(user => 
+      user.user_id === userId ? { ...user, credit: newCredit } : user);
+    setUsers(updatedUsers);
+  
+    // Atualiza o usuário selecionado, se aplicável
+    if (selectedUser && selectedUser.user_id === userId) {
+      setSelectedUser({ ...selectedUser, credit: newCredit });
+    }
   };
 
   const fetchAndUpdateUsers = async () => {
@@ -145,11 +203,10 @@ export default function GuerraToolUsers() {
         <UserTable users={users} onToggleResellerStatus={toggleResellerStatus} onUserClick={handleUserClick}/>
         {showPopup && selectedUser && (
         <GuerraToolUserCreditsPopup
-          user={selectedUser}
-          onClose={handleClosePopup}
-          onAddCredits={handleAddCredits}
-          onSubtractCredits={handleSubtractCredits}
-          onInsertCredits={handleAddCredits}
+        key={selectedUser.user_id + creditUpdateTrigger} // Isso força a re-renderização com novos dados
+        user={selectedUser}
+        onClose={handleClosePopup}
+        onUpdateUserCredit={onUpdateUserCredit} 
         />
       )}
         <div className="pagination">

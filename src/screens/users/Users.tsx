@@ -6,119 +6,101 @@ import './Users.css';
 import SearchBar from '../../components/search-components/SearchBar';
 import MainNavbar from '../../components/main-navbar/MainNavbar';
 
-function UserCreditsPopup(
-  { 
-    user, onClose, //onAddCredits, onSubtractCredits,  onInsertCredits 
-  } : { 
-    user: User, onClose: () => void, 
-    onAddCredits: (user: User, amount: number) => void, 
-    onSubtractCredits: (user: User, amount: number) => void, 
-    onInsertCredits: (user: User, amount: string) => void 
-  }) {
+// interface UserCreditsPopupProps {
+//   user: User;
+//   onClose: () => void;
+//   onUpdateUserCredit: (userId: string, newCredit: number) => void;
+// }
 
-    const [ /*userData,*/, setUserData] = useState<User | null>(null);
- // const { userId } = useParams<{ userId: string }>();
- // const [amount, setAmount] = useState('');
-  const [addAmount, setAddAmount] = useState<string>('');
-  const [subtractAmount, setSubtractAmount] = useState<string>('');
+
+
+function UserCreditsPopup({
+  user,
+  onClose,
+  onUpdateUserCredit,
+}: {
+  user: User;
+  onClose: () => void;
+  onUpdateUserCredit: (userId: string, newCredit: number) => void;
+}) {
+  const [amount, setAmount] = useState<string>('');
+  const [userStatus, setUserStatus] = useState(user.user_status);
+  //const [users, setUsers] = useState<User[]>([]);
 
   const apiurl = `https://gdcompanion-prod.onrender.com`;
-  //const apiurldev = `http://localhost:3001`;
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await axios.get(`https://gdcompanion-prod.onrender.com/users/${user.user_id}`);
-        console.log(user.user_id)
-     
-          setUserData(response.data);
-      } catch (error) {
-        console.error((error as Error).message);
-      }
-    };
+  // Supondo que User tenha um campo credit e user_id
+  // useEffect para buscar dados do usuário não modificado
+  // const updateCreditForUser = (userId: string, newCredit: number) => {
+  //   setUsers(users.map(user => {
+  //     if (user.user_id === userId) {
+  //       return { ...user, credit: newCredit };
+  //     }
+  //     return user;
+  //   }));
+  // };
   
-    fetchUser();
-  }, [user.user_id]);
 
-  const handleAddCredits = async () => {
+  const handleManageCredits = async (operation: 'add' | 'subtract') => {
     try {
-      const response = await axios.put(`${apiurl}/add-credits/${user.user_id}`, { amount: addAmount  });
-      console.log(addAmount); // Exiba a resposta do servidor
-      console.log(response.data); // Exiba a resposta do servidor
+      const response = await axios.put(`${apiurl}/manage-credits/${user.user_id}`, {
+        amount: amount,
+        operation: operation,
+      });
+      console.log(response.data);
+      // Atualize os créditos do usuário após a operação bem-sucedida
+      const newCredit = operation === 'add' ? user.credit + parseFloat(amount) : user.credit - parseFloat(amount);
+      onUpdateUserCredit(user.user_id, newCredit); // Corrigido aqui
     } catch (error) {
       console.error(error);
     }
   };
   
-  const handleSubtractCredits = async () => {
-    try {
-      const response = await axios.put(`${apiurl}/subtract-credits/${user.user_id}`, { amount: subtractAmount });
-      console.log(response.data); // Exiba a resposta do servidor
-    } catch (error) {
-      console.error(error);
-    }
+
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>, operation: 'add' | 'subtract') => {
+    e.preventDefault(); // Previne o recarregamento da página
+    handleManageCredits(operation);
   };
-
-
 
   return (
     <>
-    <div className="background-overlay"></div>
-    <div className="credit-popup-container">
-      <h2 className="credit-popup-title">Gerenciar Créditos: {user.name}</h2>
-      {/* <div>
-        <button onClick={() => onAddCredits(user, 1)}>+</button>
-        <button onClick={() => onSubtractCredits(user, 1)}>-</button>
-        <input type="number" className="popup-input" value={amount} onChange={e => setAmount(e.target.value)} />
-        <button onClick={() => onInsertCredits(user, amount)}>Inserir</button>
-      </div> */}
-      <div>
-      <div className='new-text-alignment-credit-data'>
-            {/* <label className='main-title-color'>Gestão de Créditos</label> */}
-            <p className='title-color'>
-              <b>Total de Créditos:</b> {user && user.credit}
-            </p>
-         </div>
-      <form onSubmit={handleAddCredits}>
-                      <label className='title-color'>
-                        Quantidade para Adicionar: <br />
-                        <input 
-                          type="number" 
-                          value={addAmount} 
-                          onChange={(e) => setAddAmount(e.target.value)} 
-                        />
-                      </label>
-                    <button type="submit" >Adicionar</button>
-                  </form>
+      <div className="background-overlay"></div>
+      <div className="credit-popup-container">
+        <h2 className="credit-popup-title">Gerenciar Créditos: {user.name}</h2>
+        <div>
+          <p className='title-color'>
+            <b>Total de Créditos:</b> {user && user.credit}
+          </p>
+        </div>
+        <form onSubmit={(e) => handleSubmit(e, 'add')}>
+          <label className='title-color'>
+            Quantidade: <br />
+            <input 
+              type="number" 
+              value={amount} 
+              onChange={(e) => setAmount(e.target.value)} 
+            />
+          </label>
+          <div>
+            <button type="submit">Adicionar</button>
+            <button type="button" onClick={(e) => handleSubmit(e as any, 'subtract')}>Subtrair</button>
+          </div>
+        </form>
+        <br />
+        <button className="credit-popup-button" onClick={onClose}>Fechar</button>
       </div>
-      <div>
-      <form onSubmit={handleSubtractCredits}>
-                    <label className='title-color'>
-                      Quantidade para Subtrair: <br />
-                      <input 
-                        type="number" 
-                        value={subtractAmount} 
-                        onChange={(e) => setSubtractAmount(e.target.value)} 
-                      />
-                      </label>
-                      <button type="submit" >Subtrair</button>
-                  </form>
-      </div>
-      <br />
-      <button className="credit-popup-button" onClick={onClose}>Fechar</button>
-      <br /><br />
-      <div className="gradient-line"></div>
-    <div className="copyright-text">(C) 2024 Família Guerra Software</div>
-    </div>
-   
     </>
   );
 }
+
+//export default UserCreditsPopup;
 
 export default function Users() {
   const navigate = useNavigate();
   const [showPopup, setShowPopup] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [creditUpdateTrigger, /*setCreditUpdateTrigger*/] = useState(0); // Inicializa um contador ou timestamp
 
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -138,17 +120,29 @@ export default function Users() {
     setSelectedUser(null);
   };
 
-  const handleAddCredits = async (user: User, amount: any) => {
-    // Implemente a lógica para adicionar créditos aqui
-    console.log(`Adicionando ${amount} créditos para ${user.name}`);
-    handleClosePopup();
+  // const handleAddCredits = async (user: User, amount: any) => {
+  //   // Implemente a lógica para adicionar créditos aqui
+  //   console.log(`Adicionando ${amount} créditos para ${user.name}`);
+  //   handleClosePopup();
+  // };
+  
+  // const handleSubtractCredits = async (user: User, amount: any) => {
+  //   // Implemente a lógica para subtrair créditos aqui
+  //   console.log(`Subtraindo ${amount} créditos de ${user.name}`);
+  //   handleClosePopup();
+  // };
+  const onUpdateUserCredit = (userId: string, newCredit: number) => {
+    // Atualiza o array de usuários
+    const updatedUsers = users.map(user => 
+      user.user_id === userId ? { ...user, credit: newCredit } : user);
+    setUsers(updatedUsers);
+  
+    // Atualiza o usuário selecionado, se aplicável
+    if (selectedUser && selectedUser.user_id === userId) {
+      setSelectedUser({ ...selectedUser, credit: newCredit });
+    }
   };
   
-  const handleSubtractCredits = async (user: User, amount: any) => {
-    // Implemente a lógica para subtrair créditos aqui
-    console.log(`Subtraindo ${amount} créditos de ${user.name}`);
-    handleClosePopup();
-  };
   
 
   const fetchAndUpdateUsers = async () => {
@@ -220,11 +214,14 @@ export default function Users() {
         <UserTable users={users} onToggleResellerStatus={toggleResellerStatus} onUserClick={handleUserClick}/>
         {showPopup && selectedUser && (
         <UserCreditsPopup
+        key={selectedUser.user_id + creditUpdateTrigger} // Isso força a re-renderização com novos dados
           user={selectedUser}
           onClose={handleClosePopup}
-          onAddCredits={handleAddCredits}
-          onSubtractCredits={handleSubtractCredits}
-          onInsertCredits={handleAddCredits}
+          onUpdateUserCredit={onUpdateUserCredit} 
+         // onUpdateUserCredit={updateCreditForUser}
+          // onAddCredits={handleAddCredits}
+          // onSubtractCredits={handleSubtractCredits}
+          // onInsertCredits={handleAddCredits}
         />
       )}
         <div className="pagination">

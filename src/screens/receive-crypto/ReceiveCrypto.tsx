@@ -110,7 +110,7 @@ const ReceiveCrypto: React.FC = () => {
       console.log(response.data); 
      // Swal.fire('Sucesso!', 'Cliente inserido com sucesso.', 'success');
       localStorage.setItem('payment_id', JSON.stringify(response.data.payment_id));
-      const paymentLink = `http://localhost:5173/crypto-payments/${response.data.payment_id}`;
+      const paymentLink = `${apiurlprod}/crypto-payments/${response.data.payment_id}`;
     // Swal popup to show the payment link
     Swal.fire({
       title: 'Payment Link Generated',

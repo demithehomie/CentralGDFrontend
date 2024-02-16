@@ -11,7 +11,7 @@ export interface ReportData {
   service_provided: string;
   amount: number;
   username: string;
-  pending_payments: number;
+  pending_payments: boolean | string | any;
   created_at: string;
   payment_id: number;
 }
@@ -122,6 +122,34 @@ const emitPdf = async (reportType: any) => {
       console.error('Error downloading the file:', error);
   }
 };
+
+const handlePendingPaymentChange = async (item: ReportData, newValue: string) => {
+    const newPendingStatus = newValue === 'true' ? true : newValue === 'false' ? false : newValue;
+  
+    try {
+      await axios.post(`https://gdcompanion-prod.onrender.com/marcar-posts-pagos-manualmente/${item.payment_id}`, {
+        pending_payments: newPendingStatus
+      });
+  
+      // Determinar a qual conjunto de dados o item pertence (exemplo usando dailyReportData)
+      let updatedReportData;
+      if (dailyReportData.some(reportItem => reportItem.id === item.id)) {
+        updatedReportData = dailyReportData.map(reportItem => {
+          if (reportItem.id === item.id) {
+            return { ...reportItem, pending_payments: newPendingStatus };
+          }
+          return reportItem;
+        });
+        setDailyReportData(updatedReportData);
+      }
+      // Repita a lógica acima para weeklyReportData, monthlyReportData, etc., conforme necessário
+  
+      console.log('Status de pagamento atualizado com sucesso.');
+    } catch (error) {
+      console.error('Erro ao atualizar o status de pagamento:', error);
+    }
+  };
+  
     
   return (
     <>
@@ -130,6 +158,7 @@ const emitPdf = async (reportType: any) => {
             <br /><br /><br /><br />
             <h3 className="title"> Todos Os Relatórios </h3>   
             <h3 className="subtitle">Relatório Diário</h3>
+            <div className={`report-table-container ${monthlyReportData.length > 4 ? 'scrollable' : ''}`}>
         
             <table className="report-table">
                 <thead>
@@ -155,7 +184,22 @@ const emitPdf = async (reportType: any) => {
                             <td>{item.service_provided}</td>
                             <td>R$ {item.amount.toFixed(2).replace('.', ',')}</td> 
                                {/* <td>{item.username}</td> */}
-                            <td>{item.pending_payments}</td>
+                               <td>
+                                <select
+                                    value={item.pending_payments.toString()}
+                                    onChange={(e) => handlePendingPaymentChange(item, e.target.value)}
+                                >
+                                    {/* Sempre inclua as opções true e false */}
+                                    <option value="true">Sim</option>
+                                    <option value="false">Não</option>
+                                    {/* Se o valor atual não for nem true nem false, inclua uma opção para o estado atual */}
+                                    {item.pending_payments !== true && item.pending_payments !== false && (
+                                    <option value={item.pending_payments.toString()} disabled>
+                                        {item.pending_payments.charAt(0).toUpperCase() + item.pending_payments.slice(1)}
+                                    </option>
+                                    )}
+                                </select>
+                                </td>
                               <td>
                             {
                                 new Date(new Date(item.created_at).getTime() )
@@ -176,6 +220,7 @@ const emitPdf = async (reportType: any) => {
                     ))}
                 </tbody>
             </table>
+            </div>
         <div className='buttons-row-rel'>
            {/* <button className='button-report'>Exibir detalhes</button>*/}  <button className='button-report' onClick={() => emitPdf('daily')}>Emitir PDF</button> <button className='button-report' onClick={() => emitDocx('daily')}>Emitir DOCX</button> <button className='button-report' onClick={() => emitExcel('daily')}>Emitir Excel</button>
         </div>
@@ -184,6 +229,7 @@ const emitPdf = async (reportType: any) => {
         <br />
         <br />
             <h3 className="subtitle">Relatório Semanal</h3>
+            <div className={`report-table-container ${monthlyReportData.length > 4 ? 'scrollable' : ''}`}>
             <table className="report-table">
                 <thead>
                     <tr>
@@ -208,7 +254,22 @@ const emitPdf = async (reportType: any) => {
                             <td>{item.service_provided}</td>
                             <td>R$ {item.amount.toFixed(2).replace('.', ',')}</td> 
                                {/* <td>{item.username}</td> */}
-                            <td>{item.pending_payments}</td>
+                               <td>
+                                <select
+                                    value={item.pending_payments.toString()}
+                                    onChange={(e) => handlePendingPaymentChange(item, e.target.value)}
+                                >
+                                    {/* Sempre inclua as opções true e false */}
+                                    <option value="true">Sim</option>
+                                    <option value="false">Não</option>
+                                    {/* Se o valor atual não for nem true nem false, inclua uma opção para o estado atual */}
+                                    {item.pending_payments !== true && item.pending_payments !== false && (
+                                    <option value={item.pending_payments.toString()} disabled>
+                                        {item.pending_payments.charAt(0).toUpperCase() + item.pending_payments.slice(1)}
+                                    </option>
+                                    )}
+                                </select>
+                                </td>
                               <td>
                             {
                                 new Date(new Date(item.created_at).getTime() )
@@ -229,6 +290,7 @@ const emitPdf = async (reportType: any) => {
                     ))}
                 </tbody>
             </table>
+            </div>
         <div className='buttons-row-rel'>
            {/* <button className='button-report'>Exibir detalhes</button>*/}   <button className='button-report' onClick={() => emitPdf('weekly')}>Emitir PDF</button> <button className='button-report' onClick={() => emitDocx('weekly')}>Emitir DOCX</button> <button className='button-report' onClick={() => emitExcel('weekly')}>Emitir Excel</button>
         </div>
@@ -262,7 +324,22 @@ const emitPdf = async (reportType: any) => {
                             <td>{item.service_provided}</td>
                             <td>R$ {item.amount.toFixed(2).replace('.', ',')}</td> 
                                {/* <td>{item.username}</td> */}
-                            <td>{item.pending_payments}</td>
+                               <td>
+                                <select
+                                    value={item.pending_payments.toString()}
+                                    onChange={(e) => handlePendingPaymentChange(item, e.target.value)}
+                                >
+                                    {/* Sempre inclua as opções true e false */}
+                                    <option value="true">Sim</option>
+                                    <option value="false">Não</option>
+                                    {/* Se o valor atual não for nem true nem false, inclua uma opção para o estado atual */}
+                                    {item.pending_payments !== true && item.pending_payments !== false && (
+                                    <option value={item.pending_payments.toString()} disabled>
+                                        {item.pending_payments.charAt(0).toUpperCase() + item.pending_payments.slice(1)}
+                                    </option>
+                                    )}
+                                </select>
+                                </td>
                             <td>
                             {
                                 new Date(new Date(item.created_at).getTime() )
@@ -317,7 +394,22 @@ const emitPdf = async (reportType: any) => {
                             <td>{item.service_provided}</td>
                             <td>R$ {item.amount.toFixed(2).replace('.', ',')}</td> 
                                {/* <td>{item.username}</td> */}
-                            <td>{item.pending_payments}</td>
+                               <td>
+                                <select
+                                    value={item.pending_payments.toString()}
+                                    onChange={(e) => handlePendingPaymentChange(item, e.target.value)}
+                                >
+                                    {/* Sempre inclua as opções true e false */}
+                                    <option value="true">Sim</option>
+                                    <option value="false">Não</option>
+                                    {/* Se o valor atual não for nem true nem false, inclua uma opção para o estado atual */}
+                                    {item.pending_payments !== true && item.pending_payments !== false && (
+                                    <option value={item.pending_payments.toString()} disabled>
+                                        {item.pending_payments.charAt(0).toUpperCase() + item.pending_payments.slice(1)}
+                                    </option>
+                                    )}
+                                </select>
+                                </td>
                               <td>
                             {
                                 new Date(new Date(item.created_at).getTime() )
@@ -371,7 +463,22 @@ const emitPdf = async (reportType: any) => {
                             <td>{item.service_provided}</td>
                             <td>R$ {item.amount.toFixed(2).replace('.', ',')}</td> 
                                {/* <td>{item.username}</td> */}
-                            <td>{item.pending_payments}</td>
+                               <td>
+                                <select
+                                    value={item.pending_payments.toString()}
+                                    onChange={(e) => handlePendingPaymentChange(item, e.target.value)}
+                                >
+                                    {/* Sempre inclua as opções true e false */}
+                                    <option value="true">Sim</option>
+                                    <option value="false">Não</option>
+                                    {/* Se o valor atual não for nem true nem false, inclua uma opção para o estado atual */}
+                                    {item.pending_payments !== true && item.pending_payments !== false && (
+                                    <option value={item.pending_payments.toString()} disabled>
+                                        {item.pending_payments.charAt(0).toUpperCase() + item.pending_payments.slice(1)}
+                                    </option>
+                                    )}
+                                </select>
+                                </td>
                               <td>
                             {
                                 new Date(new Date(item.created_at).getTime() )
@@ -424,7 +531,22 @@ const emitPdf = async (reportType: any) => {
                             <td>{item.service_provided}</td>
                             <td>R$ {item.amount.toFixed(2).replace('.', ',')}</td> 
                                {/* <td>{item.username}</td> */}
-                            <td>{item.pending_payments}</td>
+                               <td>
+                                <select
+                                    value={item.pending_payments.toString()}
+                                    onChange={(e) => handlePendingPaymentChange(item, e.target.value)}
+                                >
+                                    {/* Sempre inclua as opções true e false */}
+                                    <option value="true">Sim</option>
+                                    <option value="false">Não</option>
+                                    {/* Se o valor atual não for nem true nem false, inclua uma opção para o estado atual */}
+                                    {item.pending_payments !== true && item.pending_payments !== false && (
+                                    <option value={item.pending_payments.toString()} disabled>
+                                        {item.pending_payments.charAt(0).toUpperCase() + item.pending_payments.slice(1)}
+                                    </option>
+                                    )}
+                                </select>
+                                </td>
                               <td>
                             {
                                 new Date(new Date(item.created_at).getTime() )

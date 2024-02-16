@@ -41,6 +41,8 @@ const PaymentScreen: React.FC = () => {
     cpf: '10050031732',
     transaction_amount: 0.01,
   });
+  const [isTransactionAmountEnabled, setIsTransactionAmountEnabled] = useState(false);
+
   const [responsePayment, setResponsePayment] = useState<AxiosResponse | null>(null);
   const [linkBuyMercadoPago, setLinkBuyMercadoPago] = useState<string | null>(null);
   const [statusPaymentApproved, setStatusPaymentApproved] = useState<boolean>(false);
@@ -56,13 +58,13 @@ const [selectedTransfer, setSelectedTransfer] = useState<TransferData | null>(nu
 // Verifique se o item deve ser renderizado
 const shouldRenderItem = (transfer: TransferData) => {
   const currentTime = new Date();
-  const tenMinutesAgo = new Date(currentTime.getTime() - 10 * 60 * 1000); // 10 minutes ago
+  const ThirtyMinutesAgo = new Date(currentTime.getTime() - 30 * 60 * 1000); // 10 minutes ago
  // const twoMinutesAgo = new Date(currentTime.getTime() - 2 * 60 * 1000); // 2 minutes ago
 
   return (
     (transfer.pending_payments === 'true' || transfer.pending_payments === true) ||
-    (transfer.pending_payments === 'expired' && new Date(transfer.created_at) >= tenMinutesAgo)||
-    (transfer.pending_payments === 'false' && new Date(transfer.created_at) >= tenMinutesAgo)
+    (transfer.pending_payments === 'expired' && new Date(transfer.created_at) >= ThirtyMinutesAgo)||
+    (transfer.pending_payments === 'false' && new Date(transfer.created_at) >= ThirtyMinutesAgo)
   );
 };
 
@@ -217,12 +219,17 @@ const shouldRenderItem = (transfer: TransferData) => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    let finalTransactionAmount = formData.transaction_amount;
+  if (isTransactionAmountEnabled) {
+    finalTransactionAmount = calculateTotalAmount(formData.transaction_amount);
+  }
+
     // Preparando o corpo da requisição para o MercadoPago
     const token = 'APP_USR-5220412533742046-011815-549eea6144946c47d1c330d299e6fb6a-419577621';
     const idempotencyKey = `${Date.now()}-${Math.random()}`; // Chave de idempotência
 
     const paymentBody = {
-      transaction_amount: calculateTotalAmount(formData.transaction_amount),
+      transaction_amount: finalTransactionAmount,//calculateTotalAmount(formData.transaction_amount),
       description: 'Família Guerra',
       payment_method_id: 'pix',
       payer: {
@@ -281,7 +288,7 @@ const shouldRenderItem = (transfer: TransferData) => {
                 name: clientFormData.name,
                 whatsapp: clientFormData.whatsapp,
                 service_provided: clientFormData.service_provided,
-                amount: calculateTotalAmount(formData.transaction_amount),
+                amount: finalTransactionAmount, // calculateTotalAmount(formData.transaction_amount),
                 payment_id: paymentId, 
                 qr_code: qrCode,
                 qr_code_cec: qrcodeCopiaECola,
@@ -337,33 +344,33 @@ const shouldRenderItem = (transfer: TransferData) => {
     }
   }, [linkBuyMercadoPago, statusPaymentPending]);
 
-  const checkAndMarkExpiredPayments = async () => {
-    try {
-      await axios.post('https://gdcompanion-prod.onrender.com/verificar-e-marcar-expirados');
-      console.log('Pagamentos expirados verificados e marcados com sucesso.');
-    } catch (error) {
-      console.error('Erro ao verificar e marcar pagamentos expirados:', error);
-    }
-  };
+  // const checkAndMarkExpiredPayments = async () => {
+  //   try {
+  //     await axios.post('https://gdcompanion-prod.onrender.com/verificar-e-marcar-expirados');
+  //     console.log('Pagamentos expirados verificados e marcados com sucesso.');
+  //   } catch (error) {
+  //     console.error('Erro ao verificar e marcar pagamentos expirados:', error);
+  //   }
+  // };
  
-  useEffect(() => {
-    // Idealmente, essa função só deve ser chamada se você tem certeza de que há pagamentos pendentes que possam ter expirado
-    // Se você puder verificar essa condição no frontend, faça isso antes de chamar a função
-    const verificarEAtualizarPagamentosExpirados = async () => {
-      try {
-        await checkAndMarkExpiredPayments();
-      } catch (error) {
-        console.error("Erro ao verificar/atualizar pagamentos expirados:", error);
-      }
-    };
+  // useEffect(() => {
+  //   // Idealmente, essa função só deve ser chamada se você tem certeza de que há pagamentos pendentes que possam ter expirado
+  //   // Se você puder verificar essa condição no frontend, faça isso antes de chamar a função
+  //   const verificarEAtualizarPagamentosExpirados = async () => {
+  //     try {
+  //       await checkAndMarkExpiredPayments();
+  //     } catch (error) {
+  //       console.error("Erro ao verificar/atualizar pagamentos expirados:", error);
+  //     }
+  //   };
   
-    verificarEAtualizarPagamentosExpirados();
+  //   verificarEAtualizarPagamentosExpirados();
   
-    // Você também pode utilizar setInterval aqui, mas certifique-se de limpar isso quando o componente desmontar
-    const intervalId = setInterval(verificarEAtualizarPagamentosExpirados, 300000); // 5 minutos
+  //   // Você também pode utilizar setInterval aqui, mas certifique-se de limpar isso quando o componente desmontar
+  //   const intervalId = setInterval(verificarEAtualizarPagamentosExpirados, 86400000); // 24 horas
   
-    return () => clearInterval(intervalId); // Limpeza na desmontagem do componente
-  }, []); // Dependências vazias indicam que isso roda apenas na montagem do componente
+  //   return () => clearInterval(intervalId); // Limpeza na desmontagem do componente
+  // }, []); // Dependências vazias indicam que isso roda apenas na montagem do componente
   
 
   useEffect(() => {
@@ -434,6 +441,17 @@ const shouldRenderItem = (transfer: TransferData) => {
                 value={formData.transaction_amount}
                 name="transaction_amount"
               />
+              <div>
+  <label>
+    Calcular Valor da Transação?
+    <input
+      type="checkbox"
+      checked={isTransactionAmountEnabled}
+      onChange={(e) => setIsTransactionAmountEnabled(e.target.checked)}
+    />
+  </label>
+</div>
+
               <div>
                 <strong style={{ color: '#ffffff' }}>Total (com a Taxa de 1%): </strong>
                 <label style={{ color: '#ffffff' }}>

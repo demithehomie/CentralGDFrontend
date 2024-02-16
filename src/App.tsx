@@ -37,6 +37,11 @@ import CryptoPaymentPage from './screens/crypto-payment-page/CryptoPaymentPage';
 //import { useParams } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import MgmtReportsGuerraTool from './screens/management-reports/guerra-tool/MgmtReportsGuerraTool';
+import BlockedUsers from './screens/blocked-users/BlockedUsers';
+import TaskLogsGT from './screens/task-logs-gt/TaskLogsGT';
+import TaskLogsTMT from './screens/task-logs-tmt/TaskLogsTMT';
+import GuerraToolBlockedUsers from './screens/blocked-users/guerra-tool/GuerratoolBlockedUsers';
+import CreditLogsTMT from './screens/credit-logs-tmt/CreditLogsTMT';
 
 
 
@@ -89,6 +94,8 @@ function App() {
           <Route path="/activity" element={<PrivateRoute><Activity /></PrivateRoute>} />
           <Route path="/scheduling" element={<PrivateRoute><Scheduling /></PrivateRoute>} />
           <Route path="/configure" element={<PrivateRoute><Configure /></PrivateRoute>} />
+          <Route path="/blocked-users/guerratool" element={<PrivateRoute><GuerraToolBlockedUsers /></PrivateRoute>} />
+          <Route path="/blocked-users" element={<PrivateRoute><BlockedUsers /></PrivateRoute>} />
           <Route path="/users" element={<PrivateRoute><Users /></PrivateRoute>} />
           <Route path="/guerratool-users" element={<PrivateRoute><GuerraToolUsers /></PrivateRoute>} />
           <Route path="/search-results" element={<PrivateRoute><SearchResults /></PrivateRoute>} />
@@ -107,6 +114,10 @@ function App() {
           <Route path="/receive-crypto" element={<PrivateRoute><ReceiveCrypto /></PrivateRoute>} />
           {/* <Route path="/reports-dashboard/:typeOfReport" element={<PrivateRoute><ReportsDashboard /></PrivateRoute>} /> */}
           <Route path="/reports-data" element={<PrivateRoute><ReportDetailsPage /></PrivateRoute>} />
+          <Route path="/tmt-task-logs" element={<PrivateRoute><TaskLogsTMT /></PrivateRoute>} />
+          <Route path="/gt-task-logs" element={<PrivateRoute><TaskLogsGT /></PrivateRoute>} />
+          <Route path="/tmt-credit-logs" element={<PrivateRoute><CreditLogsTMT /></PrivateRoute>} />
+          <Route path="/gt-credit-logs" element={<PrivateRoute><TaskLogsGT /></PrivateRoute>} />
           <Route path="/crypto-payments/:paymentId" element={<CryptoPaymentPage />} />
           </Routes>
         </BrowserRouter>

@@ -52,15 +52,16 @@ import { Helmet } from 'react-helmet-async';
           const weeklyResponse = await axios.get('https://gdcompanion-prod.onrender.com/report/json?type=weekly');
           const monthlyResponse = await axios.get('https://gdcompanion-prod.onrender.com/report/json?type=monthly');
     
-          // Calcula os totais para o relatório diário
-          const totalServicesDaily = dailyResponse.data.reduce((acc: any, curr: { amount: any; }) => acc + curr.amount, 0);
-          const totalRevenueDaily = dailyResponse.data.reduce((acc: number, curr: { amount: number; }) => acc + (curr.amount * 1), 0);
+          const totalServicesDaily = dailyResponse.data.filter((item: { pending_payments: string; }) => item.pending_payments === "false"  ).reduce((acc: any, curr: { amount: any; }) => acc + curr.amount, 0);
+          const totalRevenueDaily = dailyResponse.data.filter((item: { pending_payments: string; }) => item.pending_payments === "false" ).reduce((acc: number, curr: { amount: number; }) => acc + (curr.amount * 1), 0);
+          
+          const totalServicesWeekly = weeklyResponse.data.filter((item: { pending_payments: string; }) => item.pending_payments === "false" ).reduce((acc: any, curr: { amount: any; }) => acc + curr.amount, 0);
+          const totalRevenueWeekly = weeklyResponse.data.filter((item: { pending_payments: string; }) => item.pending_payments === "false" ).reduce((acc: number, curr: { amount: number; }) => acc + (curr.amount * 1), 0);
+          
+          const totalServicesMonthly = monthlyResponse.data.filter((item: { pending_payments: string; }) => item.pending_payments === "false" ).reduce((acc: any, curr: { amount: any; }) => acc + curr.amount, 0);
+          const totalRevenueMonthly = monthlyResponse.data.filter((item: { pending_payments: string; }) => item.pending_payments === "false" ).reduce((acc: number, curr: { amount: number; }) => acc + (curr.amount * 1), 0);
+          
 
-          const totalServicesWeekly = weeklyResponse.data.reduce((acc: any, curr: { amount: any; }) => acc + curr.amount, 0);
-          const totalRevenueWeekly = weeklyResponse.data.reduce((acc: number, curr: { amount: number; }) => acc + (curr.amount * 1), 0);
-
-          const totalServicesMonthly = monthlyResponse.data.reduce((acc: any, curr: { amount: any; }) => acc + curr.amount, 0);
-          const totalRevenueMonthly = monthlyResponse.data.reduce((acc: number, curr: { amount: number; }) => acc + (curr.amount * 1), 0);
     
           // Similar para semanal e mensal...
           // Supõe-se que você repetirá o processo acima para weeklyResponse.data e monthlyResponse.data
@@ -332,23 +333,27 @@ import { Helmet } from 'react-helmet-async';
           flexDirection: 'row',
         }} */}
         <div className='row-of-frontal-buttons'>
+          <div className='animated-background'>
+
+          
            <div className='little-cards-gd' onClick={getAllMGMTReports} >
-            <h2 >GUERRADONE</h2>
+            <h2 style={{ fontSize: 30}}>GUERRADONE</h2>
             {/* Supondo que dailySummary contém campos como totalServices e totalRevenue */}
-            <p >Total de Serviços: R$: {summaryData.daily.totalServices.toFixed(2).replace('.', ',')}</p>
-            <p >Receita Total: R$: {summaryData.daily.totalRevenue.toFixed(2).replace('.', ',')}</p>
+            <p >Total Hoje: <strong>R$: {summaryData.daily.totalServices.toFixed(2).replace('.', ',')}</strong></p>
+            <p >Total da Semana:<strong> R$: {summaryData.weekly.totalRevenue.toFixed(2).replace('.', ',')}</strong></p>
+          </div>
           </div>
             {/* <br />
             <div className='little-cards-tmt' onClick={getAllMGMTReports}>
               <h2  >The Magic Tool</h2>
-              <p >Total de Serviços: R$: {summaryData.weekly.totalServices.toFixed(2).replace('.', ',')}</p>
+              <p >Total Hoje: R$: {summaryData.weekly.totalServices.toFixed(2).replace('.', ',')}</p>
               <p >Receita Total: R$: {summaryData.weekly.totalRevenue.toFixed(2).replace('.', ',')}</p>
             </div>
            
             <br />
             <div className='little-cards-gt' onClick={getAllMGMTReports}>
               <h2 >GuerraTool</h2>
-              <p >Total de Serviços: R$: {summaryData.monthly.totalServices.toFixed(2).replace('.', ',')}</p>
+              <p >Total Hoje: R$: {summaryData.monthly.totalServices.toFixed(2).replace('.', ',')}</p>
               <p >Receita Total: R$: {summaryData.monthly.totalRevenue.toFixed(2).replace('.', ',')}</p>
             </div> */}
           

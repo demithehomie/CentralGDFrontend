@@ -245,6 +245,18 @@ export default function Users() {
     navigate('/target')
   }
 
+  const blockedUsers = async () => {
+    navigate('/blocked-users')
+  }
+
+  const theMagicToolTaskLogs = async () => {
+    navigate('/tmt-task-logs')
+  }
+
+  const navigateToTMTCreditLogs = () => {
+    navigate('/tmt-credit-logs');
+  }
+
   const renderContent = () => {
     if (isLoading) {
       return <center><div className="loader"></div><h3 className='loading-messages'>Carregando usuários..</h3></center>;
@@ -294,7 +306,9 @@ export default function Users() {
         <button className="button" onClick={prints}  >Prints</button>
         <button className="button" onClick={targets}  >Targets</button>
       </div>
-        
+        <button onClick={theMagicToolTaskLogs}>Task Logs</button>
+        <button onClick={navigateToTMTCreditLogs}>Credit Logs</button>
+        <button onClick={blockedUsers}>Usuários Bloqueados</button>
         <button  onClick={backToDashboard}>Voltar ao Início</button>
     </div>
     </>

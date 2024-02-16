@@ -23,6 +23,8 @@ function GuerraToolUserCreditsPopup({
 
   const apiurl = `https://gdcompanion-prod.onrender.com`;
 
+  //const navigate = useNavigate();
+
   useEffect(() => {
     // Supondo que o status esteja sendo passado corretamente na prop user
     setUserStatus(user.user_status);
@@ -65,6 +67,10 @@ function GuerraToolUserCreditsPopup({
     e.preventDefault(); // Previne o recarregamento da página
     handleManageCredits(operation);
   };
+
+  // const navigateToGTCreditLogs = () => {
+  //   navigate('/gt-credit-logs');
+  // }
 
   return (
     <>
@@ -219,6 +225,18 @@ export default function GuerraToolUsers() {
     navigate('/target')
   }
 
+  const blockedUsers = async () => {
+    navigate('/blocked-users')
+  }
+
+  const GTTaskLogs = async () => {
+    navigate('/tmt-task-logs')
+  }
+
+  const CreditLogsGT = () => {
+    navigate('/tmt-credit-logs');
+  }
+
   const usersTheMagicTool = async () => {
     navigate('/users')
   }
@@ -250,6 +268,8 @@ export default function GuerraToolUsers() {
     );
   };
 
+
+
   return (
     <div>
       <MainNavbar/>
@@ -267,7 +287,9 @@ export default function GuerraToolUsers() {
         <button className="button" onClick={prints}  >Prints</button>
         <button className="button" onClick={targets}  >Targets</button>
       </div>
-        
+      <button onClick={GTTaskLogs}>Task Logs</button>
+        <button onClick={CreditLogsGT}>Credit Logs</button>
+        <button onClick={blockedUsers}>Usuários Bloqueados</button>
         <button  onClick={backToDashboard}>Voltar ao Início</button>
     </div>
   );

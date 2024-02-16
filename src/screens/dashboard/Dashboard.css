@@ -334,21 +334,66 @@
   animation: gradientBackground 5s ease infinite;
 }
 
+/* Gradiente de Background em movimento */
+@keyframes gradientAnimation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animated-background {
+  background: linear-gradient(-45deg, #0072ff, #00c6ff, #0072ff, "#silver");
+  background-size: 400% 400%;
+  animation: gradientAnimation 15s ease infinite;
+  /* Certifique-se de definir uma altura ou faça com que ela cubra um elemento específico */
+  /* Exemplo de altura mínima */
+}
+
+.row-of-frontal-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 10px;
+  max-width: 180%;
+}
 
 .little-cards-gd {
   background-color: #08055b;
   border: 1px solid #ffffff;
   max-height: 220px;
-  min-width: 60%;
+  min-width: 100%;
   border-radius: 15px;
   padding: 3%;
   margin: 2%;
+  transition: transform 0.3s ease-in-out;
 }
 
-.little-cards-gd, h2, p{
+.little-cards-gd h2,
+.little-cards-gd p {
   color: #ffffff;
   font-size: 120%;
 }
+
+.little-cards-gd:hover {
+  transform: scale(1.05);
+  border-color: #00c6ff;
+}
+
+.row-of-frontal-buttons button {
+  padding: 10px 20px;
+  margin: 0 5px;
+  border: none;
+  border-radius: 5px;
+  background-color: #00c6ff;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.row-of-frontal-buttons button:hover {
+  background-color: #0072ff;
+}
+
 
 .little-cards-tmt, h2, p{
   color: #ffffff;
@@ -389,11 +434,3 @@
           flexDirection: 'row',
         }} */
 
-.row-of-frontal-buttons {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin: 10px;
-  max-width: 70%;
-  overflow-x: auto;
-}

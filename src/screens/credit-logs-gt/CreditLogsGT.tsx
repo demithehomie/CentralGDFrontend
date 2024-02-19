@@ -25,10 +25,10 @@ type CreditDataType = {
   };
 
 
-  const CreditLogsGT: React.FC = () => {
+  const CreditToolGT: React.FC = () => {
     const [data, setData] = useState<CreditDataType[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [totalPages, setTotalPages] = useState<number>(0);
+  const [totalPages, setTotalPages] = useState<any>();
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<CreditDataType | null>(null);
   const [targetPage, setTargetPage] = useState<string>('');
@@ -45,42 +45,65 @@ type CreditDataType = {
       const response = await axios.get(`${apiurl}/guerratool/users/creditlogs-with-pagination`, {
         params: {
           page: currentPage,
-          limit: 10,
+          limit: 10, // This should match the limit you're using in your API call
           startDate: startDate ? startDate.format('YYYY-MM-DD') : undefined,
           endDate: endDate ? endDate.format('YYYY-MM-DD') : undefined,
         },
       });
   
-      setData(response.data.records);
-      setTotalPages(response.data.totalPages);
+      setData(response.data); // Assuming the response structure is {data: [...], totalRecords: number}
+      const totalRecords = response.data.totalRecords;
+      console.log(`These are totalRecords: ${totalRecords}`)
+      const limit = 10; // This should match the limit you're using in your API call
+      const totalPages = Math.ceil(totalRecords / limit);
+      setTotalPages(totalPages);
     } catch (error) {
       console.error('Erro ao buscar dados:', error);
     }
   };
   
+  // Make sure to adjust your useEffect hook or any other place you're calling fetchData or fetchDataWithDates to use this new logic.
+  
+  
 
   useEffect(() => {
     const fetchData = async () => {
-        try {
-          const response = await axios.get(`${apiurl}/guerratool/users/creditlogs-with-pagination`, {
-            params: {
-              page: currentPage,
-              limit: 10, // ou outro valor conforme sua lógica de paginação
-              startDate: startDate ? startDate.format('YYYY-MM-DD') : undefined,
-              endDate: endDate ? endDate.format('YYYY-MM-DD') : undefined,
-            },
-          });
-      
-          // Ajuste aqui, assumindo que a resposta é diretamente o array de registros
-          setData(response.data); // response.data já é o array esperado
-          // Você precisará ajustar o cálculo do totalPages com base na sua lógica de backend
-        } catch (error) {
-          console.error('Erro ao buscar dados:', error);
+      try {
+        // Make the API call
+        const response = await axios.get(`${apiurl}/guerratool/users/creditlogs-with-pagination`, {
+          params: {
+            page: currentPage,
+            limit: 10, // This should match the limit you're using in your API call
+            startDate: startDate ? startDate.format('YYYY-MM-DD') : undefined,
+            endDate: endDate ? endDate.format('YYYY-MM-DD') : undefined,
+          },
+        });
+  
+        // Assuming the response structure is { data: [...], totalRecords: number }
+        setData(response.data.data); // Set the data for the current page
+        console.log(`Esse é responde.data.data ${JSON.stringify(response.data)}`)
+        // Calculate total pages based on the total number of records and the page size (limit)
+        // const totalRecords = response.data.totalRecords;
+        // const totalPages = Math.ceil(totalRecords / 10); // Use the same limit here for calculation
+        // setTotalPages(totalPages); // Update state with the total number of pages
+        // console.log(`Esse é total pages ${Number(totalPages)}`)
+        const totalRecords = response.data.totalRecords; // Ajuste baseado na sua resposta da API
+        if (typeof totalRecords === "number") { // Verifica se totalRecords é um número
+          const totalPages = Math.ceil(totalRecords / 10); // Substitua 10 pelo seu limite de registros por página
+          setTotalPages(totalPages);
+        } else {
+          console.error('totalRecords is not a number:', totalRecords);
         }
-      };
 
-fetchData();
-}, [currentPage, startDate, endDate]);
+      } catch (error) {
+        console.error('Erro ao buscar dados:', error);
+      }
+    };
+  
+    // Call fetchData whenever currentPage, startDate, or endDate changes
+    fetchData();
+  }, [currentPage, startDate, endDate]); // Dependencies array ensures fetchData runs when any of these values change
+  
 
   const handleRowClick = (record: CreditDataType) => {
     setSelectedItem(record);
@@ -177,39 +200,38 @@ const handleCopy = async () => {
     <>
     <MainNavbar/>
    
+
     <div>
-        <br />
-        <br />
-        <br />
-        <br />
-    <h3 style={{ color: '#ffffff'}}>The Magic Tool - Credit Logs</h3>
-   
-    <button onClick={CreditLogsGt}>Check GUERRATOOL Task Logs</button>
-    <br />br
+      <br />
+      <br />
+      <br />
+      <br />
+      <h3 style={{ color: '#ffffff'}}>The Magic Tool - Credit Logs</h3>
 
-<div>
+      <button onClick={CreditLogsGt}>Check GUERRATOOL Task Logs</button>
+      <br /><br />
 
-  <DatePicker
-    placeholder="Start Date"
-    onChange={handleStartDateChange}
-  />
-  <DatePicker
-    placeholder="End Date"
-    onChange={handleEndDateChange}
-  />
-  <Button type="primary" onClick={fetchDataWithDates}>
-    Filter
-  </Button>
-</div>
-<br />
-        <Table
+      <div>
+        <DatePicker placeholder="Start Date" onChange={handleStartDateChange} />
+        <DatePicker placeholder="End Date" onChange={handleEndDateChange} />
+        <Button type="primary" onClick={fetchDataWithDates}>Filter</Button>
+      </div>
+      <br />
+
+  
+      <Table
         dataSource={data ? data.map(item => ({ ...item, key: item.id.toString() })) : []}
         columns={columns}
-        pagination={false}
-        onRow={(record: CreditDataType) => ({
-            onClick: () => handleRowClick(record),
+        pagination={false} // Gerenciando a paginação externamente
+        onRow={(record) => ({
+          onClick: () => handleRowClick(record),
         })}
-        />
+      />
+          {/* Adicionando indicação da página atual */}
+          <div style={{ marginBottom: '20px' }}>
+        <p style={{ color: '#ffffff' }}>Page {currentPage} of {totalPages}</p>
+      </div>
+
 
       <div style={{ marginTop: '20px' }}>
         <Button onClick={() => gotoPage(currentPage - 1)} disabled={currentPage <= 1}>
@@ -226,6 +248,8 @@ const handleCopy = async () => {
           Next
         </Button>
       </div>
+
+
       <Modal
         title="Task Details"
         visible={modalVisible}
@@ -244,18 +268,18 @@ const handleCopy = async () => {
           ]}
         >
         <p className='modal-items'><strong>Type:</strong> {selectedItem?.type}</p>
-        <p className='modal-items'><strong>Key:</strong> {selectedItem?.key}</p>
-        <p className='modal-items'><strong>Source:</strong> {selectedItem?.source}</p>
-        <p className='modal-items'><strong>Credit Cost:</strong> {selectedItem?.credit_cost}</p>
-        <p className='modal-items'><strong>Credits Quantity:</strong> {selectedItem?.credits_qty}</p>
-        <p className='modal-items'><strong>Balance Before:</strong> {selectedItem?.balance_before}</p>
-        <p className='modal-items'><strong>Balance After:</strong> {selectedItem?.balance_after}</p>
-        <p className='modal-items'><strong>Ref User ID:</strong> {selectedItem?.ref_user_id}</p>
-        <p className='modal-items'><strong>Order ID:</strong> {selectedItem?.order_id}</p>
-        <p className='modal-items'><strong>Note:</strong> {selectedItem?.note}</p>
-        <p className='modal-items'><strong>Status:</strong> {selectedItem?.status}</p>
-        <p className='modal-items'><strong>Created At:</strong> {selectedItem?.created_at && new Date(selectedItem.created_at).toLocaleString()}</p>
-        <p className='modal-items'><strong>Updated At:</strong> {selectedItem?.updated_at && new Date(selectedItem.updated_at).toLocaleString()}</p>
+<p className='modal-items'><strong>Key:</strong> {selectedItem?.key}</p>
+<p className='modal-items'><strong>Source:</strong> {selectedItem?.source}</p>
+<p className='modal-items'><strong>Credit Cost:</strong> {selectedItem?.credit_cost}</p>
+<p className='modal-items'><strong>Credits Quantity:</strong> {selectedItem?.credits_qty}</p>
+<p className='modal-items'><strong>Balance Before:</strong> {selectedItem?.balance_before}</p>
+<p className='modal-items'><strong>Balance After:</strong> {selectedItem?.balance_after}</p>
+<p className='modal-items'><strong>Ref User ID:</strong> {selectedItem?.ref_user_id}</p>
+<p className='modal-items'><strong>Order ID:</strong> {selectedItem?.order_id}</p>
+<p className='modal-items'><strong>Note:</strong> {selectedItem?.note}</p>
+<p className='modal-items'><strong>Status:</strong> {selectedItem?.status}</p>
+<p className='modal-items'><strong>Created At:</strong> {selectedItem?.created_at && new Date(selectedItem.created_at).toLocaleString()}</p>
+<p className='modal-items'><strong>Updated At:</strong> {selectedItem?.updated_at && new Date(selectedItem.updated_at).toLocaleString()}</p>
 
     </Modal>
 
@@ -264,4 +288,4 @@ const handleCopy = async () => {
   );
 };
 
-export default CreditLogsGT;
+export default CreditToolGT;

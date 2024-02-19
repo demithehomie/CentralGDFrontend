@@ -1,0 +1,4 @@
+.motorola-servers-container {
+    display: flex;
+    flex-direction: column;
+}

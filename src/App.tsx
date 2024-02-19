@@ -42,6 +42,7 @@ import TaskLogsGT from './screens/task-logs-gt/TaskLogsGT';
 import TaskLogsTMT from './screens/task-logs-tmt/TaskLogsTMT';
 import GuerraToolBlockedUsers from './screens/blocked-users/guerra-tool/GuerratoolBlockedUsers';
 import CreditLogsTMT from './screens/credit-logs-tmt/CreditLogsTMT';
+import MotorolaServerScreen from './screens/MotorolaServerScreen/MotorolaServerScreen';
 
 
 
@@ -118,6 +119,7 @@ function App() {
           <Route path="/gt-task-logs" element={<PrivateRoute><TaskLogsGT /></PrivateRoute>} />
           <Route path="/tmt-credit-logs" element={<PrivateRoute><CreditLogsTMT /></PrivateRoute>} />
           <Route path="/gt-credit-logs" element={<PrivateRoute><TaskLogsGT /></PrivateRoute>} />
+          <Route path="/motorola-servers-screen" element={<PrivateRoute><MotorolaServerScreen /></PrivateRoute>} />
           <Route path="/crypto-payments/:paymentId" element={<CryptoPaymentPage />} />
           </Routes>
         </BrowserRouter>

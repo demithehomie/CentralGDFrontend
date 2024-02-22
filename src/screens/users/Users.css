@@ -134,3 +134,9 @@
   background-color: rgba(0, 0, 0, 0.5); /* Cor de fundo preto fosco com transparência */
   z-index: 999; /* Para garantir que esteja acima de outros elementos */
 }
+
+
+.danger {
+  background-color: red;
+  color: #ffffff;
+}

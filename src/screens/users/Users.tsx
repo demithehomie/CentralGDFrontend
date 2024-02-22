@@ -257,6 +257,10 @@ export default function Users() {
     navigate('/tmt-credit-logs');
   }
 
+  const fingerprintHistory = () => {
+    navigate('/themagictool/fingerprints-history')
+  }
+
   const renderContent = () => {
     if (isLoading) {
       return <center><div className="loader"></div><h3 className='loading-messages'>Carregando usuários..</h3></center>;
@@ -306,10 +310,15 @@ export default function Users() {
         <button className="button" onClick={prints}  >Prints</button>
         <button className="button" onClick={targets}  >Targets</button>
       </div>
-        <button onClick={theMagicToolTaskLogs}>Task Logs</button>
+      
+      <div style={{ display: "flex", flexDirection: "column"}}>
+      <button onClick={fingerprintHistory}>Histórico de Fingerprints</button>
+      <button onClick={theMagicToolTaskLogs}>Task Logs</button>
         <button onClick={navigateToTMTCreditLogs}>Credit Logs</button>
-        <button onClick={blockedUsers}>Usuários Bloqueados</button>
+        <button className="danger" onClick={blockedUsers}>Usuários Bloqueados</button>
         <button  onClick={backToDashboard}>Voltar ao Início</button>
+      </div>
+      
     </div>
     </>
   );

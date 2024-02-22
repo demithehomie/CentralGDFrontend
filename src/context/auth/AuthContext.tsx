@@ -56,7 +56,7 @@ const login = async (username: string, password: string): Promise<boolean> => {
     });
 
     if (loginResponse.status === 200) {
-      const { token, username } = loginResponse.data.data;
+      const { token, username } = loginResponse.data;
       localStorage.setItem('token', token); // Save token for persistence on the client
       setCurrentUser({ username, token });
       return true;

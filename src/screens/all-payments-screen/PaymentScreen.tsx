@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { useNavigate, /*useParams*/ } from 'react-router-dom';
 import './PaymentScreen.css';
+import Swal from 'sweetalert2';
+
 import { Helmet } from 'react-helmet-async';
 import MainNavbar from '../../components/main-navbar/MainNavbar';
 
@@ -41,7 +43,7 @@ const PaymentScreen: React.FC = () => {
     cpf: '10050031732',
     transaction_amount: 0.01,
   });
-  const [isTransactionAmountEnabled, setIsTransactionAmountEnabled] = useState(false);
+  const [isTransactionAmountEnabled, setIsTransactionAmountEnabled] = useState(true);
 
   const [responsePayment, setResponsePayment] = useState<AxiosResponse | null>(null);
   const [linkBuyMercadoPago, setLinkBuyMercadoPago] = useState<string | null>(null);
@@ -414,6 +416,50 @@ const shouldRenderItem = (transfer: TransferData) => {
     navigate('/mgmt-reports');
   }
 
+  const deleteCliente = async (paymentId: string) => {
+    // SweetAlert de Confirmação
+    Swal.fire({
+      title: 'Tem certeza?',
+      text: "Você não poderá reverter isso!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sim, delete isso!'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await axios.delete(`https://gdcompanion-prod.onrender.com/deletar-cliente/${paymentId}`);
+          if (response.status === 200) {
+            Swal.fire(
+              'Deletado!',
+              'O cliente foi deletado.',
+              'success'
+            );
+            // Atualize o estado da sua aplicação aqui
+            // Por exemplo, removendo o cliente deletado da lista de pendências
+            setPendingTransfers(prevTransfers => prevTransfers.filter(transfer => transfer.payment_id.toString() !== paymentId));
+          } else {
+            Swal.fire(
+              'Erro!',
+              'Cliente não encontrado ou já foi deletado.',
+              'error'
+            );
+          }
+        } catch (error) {
+          console.error('Erro ao deletar cliente:', error);
+          Swal.fire(
+            'Erro!',
+            'Erro ao tentar deletar o cliente.',
+            'error'
+          );
+        }
+      }
+    });
+  };
+  
+  
+
   return (
     <div className="App">
       <MainNavbar />
@@ -443,7 +489,7 @@ const shouldRenderItem = (transfer: TransferData) => {
               />
               <div>
   <label>
-    Calcular Valor da Transação?
+    Inserir Juros na Transação?
     <input
       type="checkbox"
       checked={isTransactionAmountEnabled}
@@ -554,6 +600,7 @@ const shouldRenderItem = (transfer: TransferData) => {
                   <th style={{ color: 'white', textAlign: 'center' }}>PIX</th>
                   <th style={{ color: 'white', textAlign: 'center' }}>Pendente</th>
                   <th style={{ color: 'white', textAlign: 'center' }}>Iniciado em</th>
+                  <th style={{ color: 'white', textAlign: 'center' }}>DELETAR</th>
                 </tr>
               </thead>
               <tbody>
@@ -587,6 +634,18 @@ const shouldRenderItem = (transfer: TransferData) => {
                         </td>
                         <td>
                         <td style={{ color: 'black' }}>{transfer.created_at}</td>
+                        </td>
+                        <td
+                          style={{ 
+                            color: "#ffffff", 
+                            cursor: 'pointer',
+                            backgroundColor: 'red',
+                            fontWeight: 'bold',
+                          }}
+                          onClick={() => deleteCliente(transfer.payment_id.toString())}
+                        >
+                          DELETE
+                          {/* {transfer.qr_code_cec} */}
                         </td>
 
                       </tr>

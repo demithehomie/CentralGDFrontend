@@ -53,30 +53,33 @@ function ManagementReports() {
         navigate('/dashboard');
       };
 
-         // Function to emit DOCX
-    const emitDocx = async (reportType: any) => {
-      try {
-          const response = await axios({
-              url: `https://gdcompanion-prod.onrender.com/report/docx?type=${reportType}`, // Update with your actual endpoint
-              method: 'GET',
-              responseType: 'blob', // Important to handle binary response data
-          });
-
-          // Create a URL for the blob
-          const fileURL = window.URL.createObjectURL(new Blob([response.data]));
-          const fileLink = document.createElement('a');
-
-          fileLink.href = fileURL;
-          fileLink.setAttribute('download', 'report.docx'); // Set the file name for download
-          document.body.appendChild(fileLink);
-
-          fileLink.click();
-          fileLink.remove(); // Clean up
-      } catch (error) {
-          console.error('Error downloading the file:', error);
-      }
+// Function to emit DOCX
+const emitDocx = async (reportType: any) => {
+    try {
+        const response = await axios({
+            url: `https://gdcompanion-prod.onrender.com/report/docx?type=${reportType}`, // Update with your actual endpoint
+            method: 'GET',
+            responseType: 'blob', // Important to handle binary response data
+        });
+  
+        // Create a URL for the blob
+        const fileURL = window.URL.createObjectURL(new Blob([response.data]));
+        const fileLink = document.createElement('a');
+        
+        const currentDate = new Date().toLocaleString().replace(/[^\w\s]/g, '').replace(/ /g, '_'); // Format date and time
+        const fileName = `${reportType}_report_${currentDate}.docx`; // Set the file name for download
+  
+        fileLink.href = fileURL;
+        fileLink.setAttribute('download', fileName);
+        document.body.appendChild(fileLink);
+  
+        fileLink.click();
+        fileLink.remove(); // Clean up
+    } catch (error) {
+        console.error('Error downloading the file:', error);
+    }
   };
-
+  
   const emitExcel = async (reportType: any) => {
     try {
         const response = await axios({
@@ -84,44 +87,51 @@ function ManagementReports() {
             method: 'GET',
             responseType: 'blob', // Important to handle binary response data
         });
-
+  
         // Create a URL for the blob
         const fileURL = window.URL.createObjectURL(new Blob([response.data]));
         const fileLink = document.createElement('a');
-
+  
+        const currentDate = new Date().toLocaleString().replace(/[^\w\s]/g, '').replace(/ /g, '_'); // Format date and time
+        const fileName = `${reportType}_report_${currentDate}.xlsx`; // Set the file name for download
+  
         fileLink.href = fileURL;
-        fileLink.setAttribute('download', `${reportType}_report.xlsx`); // Set the file name for download
+        fileLink.setAttribute('download', fileName);
         document.body.appendChild(fileLink);
-
+  
         fileLink.click();
         fileLink.remove(); // Clean up
     } catch (error) {
         console.error('Error downloading the file:', error);
     }
-};
-
-const emitPdf = async (reportType: any) => {
-  try {
-      const response = await axios({
-          url: `https://gdcompanion-prod.onrender.com/report/pdf?type=${reportType}`, // Update with your actual endpoint
-          method: 'GET',
-          responseType: 'blob', // Important to handle binary response data
-      });
-
-      // Create a URL for the blob
-      const fileURL = window.URL.createObjectURL(new Blob([response.data]));
-      const fileLink = document.createElement('a');
-
-      fileLink.href = fileURL;
-      fileLink.setAttribute('download', `${reportType}_report.pdf`); // Set the file name for download
-      document.body.appendChild(fileLink);
-
-      fileLink.click();
-      fileLink.remove(); // Clean up
-  } catch (error) {
-      console.error('Error downloading the file:', error);
-  }
-};
+  };
+  
+  const emitPdf = async (reportType: any) => {
+    try {
+        const response = await axios({
+            url: `https://gdcompanion-prod.onrender.com/report/pdf?type=${reportType}`, // Update with your actual endpoint
+            method: 'GET',
+            responseType: 'blob', // Important to handle binary response data
+        });
+  
+        // Create a URL for the blob
+        const fileURL = window.URL.createObjectURL(new Blob([response.data]));
+        const fileLink = document.createElement('a');
+  
+        const currentDate = new Date().toLocaleString().replace(/[^\w\s]/g, '').replace(/ /g, '_'); // Format date and time
+        const fileName = `${reportType}_report_${currentDate}.pdf`; // Set the file name for download
+  
+        fileLink.href = fileURL;
+        fileLink.setAttribute('download', fileName);
+        document.body.appendChild(fileLink);
+  
+        fileLink.click();
+        fileLink.remove(); // Clean up
+    } catch (error) {
+        console.error('Error downloading the file:', error);
+    }
+  };
+  
 
 const handlePendingPaymentChange = async (item: ReportData, newValue: string) => {
     const newPendingStatus = newValue === 'true' ? true : newValue === 'false' ? false : newValue;

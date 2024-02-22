@@ -43,6 +43,11 @@ import TaskLogsTMT from './screens/task-logs-tmt/TaskLogsTMT';
 import GuerraToolBlockedUsers from './screens/blocked-users/guerra-tool/GuerratoolBlockedUsers';
 import CreditLogsTMT from './screens/credit-logs-tmt/CreditLogsTMT';
 import MotorolaServerScreen from './screens/MotorolaServerScreen/MotorolaServerScreen';
+import CreditLogsGT from './screens/credit-logs-gt/CreditLogsGT';
+import { Analytics } from './screens/analytics/Analytics';
+import FingerPHStoriesTMT from './screens/fingerprints-histories-tmt/FingerPHistoriesTMT';
+import FingerPHStoriesGT from './screens/fingerprints-histories-gt/FingerPHistoriesGT';
+
 
 
 
@@ -115,11 +120,21 @@ function App() {
           <Route path="/receive-crypto" element={<PrivateRoute><ReceiveCrypto /></PrivateRoute>} />
           {/* <Route path="/reports-dashboard/:typeOfReport" element={<PrivateRoute><ReportsDashboard /></PrivateRoute>} /> */}
           <Route path="/reports-data" element={<PrivateRoute><ReportDetailsPage /></PrivateRoute>} />
+          
           <Route path="/tmt-task-logs" element={<PrivateRoute><TaskLogsTMT /></PrivateRoute>} />
           <Route path="/gt-task-logs" element={<PrivateRoute><TaskLogsGT /></PrivateRoute>} />
+          
           <Route path="/tmt-credit-logs" element={<PrivateRoute><CreditLogsTMT /></PrivateRoute>} />
-          <Route path="/gt-credit-logs" element={<PrivateRoute><TaskLogsGT /></PrivateRoute>} />
+          <Route path="/gt-credit-logs" element={<PrivateRoute><CreditLogsGT /></PrivateRoute>} />
+
+          <Route path="/themagictool/fingerprints-history" element={<PrivateRoute><FingerPHStoriesTMT /></PrivateRoute>} />
+          <Route path="/guerratool/fingerprints-history" element={<PrivateRoute><FingerPHStoriesGT /></PrivateRoute>} />
+
+          <Route path="/analytics" element={<PrivateRoute><Analytics /></PrivateRoute>} />
+
+
           <Route path="/motorola-servers-screen" element={<PrivateRoute><MotorolaServerScreen /></PrivateRoute>} />
+
           <Route path="/crypto-payments/:paymentId" element={<CryptoPaymentPage />} />
           </Routes>
         </BrowserRouter>

@@ -55,6 +55,10 @@ const goToServers = () => {
   navigate('/motorola-servers-screen');
 }
 
+const goToAnalytics = () => {
+  navigate('/analytics');
+}
+
 const goToAllReports = () => {
     navigate('/mgmt-reports');
 }
@@ -87,6 +91,9 @@ const goToAllReports = () => {
                 </div>
                 <div onClick={goToServers}>
                     <h3 className='main-navbar-menu-item-text'>Servers</h3>
+                </div>
+                <div onClick={goToAnalytics}>
+                    <h3 className='main-navbar-menu-item-text'>Analytics</h3>
                 </div>
                 <div onClick={goToUsers}>
                     <h3 className='main-navbar-menu-item-text'>Users</h3>

@@ -1,5 +1,5 @@
-import React, {  useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import React from 'react';
+//import { useLocation } from 'react-router-dom';
 
 import './BlockedUserTable.css';
 import styled, { css } from 'styled-components';
@@ -81,10 +81,10 @@ interface BlockedUsersTableProps {
   
   const BlockedUsersTable: React.FC<BlockedUsersTableProps> = ({ users, /*onToggleResellerStatus, onUserClick*/ }) => {
 
-    const location = useLocation();
+   // const uselocation = useLocation();
 
 
-    const [ /*users*/, setUsers] = useState<User[]>([]);
+   // const [ /*users*/, setUsers] = useState<User[]>([]);
 
     const apiurl = `https://gdcompanion-prod.onrender.com`;
 
@@ -185,12 +185,13 @@ interface BlockedUsersTableProps {
     
       if (result.isConfirmed && result.value) {
         // A lógica para atualizar o estado local dos usuários, se necessário
-        setUsers(users.map(u => {
-          if (u.user_id === user.user_id) {
-            return { ...u, is_reseller: u.is_reseller ? 0 : 1 };
-          }
-          return u;
-        }));
+        // setUsers(users.map(u => {
+        //   if (u.user_id === user.user_id) {
+        //     return { ...u, is_reseller: u.is_reseller ? 0 : 1 };
+        //   }
+        //   return u;
+        // }));
+        location.reload();
         MySwal.fire('Atualizado!', 'O status do usuário foi atualizado.', 'success');
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         MySwal.fire('Cancelado', 'A operação foi cancelada', 'error');
@@ -242,12 +243,13 @@ interface BlockedUsersTableProps {
     
       if (result.isConfirmed && result.value) {
         // A lógica para atualizar o estado local dos usuários, se necessário
-        setUsers(users.map(u => {
-          if (u.user_id === user.user_id) {
-            return { ...u, is_distributor: u.is_distributor ? 0 : 1 };
-          }
-          return u;
-        }));
+        // setUsers(users.map(u => {
+        //   if (u.user_id === user.user_id) {
+        //     return { ...u, is_distributor: u.is_distributor ? 0 : 1 };
+        //   }
+        //   return u;
+        // }));
+        location.reload();
         MySwal.fire('Atualizado!', 'O status do usuário foi atualizado.', 'success');
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         MySwal.fire('Cancelado', 'A operação foi cancelada', 'error');

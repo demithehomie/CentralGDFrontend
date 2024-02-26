@@ -13,7 +13,7 @@ interface AuthContextType {
   currentUser: User | null; // Substitua 'any' pelo tipo apropriado
   login: (username: string, password: string) => Promise<boolean>;
   logout: () => void;
- // verifyToken: () => Promise<void>; // Adicione esta linha
+  verifyToken: () => Promise<void>; // Adicione esta linha
 }
 
 
@@ -21,7 +21,7 @@ const AuthContext = createContext<AuthContextType>({
   currentUser: null,
   login: async () => false,
   logout: () => {},
-  //verifyToken: async () => {} // Adicione esta linha: Implementação stub para verifyToken
+  verifyToken: async () => {} // Adicione esta linha: Implementação stub para verifyToken
 });
 
 
@@ -33,42 +33,80 @@ const apiurl = `https://gdcompanion-prod.onrender.com`
 
 export const AuthProvider = ({ children }: any) => {
     const [currentUser, setCurrentUser] = useState<User | null>(null);
-   // const [isLoading, setIsLoading] = useState(false);
 
-// No seu contexto de autenticação
+
+
+
+
+
+    const login = async (username: any, password: any) => {
+      try {
+        const response = await axios.post(`${apiurl}/new-login-method`, { username, password });
+        const { accessToken } = response.data;
+        localStorage.setItem('token', accessToken);
+        localStorage.setItem('timestamp', new Date().getTime().toString());
+        setCurrentUser({username, token: accessToken});
+        return true;
+      } catch (error) {
+        console.error('Erro durante a operação de login:', error);
+        return false;
+      }
+    };
+    
+
+    const verifyToken = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          const response = await axios.post(`${apiurl}/new-verify-token-method`, {}, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          // Supondo que o backend retorne os detalhes do usuário junto com a mensagem de sucesso
+          const { user } = response.data;
+          setCurrentUser({ username: user.username, token }); // Atualiza com detalhes completos do usuário
+        } catch (error) {
+          // Fazendo cast do 'error' para o tipo 'Error' para acessar a propriedade 'message'
+          if (error instanceof Error) {
+            console.error('Erro durante a verificação do token:', error.message);
+          } else {
+            console.error('Erro durante a verificação do token:', error);
+          }
+          logout();
+        }
+      }
+    };
+    
 
 useEffect(() => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    // If a token is found in localStorage, you can consider the user as logged in
-
-
-  }
+  verifyToken();
 }, []);
 
 
+// useEffect(() => {
+//   const token = localStorage.getItem('token');
+//   if (token) {
+//     verifyToken(token); // Verifica o token e define o usuário se válido
+//   }
+// }, []);
 
-const login = async (username: string, password: string): Promise<boolean> => {
-  try {
-    const loginResponse = await axios.post(`${apiurl}/login-individual`, {
-      username,
-      password,
-    });
 
-    if (loginResponse.status === 200) {
-      const { token, username } = loginResponse.data;
-      localStorage.setItem('token', token); // Save token for persistence on the client
-      setCurrentUser({ username, token });
-      return true;
-    } else {
-      console.error('Failed to login');
-      return false;
-    }
-  } catch (error) {
-    console.error('Error during login operation:', error);
-    return false;
-  }
-};
+
+// useEffect(() => {
+//   const token = localStorage.getItem('token');
+//   const timestamp = localStorage.getItem('timestamp');
+//   const now = new Date().getTime();
+
+//   if (token && timestamp && now - parseInt(timestamp) < 1800000) { // 30 minutos = 1800000 milissegundos
+//     setCurrentUser(1);
+//     // Opcional: Verifique no backend se o token ainda é válido
+//   } else {
+//     localStorage.removeItem('token');
+//     localStorage.removeItem('timestamp');
+//     setCurrentUser(null);
+//   }
+// }, []);
 
 
 
@@ -85,7 +123,7 @@ const login = async (username: string, password: string): Promise<boolean> => {
         currentUser,
         login,
         logout,
-       
+        verifyToken
     };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

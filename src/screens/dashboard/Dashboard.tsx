@@ -41,6 +41,8 @@ import { Helmet } from 'react-helmet-async';
       weekly: { totalServices: 0, totalRevenue: 0 }, 
       monthly: { totalServices: 0, totalRevenue: 0 } 
     });
+
+
     
     const navigate = useNavigate();
 
@@ -279,8 +281,7 @@ import { Helmet } from 'react-helmet-async';
         <div className="role">Admin</div>
             
             <button className="button" onClick={getAllUsers}>Usuários</button>
-            {/* <button className="button" onClick={prints} >Prints</button>
-          <button className="button" onClick={targets}>Targets</button> */}
+
             <button className="button" onClick={payments}>Pagamentos</button>
             <button className="button" onClick={getAllMGMTReports}>Relatórios</button>
             <button className='button-filled' onClick={handleLogout}>Sair</button>

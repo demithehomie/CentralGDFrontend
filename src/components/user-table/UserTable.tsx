@@ -8,6 +8,7 @@ export interface User {
     username: string;
     credit: number;
     is_reseller: number;
+    is_distributor: number;
     email: string;
     user_status: 'on' | 'blocked';
 }

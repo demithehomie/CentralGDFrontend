@@ -337,12 +337,13 @@ import { Helmet } from 'react-helmet-async';
 
           
            <div className='little-cards-gd' onClick={getAllMGMTReports} >
-            <h2 style={{ fontSize: 30}}>GUERRADONE</h2>
+            <h2 style={{ fontSize: 30 }}>GUERRADONE</h2>
             {/* Supondo que dailySummary contém campos como totalServices e totalRevenue */}
             <p >Total Hoje: <strong>R$: {summaryData.daily.totalServices.toFixed(2).replace('.', ',')}</strong></p>
             <p >Total da Semana:<strong> R$: {summaryData.weekly.totalRevenue.toFixed(2).replace('.', ',')}</strong></p>
           </div>
           </div>
+
             {/* <br />
             <div className='little-cards-tmt' onClick={getAllMGMTReports}>
               <h2  >The Magic Tool</h2>

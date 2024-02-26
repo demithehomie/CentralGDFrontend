@@ -47,6 +47,7 @@ import CreditLogsGT from './screens/credit-logs-gt/CreditLogsGT';
 import { Analytics } from './screens/analytics/Analytics';
 import FingerPHStoriesTMT from './screens/fingerprints-histories-tmt/FingerPHistoriesTMT';
 import FingerPHStoriesGT from './screens/fingerprints-histories-gt/FingerPHistoriesGT';
+import LockingCentral from './screens/locking-central/TheLockingCentral';
 
 
 
@@ -132,6 +133,7 @@ function App() {
 
           <Route path="/analytics" element={<PrivateRoute><Analytics /></PrivateRoute>} />
 
+          <Route path="/analytics" element={<PrivateRoute><LockingCentral /></PrivateRoute>} />
 
           <Route path="/motorola-servers-screen" element={<PrivateRoute><MotorolaServerScreen /></PrivateRoute>} />
 

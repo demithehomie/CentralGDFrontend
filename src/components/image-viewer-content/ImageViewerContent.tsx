@@ -16,6 +16,7 @@ export interface Image {
     details: string;
     public: number;
     fingerprint: number;
+    
    
 }
 
@@ -135,10 +136,11 @@ const ImageViewer: React.FC<ImageViewerProps> = ({ images }) => {
 
       // Inverta a ordem das imagens aqui
 
-      const processedImages = [...images].map((image, index) => ({
+      const processedImages = [...images].reverse().map((image, index) => ({
         ...image, 
         uid: uuidv4(), 
-        index: images.length - 1 - index
+        index
+       // index: images.length - 1 - index
     }));
 
 // Exemplo: Copiando os detalhes do primeiro item do array 'images'
@@ -169,8 +171,8 @@ const copyText = async () => {
               </tr>
             </thead>
             <tbody>
-              {processedImages.map((image) => (
-                <TableRow key={image.uid} index={image.index}>
+              {processedImages.map((image, index) => (
+                <TableRow key={image.uid} index={index}>
                 <TableCell key={image.uid}>
                 <StyledImageContainer
                   onMouseEnter={() => handleMouseEnter(image.id)}
@@ -250,8 +252,8 @@ const copyText = async () => {
         whiteSpace: 'pre-wrap',
         textAlign: 'left',
     }}>
-      <h2>Detalhes</h2>
-      <p>{selectedImage.details}</p>
+      <h2 style={{ color: "#000000"}}>Detalhes</h2>
+      <p style={{ color: "#000000"}}>{selectedImage.details}</p>
       <button onClick={copyText}>Copiar</button>
       <button onClick={closePopup}>Fechar</button>
     </div>

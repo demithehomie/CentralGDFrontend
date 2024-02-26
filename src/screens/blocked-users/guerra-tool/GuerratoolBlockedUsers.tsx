@@ -67,6 +67,9 @@ export default function GuerraToolBlockedUsers() {
       <MainNavbar/>
       <div>
         <br /><br /> <br /><br /> <br /><br />
+        <h1 style={{
+          color: "#ffffff"
+        }}>Locking Center</h1>
         <h2 className='title-table'>Blocked Users at GUERRATOOL</h2>
         {/* <div>
           <SearchBar/>

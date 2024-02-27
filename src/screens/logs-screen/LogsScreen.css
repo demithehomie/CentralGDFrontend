@@ -1,0 +1,9 @@
+.logs-screen-container {
+    max-height: 700px;
+    overflow-y: auto;
+    max-width: 1080px;
+}
+
+.amount--details {
+    color: black;
+}

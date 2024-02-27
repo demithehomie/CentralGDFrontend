@@ -63,9 +63,9 @@ const goToAllReports = () => {
     navigate('/mgmt-reports');
 }
 
-// const goToReceiveCrypto= () => {
-//     navigate('/receive-crypto');
-// }
+const goToLogs= () => {
+    navigate('/logs-screen');
+}
 
 
   return (
@@ -97,6 +97,9 @@ const goToAllReports = () => {
                 </div>
                 <div onClick={goToUsers}>
                     <h3 className='main-navbar-menu-item-text'>Users</h3>
+                </div>
+                <div onClick={goToLogs}>
+                    <h3 className='main-navbar-menu-item-text'>Logs</h3>
                 </div>
 
                 </div>

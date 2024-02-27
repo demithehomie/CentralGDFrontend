@@ -42,6 +42,7 @@ interface ClientFormData {
 const ReceiveCrypto: React.FC = () => {
  // const apiurldev = 'http://localhost:3001';
   const apiurlprod = 'https://gdcompanion-prod.onrender.com';
+  const newpaymentapp = `http://gdpayment-MJLRKFGyq9MqzMq5.web.app`
  // const navigate = useNavigate();
   const [paymentAddress, setPaymentAddress] = useState<string | null>(null);
   const [clientFormData, setClientFormData] = useState<ClientFormData>({
@@ -110,7 +111,7 @@ const ReceiveCrypto: React.FC = () => {
       console.log(response.data); 
      // Swal.fire('Sucesso!', 'Cliente inserido com sucesso.', 'success');
       localStorage.setItem('payment_id', JSON.stringify(response.data.payment_id));
-      const paymentLink = `${apiurlprod}/crypto-payments/${response.data.payment_id}`;
+      const paymentLink = `${newpaymentapp}/crypto-payments/${response.data.payment_id}`;
     // Swal popup to show the payment link
     Swal.fire({
       title: 'Payment Link Generated',

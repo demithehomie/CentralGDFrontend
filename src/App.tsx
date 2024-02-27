@@ -48,6 +48,7 @@ import { Analytics } from './screens/analytics/Analytics';
 import FingerPHStoriesTMT from './screens/fingerprints-histories-tmt/FingerPHistoriesTMT';
 import FingerPHStoriesGT from './screens/fingerprints-histories-gt/FingerPHistoriesGT';
 import LockingCentral from './screens/locking-central/TheLockingCentral';
+import LogsScreen from './screens/logs-screen/LogsScreen';
 
 
 
@@ -96,6 +97,7 @@ function App() {
         <BrowserRouter>
           <Routes>
           <Route path="/" element={<LoginForm />} />
+          <Route path="/logs-screen" element={<PrivateRoute><LogsScreen /></PrivateRoute>} />
           <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
           <Route path="/profile" element={<PrivateRoute><Profile nomeInicial={'Demetrius'} funcaoInicial={'Admin'}/></PrivateRoute>} />
           <Route path="/activity" element={<PrivateRoute><Activity /></PrivateRoute>} />

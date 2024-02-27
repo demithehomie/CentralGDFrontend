@@ -18,6 +18,7 @@ const UserProfile: React.FC<UserProfileProps> = ({  }) => {
   //const { handleSendCredits, handleSendMoney } = useSendFunctions(onSendCredits, onSendMoney);
   //const location = useLocation();
   // const navigate = useNavigate()
+ // const [creditLogs, setCreditLogs] = useState([]);
   const { userId } = useParams<{ userId: string }>();
   const [userData, setUserData] = useState<User | null>(null);
   const [addAmount, setAddAmount] = useState<string>('');
@@ -26,19 +27,81 @@ const UserProfile: React.FC<UserProfileProps> = ({  }) => {
    const apiurl = `https://gdcompanion-prod.onrender.com`;
   //const apiurldev = `http://localhost:3001`;
 
-  const handleAddCredits = async () => {
+  const handleCreditOperation = async (operationType: string | number, amount: any) => {
     try {
-      const response = await axios.put(`${apiurl}/add-credits/${userId}`, { amount: addAmount  });
-      console.log(addAmount); // Exiba a resposta do servidor
-      console.log(response.data); // Exiba a resposta do servidor
+      const operationMap = {
+        add: {
+          url: `${apiurl}/add-credits/${userId}`,
+          successMessage: 'Credits added successfully',
+          logType: 'credit'
+        },
+        subtract: {
+          url: `${apiurl}/subtract-credits/${userId}`,
+          successMessage: 'Credits subtracted successfully',
+          logType: 'debit'
+        }
+      };
+  
+      const operation = operationMap[operationType as keyof typeof operationMap];
+      
+      // Make the request to add or subtract credits
+      const response = await axios.put(operation.url, { amount });
+      console.log(operation.successMessage, response.data);
+  
+      // If the operation was successful, log the transaction
+      if (response.data.success) {
+        const previousBalance = response.data.balance_before;
+        const newBalance = response.data.balance_after;
+  
+        const logDetails = {
+          userId,
+          type: operation.logType,
+          amount,
+          balance_before: previousBalance,
+          balance_after: newBalance,
+          // Add additional required fields for the log entry
+        };
+  
+        await axios.post(`${apiurl}/guerradone/credit_logs`, logDetails);
+      }
     } catch (error) {
-      console.error(error);
+      console.error('Error in credit operation:', error);
     }
   };
+  
+//  const handleAddCredits = () => handleCreditOperation('add', parseFloat(addAmount));
+//  const handleSubtractCredits = () => handleCreditOperation('subtract', parseFloat(subtractAmount));
+  
+
+  const handleAddCredits = async () => {
+    try {
+      const responseAddCredits = await axios.put(`${apiurl}/add-credits/${userId}`, { amount: addAmount });
+      console.log('Add Amount Response:', responseAddCredits.data);
+
+    handleCreditOperation('add', parseFloat(addAmount));
+      // Check the response to decide if the second call should be made
+      if (responseAddCredits.data.success) { // Assuming 'success' is a property in your response
+        const insertCreditDetails = {
+          userId,
+          amount: addAmount,
+          // Additional data as required by your endpoint
+        };
+  
+        const responseInsertCredits = await axios.post(`${apiurl}/guerradone/credit_logs`, insertCreditDetails);
+        console.log('Insert Credits Response:', responseInsertCredits.data);
+      } else {
+        console.log('Credits not added, skipping insert log.');
+      }
+    } catch (error) {
+      console.error('Error in handleAddCredits:', error);
+    }
+  };
+  
   
   const handleSubtractCredits = async () => {
     try {
       const response = await axios.put(`${apiurl}/subtract-credits/${userId}`, { amount: subtractAmount });
+      handleCreditOperation('subtract', parseFloat(subtractAmount));
       console.log(response.data); // Exiba a resposta do servidor
     } catch (error) {
       console.error(error);

@@ -7,6 +7,7 @@ import axios from 'axios';
 interface User {
   username: string;
   token: string;
+  name: string;
 }
 
 interface AuthContextType {
@@ -42,10 +43,10 @@ export const AuthProvider = ({ children }: any) => {
     const login = async (username: any, password: any) => {
       try {
         const response = await axios.post(`${apiurl}/new-login-method`, { username, password });
-        const { accessToken } = response.data;
+        const { accessToken, name } = response.data; // Add 'name' to destructured response data
         localStorage.setItem('token', accessToken);
         localStorage.setItem('timestamp', new Date().getTime().toString());
-        setCurrentUser({username, token: accessToken});
+        setCurrentUser({username, name, token: accessToken});
         return true;
       } catch (error) {
         console.error('Erro durante a operação de login:', error);
@@ -65,7 +66,7 @@ export const AuthProvider = ({ children }: any) => {
           });
           // Supondo que o backend retorne os detalhes do usuário junto com a mensagem de sucesso
           const { user } = response.data;
-          setCurrentUser({ username: user.username, token }); // Atualiza com detalhes completos do usuário
+          setCurrentUser({ username: user.username, name: user.name, token }); // Atualiza com detalhes completos do usuário
         } catch (error) {
           // Fazendo cast do 'error' para o tipo 'Error' para acessar a propriedade 'message'
           if (error instanceof Error) {

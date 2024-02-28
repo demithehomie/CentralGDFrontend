@@ -1,9 +1,29 @@
 .logs-screen-container {
     max-height: 700px;
     overflow-y: auto;
-    max-width: 1080px;
+    max-width: 1280px;
 }
 
 .amount--details {
     color: black;
 }
+
+/* Customiza os botões de paginação */
+.ant-pagination-item, .ant-pagination-prev, .ant-pagination-next {
+    background-color: grey; /* Fundo cinza */
+  }
+  
+  .ant-pagination-item-link, .ant-pagination-item a {
+    color: black !important; /* Cor da fonte preta */
+    font-weight: bold !important; /* Fonte em negrito */
+  }
+  
+  /* Estilo para o botão da página atual */
+  .ant-pagination-item-active {
+    background-color: rgb(255, 255, 255) !important; /* Garante que o fundo do item ativo também seja cinza */
+  }
+  
+  .ant-pagination-item-active a {
+    color: black !important; /* Cor da fonte do item ativo */
+  }
+  

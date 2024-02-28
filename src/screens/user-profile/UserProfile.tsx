@@ -6,6 +6,8 @@ import {  /*useNavigate , */useParams } from 'react-router-dom';
 import { User } from '../../components/user-table/UserTable';
 // import useSendFunctions from '../../personalized-hooks/useSendFunctions';
 import axios from 'axios'; 
+import MainNavbar from '../../components/main-navbar/MainNavbar';
+import { useAuth } from '../../context/auth/AuthContext';
 
 export interface UserProfileProps {
   user?: User;
@@ -19,6 +21,7 @@ const UserProfile: React.FC<UserProfileProps> = ({  }) => {
   //const location = useLocation();
   // const navigate = useNavigate()
  // const [creditLogs, setCreditLogs] = useState([]);
+ const { currentUser } = useAuth();
   const { userId } = useParams<{ userId: string }>();
   const [userData, setUserData] = useState<User | null>(null);
   const [addAmount, setAddAmount] = useState<string>('');
@@ -27,118 +30,137 @@ const UserProfile: React.FC<UserProfileProps> = ({  }) => {
    const apiurl = `https://gdcompanion-prod.onrender.com`;
   //const apiurldev = `http://localhost:3001`;
 
-  const handleCreditOperation = async (operationType: string | number, amount: any) => {
+  // Função unificada para lidar com operações de crédito
+  const handleCreditOperation = async (operationType: string, amount: number, userId: string, _userInfo: string) => {
     try {
+      const userInfo = await fetchUserInfo(userId);
+      if (!userInfo) {
+        console.error('Usuário não encontrado');
+        return;
+      }
+  
       const operationMap = {
         add: {
           url: `${apiurl}/add-credits/${userId}`,
           successMessage: 'Credits added successfully',
-          logType: 'credit'
+          logType: 'credit',
+          key: 'bycredits',
+          source: 'web',
+          note: 'Adding credits to account',
+          status: 'completed',
+          description: 'Credit for purchase',
+          action: 'Add',
+          // app: "theMagicTool",
+          // staff_member: currentUser?.username || '',
         },
         subtract: {
           url: `${apiurl}/subtract-credits/${userId}`,
           successMessage: 'Credits subtracted successfully',
-          logType: 'debit'
+          logType: 'debit',
+          key: 'bycredits',
+          source: 'web',
+          note: 'Subtracting credits from account',
+          status: 'completed',
+          description: 'Debit for purchase',
+          action: 'Subtract',
+          // app: "theMagicTool",
+          // staff_member: currentUser?.username || '',
         }
       };
   
       const operation = operationMap[operationType as keyof typeof operationMap];
-      
-      // Make the request to add or subtract credits
       const response = await axios.put(operation.url, { amount });
       console.log(operation.successMessage, response.data);
   
-      // If the operation was successful, log the transaction
-      if (response.data.success) {
-        const previousBalance = response.data.balance_before;
-        const newBalance = response.data.balance_after;
-  
+      // Se a operação foi bem-sucedida, registra a transação
+      if (response.data.message && response.data.balance_before !== undefined && response.data.balance_after !== undefined) {
         const logDetails = {
-          userId,
+          user_id: userId,
           type: operation.logType,
-          amount,
-          balance_before: previousBalance,
-          balance_after: newBalance,
-          // Add additional required fields for the log entry
+          key: operation.key,
+          source: operation.source,
+          credit_cost: amount, // Pode precisar de ajuste baseado na sua lógica de negócios
+          credits_qty: amount, // Este campo pode necessitar de ajuste conforme a lógica de negócios
+          balance_before: response.data.balance_before,
+          balance_after: response.data.balance_after,
+          ref_user_id: userInfo.refUserId || userId, // Exemplo, ajuste conforme necessário
+          order_id: userInfo.orderId || 0, // Exemplo, ajuste conforme necessário
+          note: operation.note,
+          status: operation.status,
+          Username: userInfo.username || 'user_example', // Usa a informação real do usuário
+          Amount_CRD: amount,
+          Description: operation.description,
+          Action: operation.action,
+          app: "theMagicTool",
+          staff_member: currentUser?.username || '',
+          // app: operation.app, 
+          // staff_member: currentUser?.username || '',
         };
-  
-        await axios.post(`${apiurl}/guerradone/credit_logs`, logDetails);
+
+        try {
+          const logResponse = await axios.post(`${apiurl}/guerradone/credit_logs`, logDetails);
+          console.log('Log de operação de crédito registrado com sucesso:', logResponse.data);
+        } catch (error: unknown) {
+          if (error instanceof Error) {
+            console.error('Erro ao registrar o log de operação de crédito:', error.message);
+          } else {
+            console.error('Erro desconhecido');
+          }
+        }
+      } else {
+        console.log('Operation did not affect any rows, skipping log entry.');
       }
     } catch (error) {
       console.error('Error in credit operation:', error);
     }
   };
   
-//  const handleAddCredits = () => handleCreditOperation('add', parseFloat(addAmount));
-//  const handleSubtractCredits = () => handleCreditOperation('subtract', parseFloat(subtractAmount));
-  
 
-  const handleAddCredits = async () => {
+  async function fetchUserInfo(userId: string) {
     try {
-      const responseAddCredits = await axios.put(`${apiurl}/add-credits/${userId}`, { amount: addAmount });
-      console.log('Add Amount Response:', responseAddCredits.data);
-
-    handleCreditOperation('add', parseFloat(addAmount));
-      // Check the response to decide if the second call should be made
-      if (responseAddCredits.data.success) { // Assuming 'success' is a property in your response
-        const insertCreditDetails = {
-          userId,
-          amount: addAmount,
-          // Additional data as required by your endpoint
-        };
+      const response = await axios.get(`${apiurl}/users/${userId}`);
+      return response.data; // Retorna os dados do usuário obtidos
+    } catch (error) {
+      console.error('Erro ao buscar informações do usuário:', error);
+      throw new Error('Falha ao buscar informações do usuário'); // Propaga o erro
+    }
+  }
   
-        const responseInsertCredits = await axios.post(`${apiurl}/guerradone/credit_logs`, insertCreditDetails);
-        console.log('Insert Credits Response:', responseInsertCredits.data);
-      } else {
-        console.log('Credits not added, skipping insert log.');
+  // Função modificada para buscar informações do usuário antes da operação
+  const handleAddCredits: React.FormEventHandler<HTMLFormElement> = async (event) => {
+    event.preventDefault();
+    const amountNumber = parseFloat(addAmount);
+    if (!isNaN(amountNumber) && userId) {
+      try {
+        // Busca informações do usuário antes de prosseguir
+        const userInfo = await fetchUserInfo(userId); // Assume que userId vem de useParams() ou similar
+        await handleCreditOperation('add', amountNumber, userId, userInfo);
+      } catch (error) {
+        console.error(error);
       }
-    } catch (error) {
-      console.error('Error in handleAddCredits:', error);
+    } else {
+      console.error('Invalid number or missing user ID');
     }
   };
   
-  
-  const handleSubtractCredits = async () => {
-    try {
-      const response = await axios.put(`${apiurl}/subtract-credits/${userId}`, { amount: subtractAmount });
-      handleCreditOperation('subtract', parseFloat(subtractAmount));
-      console.log(response.data); // Exiba a resposta do servidor
-    } catch (error) {
-      console.error(error);
+  const handleSubtractCredits: React.FormEventHandler<HTMLFormElement> = async (event) => {
+    event.preventDefault();
+    const amountNumber = parseFloat(subtractAmount);
+    if (!isNaN(amountNumber) && userId) {
+      try {
+        // Busca informações do usuário antes de prosseguir
+        const userInfo = await fetchUserInfo(userId); // Assume que userId vem de useParams() ou similar
+        await handleCreditOperation('subtract', amountNumber, userId, userInfo);
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      console.error('Invalid number or missing user ID');
     }
   };
- 
 
-//   const  goToPaymentScreen  = async () => {
-//   navigate('/payment-screen/:userId')
-// }
 
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  
-  //   try {
-  //     const response = await axios.post(`${apiurl}/update-credits?action=${action}&amount=${amount}`, { action, amount });
-  //     console.log(response.data); // Exiba a resposta do servidor
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-  
 
-  // const handleSubmit = (e: React.FormEvent) => {
-  //   e.preventDefault();
-
-  //   // Verificar a ação selecionada (add ou subtract) e chamar a função apropriada
-  //   if (action === 'add') {
-  //     handleSendCredits(amount);
-  //   } else if (action === 'subtract') {
-  //     handleSendCredits(-amount); // Passar um valor negativo para subtrair
-  //   }
-  // };
-
-  // if (!response.ok) {
-  //   throw new Error('Failed to fetch user');
-  // }
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -157,9 +179,12 @@ const UserProfile: React.FC<UserProfileProps> = ({  }) => {
 
   return (
     <>
+    <MainNavbar/>
+
     <div className="user-profile">
-   
+    <br /><br /><br />
       <div className="profile-card">
+      <br /><br /><br />
       <label className='main-title-color'>Perfil de Usuário</label>
         <div className='new-text-alignment-user-data'>    
        

@@ -41,7 +41,7 @@ export default function LogsScreen() {
         title: 'ID',
         dataIndex: 'ID',
         key: 'ID',
-        
+        width: 120,
       },
       {
         title: 'Date',
@@ -58,28 +58,33 @@ export default function LogsScreen() {
       },
       {
         title: 'Type',
-        dataIndex: 'Type',
+        dataIndex: 'type',
         key: 'Type',
+        width: 90,
       },
       {
         title: 'Amount (CRD)',
         dataIndex: 'Amount_CRD',
         key: 'Amount_CRD',
+        width: 90,
       },
       {
         title: 'Description',
         dataIndex: 'Description',
         key: 'Description',
+        width: 120,
       },
       {
         title: 'Status',
         dataIndex: 'Status',
         key: 'Status',
+        width: 100,
       },
       {
         title: 'Action',
         dataIndex: 'Action',
         key: 'Action',
+        width: 90,
       },
       {
         title: 'Amount Details',
@@ -92,7 +97,19 @@ export default function LogsScreen() {
             <p className='amount--details'>Final Amount: {record.balance_after}</p>
           </>
         ),
-      }
+      },
+      {
+        title: 'App',
+        dataIndex: 'app',
+        key: 'app',
+        width: 100,
+      },
+      {
+        title: 'Staff Member',
+        dataIndex: 'staff_member',
+        key: 'staff_member',
+        width: 100
+      },
       
     ];
   
@@ -105,7 +122,10 @@ export default function LogsScreen() {
                         <br />
                         <h2>Logs Screen</h2>
                         <hr />
-                        <h2>GUERRADONE Credit Logs</h2>
+                        <h2>The Magic Tool and GUERRATOOL - Credit Logs</h2>
+                        <h4 style={{
+                          color: 'white',
+                        }}>Credits inserted by the GUERRADONE Team</h4>
                         <Table
                             dataSource={logs}
                             columns={columns}
@@ -119,8 +139,8 @@ export default function LogsScreen() {
                         />
 
 
-                    <h2>The Magic Tool - Credit Logs</h2>
-                    <h2>GUERRATOOL - Credit Logs</h2>
+               
+             
                     </div>
 
                     <h2></h2>

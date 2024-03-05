@@ -6,7 +6,7 @@ export default function PaymentMenu() {
     const navigate = useNavigate();
 
     const goToPaymentScreen = async () => {
-        navigate('/payment-screen/:userId');
+        navigate('/payment-screen/execute-action');
     }
 
     // const showAlert = () => {

@@ -5,7 +5,7 @@
 }
 
 .report-table-container.scrollable {
-  max-height: 300px; /* Ajuste a altura máxima conforme necessário */
+  max-height: 1000px; /* Ajuste a altura máxima conforme necessário */
   overflow-y: auto;
 }
 
@@ -180,4 +180,14 @@
 
 .fetch-report-button:hover {
   background-color: #0056b3;
+}
+
+
+.delete-button {
+  padding: 10px 20px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }

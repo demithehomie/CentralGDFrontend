@@ -35,7 +35,7 @@ import { Helmet } from 'react-helmet-async';
     const { currentUser, logout } = useAuth();
     const [isLoading, setIsLoading] = useState(true);
     const [cards, setCards] = useState<CardData[]>([]);
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isMenuOpen, /*setIsMenuOpen*/] = useState(false);
     const [summaryData, setSummaryData] = useState<SummaryData>({ 
       daily: { totalServices: 0, totalRevenue: 0 }, 
       weekly: { totalServices: 0, totalRevenue: 0 }, 
@@ -179,9 +179,9 @@ import { Helmet } from 'react-helmet-async';
       navigate('/users')
     }
 
-    const toggleMenu = () => {
-      setIsMenuOpen(!isMenuOpen);
-    };
+    // const toggleMenu = () => {
+    //   setIsMenuOpen(!isMenuOpen);
+    // };
     
     const handleLogout = () => {
       // Chame a função de logout do contexto de autenticação
@@ -297,11 +297,11 @@ import { Helmet } from 'react-helmet-async';
         )}
       </div>
 
-<div className="hamburger-button" onClick={toggleMenu}>
+{/* <div className="hamburger-button" onClick={toggleMenu}>
   <div className={`bar ${isMenuOpen ? 'open' : ''}`}></div>
   <div className={`bar ${isMenuOpen ? 'open' : ''}`}></div>
   <div className={`bar ${isMenuOpen ? 'open' : ''}`}></div>
-</div>
+</div> */}
 
 
 

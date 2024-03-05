@@ -4,9 +4,11 @@ import axios, { AxiosResponse } from 'axios';
 import { useNavigate, /*useParams*/ } from 'react-router-dom';
 import './PaymentScreen.css';
 import Swal from 'sweetalert2';
-
+import { toast } from 'react-toastify';
 import { Helmet } from 'react-helmet-async';
 import MainNavbar from '../../components/main-navbar/MainNavbar';
+import { formatDate } from '../../services/ConversrionService';
+//import { useTimePassed } from '../../personalized-hooks/useTimePassed';
 
 
 interface UserData {
@@ -55,6 +57,10 @@ const PaymentScreen: React.FC = () => {
   const [renderedIds, setRenderedIds] = useState<string[]>([]);
   const [showPopup, setShowPopup] = useState(false);
 const [selectedTransfer, setSelectedTransfer] = useState<TransferData | null>(null);
+//const [remountKey, setRemountKey] = useState(0);
+
+
+
 
 
 // Verifique se o item deve ser renderizado
@@ -127,6 +133,9 @@ const shouldRenderItem = (transfer: TransferData) => {
     navigator.clipboard.writeText(text)
       .then(() => {
         alert('Texto copiado para a área de transferência!');
+        toast.success('Texto copiado para a área de transferência!', {
+          position: "bottom-left",
+        });
       })
       .catch(err => {
         console.error('Erro ao copiar texto:', err);
@@ -167,7 +176,10 @@ const shouldRenderItem = (transfer: TransferData) => {
           setStatusPaymentPending(false); // Set pending status to false when payment is approved
           console.log(`Payment status: ${response.data.status}`);
         } else {
-          alert("Pagamento ainda não foi feito"); //
+         alert("Pagamento ainda não foi feito"); //
+         toast.warn("Pagamento ainda não foi feito", {
+          position: "bottom-left",
+        });
           console.log(`Not approved - Payment status: ${response.data.status}`);
         }
       } else {
@@ -203,7 +215,10 @@ const shouldRenderItem = (transfer: TransferData) => {
           setStatusPaymentPending(false); // Set pending status to false when payment is approved
           console.log(`Payment status: ${response.data.status}`);
         } else {
-          alert("Pagamento ainda não foi feito"); //
+         alert("Pagamento ainda não foi feito"); //
+         toast.warn("Pagamento ainda não foi feito", {
+          position: "bottom-left",
+        });
           console.log(`Not approved - Payment status: ${response.data.status}`);
         }
       } else {
@@ -224,6 +239,8 @@ const shouldRenderItem = (transfer: TransferData) => {
     let finalTransactionAmount = formData.transaction_amount;
   if (isTransactionAmountEnabled) {
     finalTransactionAmount = calculateTotalAmount(formData.transaction_amount);
+  } else {
+    finalTransactionAmount = formData.transaction_amount;
   }
 
     // Preparando o corpo da requisição para o MercadoPago
@@ -342,37 +359,27 @@ const shouldRenderItem = (transfer: TransferData) => {
   useEffect(() => {
     if (linkBuyMercadoPago && statusPaymentPending) {
       // Forçar recarga da página
-      alert("Seu pagamento está pendente. Aguarde a aprovação.");
+     alert("Seu pagamento está pendente. Aguarde a aprovação.");
+     toast.info("Seu pagamento está pendente. Aguarde a aprovação.", {
+      position: "bottom-left",
+    });
     }
   }, [linkBuyMercadoPago, statusPaymentPending]);
 
-  // const checkAndMarkExpiredPayments = async () => {
-  //   try {
-  //     await axios.post('https://gdcompanion-prod.onrender.com/verificar-e-marcar-expirados');
-  //     console.log('Pagamentos expirados verificados e marcados com sucesso.');
-  //   } catch (error) {
-  //     console.error('Erro ao verificar e marcar pagamentos expirados:', error);
-  //   }
-  // };
- 
-  // useEffect(() => {
-  //   // Idealmente, essa função só deve ser chamada se você tem certeza de que há pagamentos pendentes que possam ter expirado
-  //   // Se você puder verificar essa condição no frontend, faça isso antes de chamar a função
-  //   const verificarEAtualizarPagamentosExpirados = async () => {
-  //     try {
-  //       await checkAndMarkExpiredPayments();
-  //     } catch (error) {
-  //       console.error("Erro ao verificar/atualizar pagamentos expirados:", error);
-  //     }
-  //   };
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // Chama a função que verifica o status do pagamento
+      getStatusPaymentViaMercadoPago();
+      // ou
+      // getStatusPaymentViaMercadoPagoWithResponse();
+    }, 10000); // 30000 ms = 30 segundos
   
-  //   verificarEAtualizarPagamentosExpirados();
+    // Limpa o intervalo quando o componente for desmontado
+    return () => clearInterval(interval);
+  }, [
+    statusPaymentApproved
+  ]); // Passando um array vazio como segundo argumento para garantir que isso rode apenas uma vez ao montar
   
-  //   // Você também pode utilizar setInterval aqui, mas certifique-se de limpar isso quando o componente desmontar
-  //   const intervalId = setInterval(verificarEAtualizarPagamentosExpirados, 86400000); // 24 horas
-  
-  //   return () => clearInterval(intervalId); // Limpeza na desmontagem do componente
-  // }, []); // Dependências vazias indicam que isso roda apenas na montagem do componente
   
 
   useEffect(() => {
@@ -457,10 +464,75 @@ const shouldRenderItem = (transfer: TransferData) => {
       }
     });
   };
+
+  const calculateTimePassed = (createdAt: string | number | Date) => {
+    const startDate = new Date(createdAt).getTime();
+    const currentDate = new Date().getTime();
+    const seconds = Math.floor((currentDate - startDate) / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+  
+    if (days > 0) return `${days} dia(s)`;
+    if (hours > 0) return `${hours} hora(s)`;
+    if (minutes > 0) return `${minutes} minuto(s)`;
+    return `${seconds} segundo(s)`;
+  };
+  
+  // const useTimePassed = (createdAt: any) => {
+  //   const [timePassed, setTimePassed] = useState('');
+  
+  //   useEffect(() => {
+  //     const update = () => {
+  //       const startDate = new Date(createdAt).getTime();
+  //       const currentDate = new Date().getTime();
+  //       const diff = currentDate - startDate;
+  
+  //       const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  //       const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+  //       const minutes = Math.floor((diff / (1000 * 60)) % 60);
+  //       const seconds = Math.floor((diff / 1000) % 60);
+  
+  //       setTimePassed(`${days} dia(s) ${hours} hora(s) ${minutes} minuto(s) ${seconds} segundo(s)`);
+  //     };
+  
+  //     update(); // Inicializa imediatamente
+  //     const interval = setInterval(update, 1000); // Atualiza a cada segundo
+  
+  //     return () => clearInterval(interval); // Limpa o intervalo quando o componente é desmontado
+  //   }, [createdAt]);
+  
+  //   return timePassed;
+  // };
+
+  const initializeComponent = () => {
+    setIsLoading(true); // Supondo que você queira começar com o estado de carregamento
+    fetchPendingTransfers(); // Buscar os dados iniciais necessários
+    setLastRefreshed(new Date());// Defina qualquer outro estado inicial aqui
+  };
+  
+  useEffect(() => {
+    initializeComponent();
+    // Se você tiver outras operações de inicialização que só devem acontecer uma vez, elas ainda podem ser colocadas aqui
+  }, []);
+  
+  
+  // const handleRefresh = () => {
+  //   setRemountKey(prevKey => prevKey + 1); // Isso irá forçar a remontagem
+  //   fetchPendingTransfers();
+  // };
   
   
 
+  // Antes de renderizar
+if (pendingTransfers && Array.isArray(pendingTransfers)) {
+  pendingTransfers.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+}
+  
+
   return (
+    <>
+   {/* <div key={remountKey} className="App"> */}
     <div className="App">
       <MainNavbar />
       <br /><br /><br /><br /><br />
@@ -580,6 +652,24 @@ const shouldRenderItem = (transfer: TransferData) => {
         </div>
       </div>
 
+      {/* <button className="refresh-button" onClick={initializeComponent}>
+        Recarregar
+      </button> */}
+
+      {/* <button
+      className="refresh-button"
+      onClick={handleRefresh}
+      style={{
+        position: 'fixed',
+        bottom: '20px',
+        right: '20px',
+        zIndex: 1000,
+      }}
+    >
+      Atualizar
+    </button> */}
+
+
       <div className="PixPendentes">
       <hr />
      
@@ -587,11 +677,10 @@ const shouldRenderItem = (transfer: TransferData) => {
         {pendingTransfers && Array.isArray(pendingTransfers) && pendingTransfers.length > 0 ? (
           <div className="pending-transfers-table-container">
             <h3 style={{ color: '#ffffff', fontSize: '20px' }}>Pix Pendentes </h3>
+          
             <table className="pending-transfers-table">
               <br />
-              <div style={{ display: "flex", margin: "auto", alignItems: "center", justifyContent: "center"}}>
-                  <button className='outline-button' onClick={navigateToReports}>Ver todos os relatórios</button>
-              </div>
+            
            
               <thead>
                 <tr>
@@ -600,11 +689,13 @@ const shouldRenderItem = (transfer: TransferData) => {
                   <th style={{ color: 'white', textAlign: 'center' }}>PIX</th>
                   <th style={{ color: 'white', textAlign: 'center' }}>Pendente</th>
                   <th style={{ color: 'white', textAlign: 'center' }}>Iniciado em</th>
+                  <th style={{ color: 'white', textAlign: 'center' }}>Iniciado há</th>
                   <th style={{ color: 'white', textAlign: 'center' }}>DELETAR</th>
                 </tr>
               </thead>
               <tbody>
                 {pendingTransfers.map((transfer) => {
+                  //  const timePassed = useTimePassed(transfer.created_at);
                   if (shouldRenderItem(transfer)) {
                     return (
                   
@@ -633,8 +724,11 @@ const shouldRenderItem = (transfer: TransferData) => {
                           ) : null}
                         </td>
                         <td>
-                        <td style={{ color: 'black' }}>{transfer.created_at}</td>
+                        <td style={{ color: 'black' }}>{formatDate(transfer.created_at)}</td>
+                 
                         </td>
+                        <td style={{ color: 'black' }}>{calculateTimePassed(transfer.created_at)}</td>
+                        {/* <td style={{ color: 'black' }}>{timePassed}</td> */}
                         <td
                           style={{ 
                             color: "#ffffff", 
@@ -657,6 +751,10 @@ const shouldRenderItem = (transfer: TransferData) => {
                 })}
               </tbody>
             </table>
+
+            <div style={{ display: "flex", margin: "auto", alignItems: "center", justifyContent: "center"}}>
+                  <button className='outline-button' onClick={navigateToReports}>Ver todos os relatórios</button>
+              </div>
           </div>
         ) : (
           <p>No pending transfers found.</p>
@@ -664,7 +762,7 @@ const shouldRenderItem = (transfer: TransferData) => {
       </div>
     </div>
 
-    {showPopup && selectedTransfer && (
+    {/* {showPopup && selectedTransfer && (
       <div className="popup">
       <h2 style={{ color: '#000000' }}>Gerando PIX</h2>
       <label style={{ color: '#000000' }}> Devedor:  {selectedTransfer.name}</label>
@@ -684,8 +782,41 @@ const shouldRenderItem = (transfer: TransferData) => {
         <button onClick={(() => setShowPopup(false))}>Fechar</button>
       
       </div>
-    )}
+    )} */}
+
+{showPopup && selectedTransfer && (
+  <div className="popup-background">
+    <div className="popup">
+      <h2 style={{ color: '#000000' }}>Gerando PIX</h2>
+      <label style={{ color: '#000000' }}> Devedor:  {selectedTransfer.name}</label>
+      <label style={{ color: '#000000' }}> Quantia:  {selectedTransfer.amount}</label>
+      <label style={{ color: '#000000' }}> Payment ID:  {selectedTransfer.id}</label>
+      <label style={{ color: '#000000' }}> Serviço Prestado:  {selectedTransfer.service_provided}</label>
+      <img 
+        src={`data:image/png;base64,${selectedTransfer.qr_code}`} alt="QR Code" />
+      <button onClick={() => copyToClipboard(selectedTransfer.qr_code_cec)}>Copiar Pix</button>
+      <button onClick={() => openPaymentLinkInNewTab(selectedTransfer.payment_link)}>Abrir Link de Pagamento</button>
+      <button
+          style={{ backgroundColor: 'red', color: 'white' }}
+          onClick={getStatusPaymentViaMercadoPago}
+        >
+          Validar Pagamento
+        </button>
+      <button
+        style={{ backgroundColor: 'red', color: 'white' }}
+        onClick={() => setShowPopup(false)}
+      >
+        Fechar
+      </button>
+    </div>
   </div>
+)}
+
+
+  </div>
+
+  {/* </div> */}
+  </>
   );
   
   

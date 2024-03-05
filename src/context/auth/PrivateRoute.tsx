@@ -1,35 +1,32 @@
-import  { ReactNode, useEffect, useState } from 'react';
+import { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from './AuthContext' // Ajuste o caminho conforme necessário
 
 interface PrivateRouteProps {
     children: ReactNode;
 }
 
-const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
-    const { currentUser} = useAuth();
-    const [loading, setLoading] = useState(true);
-  
-    useEffect(() => {
-      const checkToken = async () => {
-        if (!currentUser) {
-          setLoading(false);
-          return;
-        }
-  
-       // await verifyToken();
-        setLoading(false);
-      };
-  
-      checkToken();
-    }, [currentUser]);
-  
-    if (loading) {
-      return <div>Carregando...</div>; // Ou algum spinner/loader
+const isSessionValid = (): boolean => {
+    const token = localStorage.getItem('token');
+    const timestamp = localStorage.getItem('timestamp');
+    if (!token || !timestamp) {
+        return false; // Sem token ou timestamp, a sessão não é válida
     }
-  
-    return currentUser ? <>{children}</> : <Navigate to="/" />;
-  };
-  
+
+    const now = new Date().getTime();
+    const sessionDuration = now - parseInt(timestamp, 10);
+    const sessionIsValid = sessionDuration <= 3600000; // Exemplo: 1 hora = 3600000 milissegundos
+
+    return sessionIsValid;
+};
+
+const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
+    if (!isSessionValid()) {
+        // Se a sessão não for válida, redirecione para a página de login
+        return <Navigate to="/" replace />;
+    }
+
+    // Se a sessão for válida, renderize os children do componente
+    return <>{children}</>;
+};
 
 export default PrivateRoute;

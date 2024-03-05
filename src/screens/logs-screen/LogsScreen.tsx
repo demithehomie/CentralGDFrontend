@@ -119,6 +119,7 @@ export default function LogsScreen() {
    
        
                     <div className="logs-screen-container">
+                    <div className="responsive-table-container">
                         <br />
                         <h2>Logs Screen</h2>
                         <hr />
@@ -126,6 +127,7 @@ export default function LogsScreen() {
                         <h4 style={{
                           color: 'white',
                         }}>Credits inserted by the GUERRADONE Team</h4>
+                      
                         <Table
                             dataSource={logs}
                             columns={columns}
@@ -135,8 +137,9 @@ export default function LogsScreen() {
                                 pageSize: pagination.pageSize || 10 // Provide a default value for pageSize
                             })}
                             rowKey="ID"
-                            scroll={{ y: 300 }} // Adjust the height value (240px) as needed
+                            scroll={{ x: 'max-content' }} // Isso garante que a tabela seja scrollable horizontalmente se necessário
                         />
+                        </div>
 
 
                

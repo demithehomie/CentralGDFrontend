@@ -3,6 +3,7 @@ import  /*React,*/{ createContext, useState, useContext, useEffect } from 'react
 //import jwt, { JwtPayload } from 'jsonwebtoken';
 //import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
+//import { useNavigate } from 'react-router-dom';
 
 interface User {
   username: string;
@@ -15,6 +16,7 @@ interface AuthContextType {
   login: (username: string, password: string) => Promise<boolean>;
   logout: () => void;
   verifyToken: () => Promise<void>; // Adicione esta linha
+  verifySession: () => boolean; // Adicione esta linha
 }
 
 
@@ -22,7 +24,8 @@ const AuthContext = createContext<AuthContextType>({
   currentUser: null,
   login: async () => false,
   logout: () => {},
-  verifyToken: async () => {} // Adicione esta linha: Implementação stub para verifyToken
+  verifyToken: async () => {}, // Adicione esta linha: Implementação stub para verifyToken
+  verifySession: () => false, // Adicione esta linha: Implementação stub para verifySession
 });
 
 
@@ -33,8 +36,8 @@ export const useAuth = () => useContext(AuthContext);
 const apiurl = `https://gdcompanion-prod.onrender.com`
 
 export const AuthProvider = ({ children }: any) => {
+ // const navigate = useNavigate();
     const [currentUser, setCurrentUser] = useState<User | null>(null);
-
 
 
 
@@ -43,10 +46,11 @@ export const AuthProvider = ({ children }: any) => {
     const login = async (username: any, password: any) => {
       try {
         const response = await axios.post(`${apiurl}/new-login-method`, { username, password });
-        const { accessToken, name } = response.data; // Add 'name' to destructured response data
+        const { accessToken, name } = response.data;
+        const timestamp = new Date().getTime(); // Timestamp atual em milissegundos
         localStorage.setItem('token', accessToken);
-        localStorage.setItem('timestamp', new Date().getTime().toString());
-        setCurrentUser({username, name, token: accessToken});
+        localStorage.setItem('timestamp', timestamp.toString());
+        setCurrentUser({ username, name, token: accessToken });
         return true;
       } catch (error) {
         console.error('Erro durante a operação de login:', error);
@@ -57,32 +61,60 @@ export const AuthProvider = ({ children }: any) => {
 
     const verifyToken = async () => {
       const token = localStorage.getItem('token');
-      if (token) {
-        try {
-          const response = await axios.post(`${apiurl}/new-verify-token-method`, {}, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          // Supondo que o backend retorne os detalhes do usuário junto com a mensagem de sucesso
-          const { user } = response.data;
-          setCurrentUser({ username: user.username, name: user.name, token }); // Atualiza com detalhes completos do usuário
-        } catch (error) {
-          // Fazendo cast do 'error' para o tipo 'Error' para acessar a propriedade 'message'
-          if (error instanceof Error) {
-            console.error('Erro durante a verificação do token:', error.message);
-          } else {
-            console.error('Erro durante a verificação do token:', error);
-          }
-          logout();
-        }
+      const timestamp = localStorage.getItem('timestamp');
+      const now = new Date().getTime();
+    
+      if (!token || !timestamp || now - parseInt(timestamp) > 3600000) { // 60 minutos = 3600000 milissegundos
+        logout(); // Isso vai remover o token e o usuário atual
+        return;
+      }
+    
+      // Se o token ainda não expirou, prossiga com a verificação no servidor
+      try {
+        const response = await axios.post(`${apiurl}/new-verify-token-method`, {}, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const { user } = response.data;
+        setCurrentUser({ username: user.username, name: user.name, token });
+      } catch (error) {
+        console.error('Erro durante a verificação do token:', error);
+        logout();
       }
     };
+
+
+    
     
 
 useEffect(() => {
   verifyToken();
 }, []);
+
+// Dentro do seu AuthContext ou onde você define useAuth
+
+const verifySession = (): boolean => {
+  // Sua lógica existente para verificar a sessão
+  // Por exemplo, verificar um token ou timestamp no localStorage
+  
+  // Certifique-se de que todos os caminhos de retorno sejam booleanos
+  // Se a sessão for válida, retorne true; caso contrário, retorne false
+
+  const token = localStorage.getItem('token');
+  const timestamp = localStorage.getItem('timestamp');
+  const now = new Date().getTime();
+
+  if (token && timestamp) {
+    const sessionDuration = now - parseInt(timestamp);
+    const sessionIsValid = sessionDuration <= 3600000; // Por exemplo, 1 hora = 3600000 milissegundos
+    return sessionIsValid;
+  }
+
+  // Se não houver token ou timestamp, ou se a sessão expirou, retorne false
+  return false;
+};
+
 
 
 // useEffect(() => {
@@ -116,15 +148,24 @@ useEffect(() => {
   
 
     const logout = () => {
-        localStorage.removeItem('token');
-        setCurrentUser(null);
+      localStorage.removeItem('token');
+      localStorage.removeItem('timestamp'); // Se você estiver usando um timestamp para a sessão
+  
+      // Atualiza o estado da aplicação, se necessário
+      // Por exemplo, se você tiver um estado `currentUser` no contexto de autenticação:
+      setCurrentUser(null);
+  
+      // Redireciona o usuário para a página de login ou para a home
+      // Isso pode depender de como você está gerenciando rotas na sua aplicação
+      //navigate('/')
     };
 
     const value = {
         currentUser,
         login,
         logout,
-        verifyToken
+        verifyToken,
+        verifySession
     };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

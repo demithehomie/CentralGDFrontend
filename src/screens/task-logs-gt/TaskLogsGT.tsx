@@ -167,7 +167,7 @@ const handleCopy = async () => {
   return (
     <>
     <MainNavbar/>
-   
+    <div className="task-logs-gt-container"> {/* Adicione esta linha */}
     <div>
         <br />
         <br />
@@ -244,7 +244,7 @@ const handleCopy = async () => {
         <p className='modal-items'><strong>Client IP:</strong> {selectedItem?.client_ip}</p>
         <p className='modal-items'><strong>Logs:</strong> <pre>{selectedItem?.logs}</pre></p> {/* Usando <pre> para preservar quebras de linha e espaçamento */}
     </Modal>
-
+    </div>
     </div>
     </>
   );

@@ -1,0 +1,14 @@
+.task-logs-gt-container {
+    display: block;
+    overflow-x: auto;
+    padding: 0 20px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    width: calc(100% - 20px); /* Subtrai 40px no total, 20px de cada lado */
+}
+
+/* Garante que a tabela se ajuste dentro do contêiner */
+.ant-table-container {
+    width: auto;
+    min-width: 100%; /* Assegura que a tabela ocupe pelo menos o espaço disponível, ajustando-se para overflow se necessário */
+}

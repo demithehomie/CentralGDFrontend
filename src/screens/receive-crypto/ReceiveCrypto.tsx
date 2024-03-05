@@ -35,12 +35,14 @@ interface ClientFormData {
   name: string;
   whatsapp: string;
   service_provided: string;
-  amount: number;
+  amount: any;
   username: string;
+  [key: string]: string | number; 
 }
 
 const ReceiveCrypto: React.FC = () => {
  // const apiurldev = 'http://localhost:3001';
+// let validationTimer: NodeJS.Timeout;  
   const apiurlprod = 'https://gdcompanion-prod.onrender.com';
   const newpaymentapp = `http://gdpayment-MJLRKFGyq9MqzMq5.web.app`
  // const navigate = useNavigate();
@@ -61,7 +63,7 @@ const ReceiveCrypto: React.FC = () => {
     try {
       const { data } = await axios.get(`${apiurlprod}/binance-user-id`);
       setPaymentAddress(data.id_to_receive_payment );
-      console.log( `Isso é o que está vindo do backend => ${data}`)
+      console.log( `Isso é o que está vindo do backend => ${JSON.stringify(data)}`)
     } catch (error) {
       console.error("Failed to fetch payment address:", error);
       Swal.fire('Erro!', 'Falha ao buscar o endereço de pagamento.', 'error');
@@ -70,13 +72,53 @@ const ReceiveCrypto: React.FC = () => {
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    console.log(`Updating ${name} with value ${value}`);
+  
+    // Atualiza o estado imediatamente para refletir a entrada do usuário, sem validações específicas
     setClientFormData(prevState => ({
       ...prevState,
-      [name]: name === 'amount' ? parseFloat(value) : value,
+      [name]: value,
     }));
   };
   
+  // const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = event.target;
+  
+  //   // Atualiza o estado imediatamente para refletir a entrada do usuário
+  //   setClientFormData(prevState => ({
+  //     ...prevState,
+  //     [name]: value,
+  //   }));
+  
+  //   clearTimeout(validationTimer); // Limpa o temporizador anterior
+  
+  //   validationTimer = setTimeout(() => {
+  //     if (name === 'amount') {
+  //       let validValue = value.trim(); // Remove espaços em branco no início e no fim
+        
+  //       // Substitui vírgula por ponto e verifica se o resultado é um número válido maior que zero
+  //       validValue = validValue.replace(',', '.');
+        
+  //       if (!validValue || // Se for uma string vazia
+  //           validValue === '0' || // Se for "0"
+  //           /^(0+)$/.test(validValue) || // Se consistir apenas de zeros
+  //           isNaN(parseFloat(validValue)) || // Se não for um número
+  //           parseFloat(validValue) <= 0) { // Se for um número menor ou igual a zero
+  //         // Caso inválido: limpa o valor
+  //         setClientFormData(prevState => ({
+  //           ...prevState,
+  //           [name]: '', // Limpa o campo
+  //         }));
+  //       } else {
+  //         // Caso válido, mantém o valor (ajustes podem ser aplicados aqui, se necessário)
+  //         setClientFormData(prevState => ({
+  //           ...prevState,
+  //           [name]: validValue, // Mantém ou ajusta o valor
+  //         }));
+  //       }
+  //     }
+  //   }, 5000); // Valida após 2,5 segundos
+  // };
+
 
   const copyToClipboard = async (text: string) => {
     try {
@@ -93,49 +135,118 @@ const ReceiveCrypto: React.FC = () => {
   //   navigate(`/crypto-payments/${paymentId}`);
   // };
 
+  // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  //   event.preventDefault();
+  //   if (!clientFormData.amount || clientFormData.amount <= 0) {
+  //     Swal.fire('Erro!', 'A quantia a ser recebida deve ser maior que zero.', 'error');
+  //     return; // Interrompe a execução da função
+  //   }
+  //   const payment_id = Math.floor(Math.random() * 100000000);
+  //   try {
+  //     const response = await axios.post(`${apiurlprod}/inserir-cliente-com-crypto`, {
+  //       ...clientFormData,
+  //       payment_id: payment_id,
+  //       wallet_address: paymentAddress, 
+  //     });
+  //     console.log(clientFormData)
+  //     console.log(paymentAddress)
+  //     console.log(response.data); 
+  //    // Swal.fire('Sucesso!', 'Cliente inserido com sucesso.', 'success');
+  //     localStorage.setItem('payment_id', JSON.stringify(response.data.payment_id));
+  //     const paymentLink = `${newpaymentapp}/crypto-payments/${response.data.payment_id}`;
+  //   // Swal popup to show the payment link
+  //   Swal.fire({
+  //     title: 'Payment Link Generated',
+  //     html: `<p>Use the link below to access the payment page:</p><pre>${paymentLink}</pre>`,
+  //     showCancelButton: true,
+  //     confirmButtonText: 'Copy Link',
+  //     cancelButtonText: 'Access Page',
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       navigator.clipboard.writeText(paymentLink).then(() => {
+  //         Swal.fire('Copied!', 'The link has been copied to your clipboard.', 'success');
+  //       });
+  //     } else if (result.dismiss === Swal.DismissReason.cancel) {
+  //       //navigate(`/crypto-payments/${response.data.payment_id}`);
+  //       window.open(paymentLink, '_blank');
+  //     }
+  //   });
+  //   // Rest of your success handling...
+  //   //Swal.fire('Sucesso!', 'Cliente inserido com sucesso.', 'success');
+  //   } catch (error) {
+  //     console.error('Erro ao inserir cliente:', error);
+  //     Swal.fire('Erro!', 'Falha ao inserir cliente.', 'error');
+  //   }
+  // };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!clientFormData.amount || clientFormData.amount <= 0) {
       Swal.fire('Erro!', 'A quantia a ser recebida deve ser maior que zero.', 'error');
-      return; // Interrompe a execução da função
+      return; // Stops function execution if validation fails
     }
-    const payment_id = Math.floor(Math.random() * 100000000);
+
+        // Payload modificado para excluir merchantId e adicionar apenas os dados necessários.
+        const orderPayload = {
+          tradeType: 'WEB',
+          totalFee: clientFormData.amount.toString(), // Convert amount to string if necessary
+          currency: 'USDT', // Assuming currency is always USDT
+          productType: clientFormData.service_provided, // Or any other field you deem appropriate
+          productName: 'Service Payment', // This could be dynamic based on your form data
+          productDetail: `Payment for ${clientFormData.service_provided} by ${clientFormData.name}` // Example detail
+        };
+  
+    // Removendo payment_id gerado no frontend, pois será gerado no backend.
     try {
-      const response = await axios.post(`${apiurlprod}/inserir-cliente-com-crypto`, {
-        ...clientFormData,
-        payment_id: payment_id,
-        wallet_address: paymentAddress, 
-      });
+  
+  
+      const orderResponse = await axios.post(`${apiurlprod}/binancepay/create_order`, orderPayload);
+      console.log(orderResponse.data);
       console.log(clientFormData)
       console.log(paymentAddress)
-      console.log(response.data); 
-     // Swal.fire('Sucesso!', 'Cliente inserido com sucesso.', 'success');
-      localStorage.setItem('payment_id', JSON.stringify(response.data.payment_id));
-      const paymentLink = `${newpaymentapp}/crypto-payments/${response.data.payment_id}`;
-    // Swal popup to show the payment link
-    Swal.fire({
-      title: 'Payment Link Generated',
-      html: `<p>Use the link below to access the payment page:</p><pre>${paymentLink}</pre>`,
-      showCancelButton: true,
-      confirmButtonText: 'Copy Link',
-      cancelButtonText: 'Access Page',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        navigator.clipboard.writeText(paymentLink).then(() => {
-          Swal.fire('Copied!', 'The link has been copied to your clipboard.', 'success');
-        });
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        //navigate(`/crypto-payments/${response.data.payment_id}`);
-        window.open(paymentLink, '_blank');
-      }
-    });
-    // Rest of your success handling...
-    //Swal.fire('Sucesso!', 'Cliente inserido com sucesso.', 'success');
+      console.log(orderPayload);
+  
+      // Assuming you receive a paymentId or equivalent identifier from your orderResponse
+      const clientPayload = {
+        ...clientFormData,
+        payment_id: orderResponse.data.paymentId, // Assuming this is the field name in your response
+        wallet_address: paymentAddress, 
+      };
+  
+      const clientResponse = await axios.post(`${apiurlprod}/inserir-cliente-com-crypto`, clientPayload);
+      console.log(clientResponse.data);
+      
+      // Upon successful client insertion, proceed with showing the payment link or further actions
+      localStorage.setItem('payment_id', JSON.stringify(clientResponse.data.payment_id));
+      const paymentLink = `${newpaymentapp}/crypto-payments/${clientResponse.data.payment_id}`;
+      
+      Swal.fire({
+        title: 'Payment Link Generated',
+        html: `<p>Use the link below to access the payment page:</p><pre>${paymentLink}</pre>`,
+        showCancelButton: true,
+        confirmButtonText: 'Copy Link',
+        cancelButtonText: 'Access Page',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigator.clipboard.writeText(paymentLink).then(() => {
+            Swal.fire('Copied!', 'The link has been copied to your clipboard.', 'success');
+          });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          window.open(paymentLink, '_blank');
+        }
+      });
     } catch (error) {
-      console.error('Erro ao inserir cliente:', error);
-      Swal.fire('Erro!', 'Falha ao inserir cliente.', 'error');
+      console.error('Error during submission:', error);
+      Swal.fire('Erro!', 'Falha ao processar a transação.', 'error');
+     // console.log(orderResponse.data);
+      console.log(clientFormData)
+      console.log(paymentAddress)
+     console.log(orderPayload);
+  
     }
   };
+  
+  
 
   return (
     <>
@@ -156,14 +267,15 @@ const ReceiveCrypto: React.FC = () => {
         <form className="crypto-form" onSubmit={handleSubmit}>
           <label className="label" htmlFor="amount">Quantidade a ser recebida em <strong>USDT</strong>:</label>
           <input
-          className="input-c"
-            type="number"
-            id="amount"
-            name="amount"
-            value={clientFormData.amount > 0 ? clientFormData.amount : ''}
-            onChange={handleInputChange}
-            placeholder='Insira a quantia em USDT'
-          />
+  className="input-c"
+  type="text" // Mudança de 'number' para 'text' para permitir entrada como '0,01'
+  id="amount"
+  name="amount"
+  value={clientFormData.amount}
+  onChange={handleInputChange}
+  placeholder='Insira a quantia em USDT'
+/>
+
             <label className="label" htmlFor="name">Nome do Cliente</label>
           <input
           className="input-c"

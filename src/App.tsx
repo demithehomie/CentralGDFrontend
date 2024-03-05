@@ -1,6 +1,6 @@
 import './App.css';
 import axios from 'axios';
-import * as Sentry from "@sentry/react";
+
 import { createRoot } from 'react-dom/client';
 //import  { useEffect, useState } from 'react';
 import { GlobalStyle } from './components/global-style/GlobalStyle';
@@ -49,7 +49,10 @@ import FingerPHStoriesTMT from './screens/fingerprints-histories-tmt/FingerPHist
 import FingerPHStoriesGT from './screens/fingerprints-histories-gt/FingerPHistoriesGT';
 import LockingCentral from './screens/locking-central/TheLockingCentral';
 import LogsScreen from './screens/logs-screen/LogsScreen';
+import PresentationScreen from './screens/presentation-screen/PresentationScreen';
 
+//import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 
@@ -57,23 +60,6 @@ export const mercadoPagoApi = axios.create({
   baseURL: 'https://api.mercadopago.com/v1'
 });
 
-Sentry.init({
-  dsn: "https://3f6d4a098a0bdf0d992be607a65e51e8@o4506707658539008.ingest.sentry.io/4506707659915264",
-  integrations: [
-    Sentry.browserTracingIntegration(),
-    Sentry.replayIntegration({
-      maskAllText: false,
-      blockAllMedia: false,
-    }),
-  ],
-  // Performance Monitoring
-  tracesSampleRate: 1.0, //  Capture 100% of the transactions
-  // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
-  tracePropagationTargets: ["localhost", /^https:\/\/yourserver\.io\/api/],
-  // Session Replay
-  replaysSessionSampleRate: 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
-  replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
-});
 
 
 
@@ -84,7 +70,7 @@ root.render(<App />);
 
 function App() {
 
-  
+ // let navigate = useNavigate();
   
   return (
     <>
@@ -93,7 +79,7 @@ function App() {
       <AuthProvider>
         <HelmetProvider>
         <GlobalStyle />
-
+        
         <BrowserRouter>
           <Routes>
           <Route path="/" element={<LoginForm />} />
@@ -111,8 +97,9 @@ function App() {
           <Route path="/search-results-guerratool" element={<PrivateRoute><SearchResultsGuerraTool /></PrivateRoute>} />
           <Route path="/search-prints-results" element={<PrivateRoute><SearchPrintsResults /></PrivateRoute>} />
           <Route path="/user-profile/:userId" element={ /* <PrivateRoute> */ <UserProfile /> /* </PrivateRoute > */} />
+          <Route path="/presentation-screen" element={ /* <PrivateRoute> */ <PresentationScreen /> /* </PrivateRoute > */} />
           <Route path="/user-profile-guerratool/:userId" element={ /*<PrivateRoute>*/ <UserProfileGuerraTool /> /*</PrivateRoute> */}/>
-          <Route path="/payment-screen/:userId" element={<PrivateRoute><PaymentScreen /></PrivateRoute>} />
+          <Route path="/payment-screen/execute-action" element={<PrivateRoute><PaymentScreen /></PrivateRoute>} />
           <Route path="/get-prints-guerra-tool" element={<PrivateRoute><PrintsGuerraTool /></PrivateRoute>} />
           <Route path="/get-prints-themagictool" element={<PrivateRoute><PrintsTheMagicTool /></PrivateRoute>} />
           <Route path="/target" element={<PrivateRoute><MiniTargetTable /></PrivateRoute>} />
@@ -140,10 +127,17 @@ function App() {
           <Route path="/motorola-servers-screen" element={<PrivateRoute><MotorolaServerScreen /></PrivateRoute>} />
 
           <Route path="/crypto-payments/:paymentId" element={<CryptoPaymentPage />} />
+        
           </Routes>
+          {/* <div className="floating-buttons">
+              <button onClick={() => navigate('/rota1')} className="floating-btn">Botão 1</button>
+              <button onClick={() => navigate('/rota2')} className="floating-btn">Botão 2</button>
+          </div> */}
+          {/* <ToastContainer position="bottom-left" /> */}
         </BrowserRouter>
         </HelmetProvider>
       </AuthProvider>
+
     </>
   );
 }

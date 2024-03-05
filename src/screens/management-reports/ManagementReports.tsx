@@ -54,6 +54,7 @@ function ManagementReports() {
 
   useEffect(() => {
       // Aqui você pode definir o reportType inicial, por exemplo: 'daily'
+      fetchReportData('customDays', setCustomRangeReportData);
       fetchReportData('daily', setDailyReportData);
       fetchReportData('weekly', setWeeklyReportData);
       fetchReportData('monthly', setMonthlyReportData);
@@ -288,6 +289,56 @@ const fetchCustomRangeReportData = async () => {
       fetchCustomRangeReportData();
     }
   }, [startDate, endDate]);
+
+  const deleteCliente = async (paymentId: number) => {
+    Swal.fire({
+        title: 'Tem certeza?',
+        text: "Você não poderá reverter isso!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sim, delete isso!'
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            try {
+                const response = await axios.delete(`https://gdcompanion-prod.onrender.com/deletar-cliente/${paymentId}`);
+                if (response.status === 200) {
+                    Swal.fire(
+                        'Deletado!',
+                        'O cliente foi deletado.',
+                        'success'
+                    );
+                    // Update your state here to remove the deleted client from the UI
+                    setDailyReportData(prevData => prevData.filter(item => item.payment_id !== paymentId));
+                    setWeeklyReportData(prevData => prevData.filter(item => item.payment_id !== paymentId));
+                    setMonthlyReportData(prevData => prevData.filter(item => item.payment_id !== paymentId));
+                    setQuarterlyReportData(prevData => prevData.filter(item => item.payment_id !== paymentId));
+                    setSemiAnnualyReportData(prevData => prevData.filter(item => item.payment_id !== paymentId));
+                    setAnnualReportData(prevData => prevData.filter(item => item.payment_id !== paymentId));
+                    setCustomRangeReportData(prevData => prevData.filter(item => item.payment_id !== paymentId));
+
+                        
+                   
+                } else {
+                    Swal.fire(
+                        'Erro!',
+                        'Cliente não encontrado ou já foi deletado.',
+                        'error'
+                    );
+                }
+            } catch (error) {
+                console.error('Erro ao deletar cliente:', error);
+                Swal.fire(
+                    'Erro!',
+                    'Erro ao tentar deletar o cliente.',
+                    'error'
+                );
+            }
+        }
+    });
+};
+
     
   return (
     <>
@@ -331,6 +382,7 @@ const fetchCustomRangeReportData = async () => {
         <th>É Devedor?</th>
         <th>Data de Criação</th>
         <th>ID do Pagamento</th>
+                        <th>EXCLUIR</th>
       </tr>
     </thead>
     <tbody>
@@ -353,7 +405,12 @@ const fetchCustomRangeReportData = async () => {
               hour12: false
             })
           }</td>
-          <td>{item.payment_id}</td>
+            <td>{item.payment_id}</td>
+                        
+
+                            <td>
+                                <button onClick={() => deleteCliente(item.payment_id)} className="delete-button">Excluir</button>
+                            </td>
         </tr>
       ))}
     </tbody>
@@ -362,12 +419,12 @@ const fetchCustomRangeReportData = async () => {
 
 <div className='buttons-row-rel'>
            {/* <button className='button-report'>Exibir detalhes</button>*/}  
-           <button className='button-report' onClick={() => emitPdf('daily')}>Emitir PDF</button> 
-           <button className='button-report' onClick={() => emitDocx('daily')}>Emitir DOCX</button> 
-           <button className='button-report' onClick={() => emitExcel('daily')}>Emitir Excel</button>
-           <button className="button-report" onClick={() => prepareGraphData('daily')}>Exibir Gráfico Diário</button>
+           <button className='button-report' onClick={() => emitPdf('customDays')}>Emitir PDF</button> 
+           <button className='button-report' onClick={() => emitDocx('customDays')}>Emitir DOCX</button> 
+           <button className='button-report' onClick={() => emitExcel('customDays')}>Emitir Excel</button>
+           <button className="button-report" onClick={() => prepareGraphData('customDays')}>Exibir Gráfico Diário</button>
 
-           {showGraph && graphData && currentReportType === 'daily' &&  (
+           {showGraph && graphData && currentReportType === 'customDays' &&  (
                 <div className="graph-popup">
                     <div className="graph-popup-inner">
                         <h2>{`${currentReportType.charAt(0).toUpperCase() + currentReportType.slice(1)} Report Graph`}</h2>
@@ -400,6 +457,8 @@ const fetchCustomRangeReportData = async () => {
                         <th>É Devedor?</th>
                         <th>Data de Criação</th>
                         <th>ID do Pagamento</th>
+                        
+                        <th>EXCLUIR</th>
                         {/* Adicione mais colunas conforme necessário */}
                     </tr>
                 </thead>
@@ -442,7 +501,16 @@ const fetchCustomRangeReportData = async () => {
                                 })
                             }
                             </td>
-                            <td>{item.payment_id}</td>
+                              <td>{item.payment_id}</td>
+                            {/* Existing table row code */}
+
+                            <td>
+                                <button onClick={() => deleteCliente(item.payment_id)} className="delete-button">Excluir</button>
+                            </td>
+                            {/* Existing table row code */}
+
+                        
+
                             {/* Adicione mais colunas conforme necessário */}
                         </tr>
                     ))}
@@ -488,6 +556,9 @@ const fetchCustomRangeReportData = async () => {
                         <th>É Devedor?</th>
                         <th>Data de Criação</th>
                         <th>ID do Pagamento</th>
+                        <th>EXCLUIR</th>
+                        
+
                         {/* Adicione mais colunas conforme necessário */}
                     </tr>
                 </thead>
@@ -530,7 +601,12 @@ const fetchCustomRangeReportData = async () => {
                                 })
                             }
                             </td>
-                            <td>{item.payment_id}</td>
+                              <td>{item.payment_id}</td>
+                            {/* Existing table row code */}
+
+                            <td>
+                                <button onClick={() => deleteCliente(item.payment_id)} className="delete-button">Excluir</button>
+                            </td>
                             {/* Adicione mais colunas conforme necessário */}
                         </tr>
                     ))}
@@ -574,6 +650,7 @@ const fetchCustomRangeReportData = async () => {
                         <th>É Devedor?</th>
                         <th>Data de Criação</th>
                         <th>ID do Pagamento</th>
+                        <th>EXCLUIR</th>
                         {/* Adicione mais colunas conforme necessário */}
                     </tr>
                 </thead>
@@ -617,7 +694,12 @@ const fetchCustomRangeReportData = async () => {
                             }
                             </td>
 
-                            <td>{item.payment_id}</td>
+                              <td>{item.payment_id}</td>
+                            {/* Existing table row code */}
+
+                            <td>
+                                <button onClick={() => deleteCliente(item.payment_id)} className="delete-button">Excluir</button>
+                            </td>
                             {/* Adicione mais colunas conforme necessário */}
                         </tr>
                     ))}
@@ -659,6 +741,7 @@ const fetchCustomRangeReportData = async () => {
                         <th>É Devedor?</th>
                         <th>Data de Criação</th>
                         <th>ID do Pagamento</th>
+                        <th>EXCLUIR</th>
                         {/* Adicione mais colunas conforme necessário */}
                     </tr>
                 </thead>
@@ -701,7 +784,12 @@ const fetchCustomRangeReportData = async () => {
                                 })
                             }
                             </td>
-                            <td>{item.payment_id}</td>
+                              <td>{item.payment_id}</td>
+                            {/* Existing table row code */}
+
+                            <td>
+                                <button onClick={() => deleteCliente(item.payment_id)} className="delete-button">Excluir</button>
+                            </td>
                             {/* Adicione mais colunas conforme necessário */}
                         </tr>
                     ))}
@@ -743,6 +831,7 @@ const fetchCustomRangeReportData = async () => {
                         <th>É Devedor?</th>
                         <th>Data de Criação</th>
                         <th>ID do Pagamento</th>
+                        <th>EXCLUIR</th>
                         {/* Adicione mais colunas conforme necessário */}
                     </tr>
                 </thead>
@@ -785,7 +874,12 @@ const fetchCustomRangeReportData = async () => {
                                 })
                             }
                             </td>
-                            <td>{item.payment_id}</td>
+                              <td>{item.payment_id}</td>
+                            {/* Existing table row code */}
+
+                            <td>
+                                <button onClick={() => deleteCliente(item.payment_id)} className="delete-button">Excluir</button>
+                            </td>
                             {/* Adicione mais colunas conforme necessário */}
                         </tr>
                     ))}
@@ -827,6 +921,7 @@ const fetchCustomRangeReportData = async () => {
                         <th>É Devedor?</th>
                         <th>Data de Criação</th>
                         <th>ID do Pagamento</th>
+                        <th>EXCLUIR</th>
                         {/* Adicione mais colunas conforme necessário */}
                     </tr>
                 </thead>
@@ -869,7 +964,12 @@ const fetchCustomRangeReportData = async () => {
                                 })
                             }
                             </td>
-                            <td>{item.payment_id}</td>
+                              <td>{item.payment_id}</td>
+                            {/* Existing table row code */}
+
+                            <td>
+                                <button onClick={() => deleteCliente(item.payment_id)} className="delete-button">Excluir</button>
+                            </td>
                             {/* Adicione mais colunas conforme necessário */}
                         </tr>
                     ))}

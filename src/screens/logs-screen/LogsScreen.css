@@ -27,3 +27,25 @@
     color: black !important; /* Cor da fonte do item ativo */
   }
   
+  .logs-screen-container {
+    overflow-x: auto;
+    
+    width: calc(100vw - 40px); /* Calcula a largura como a largura total da viewport menos 40px de padding total */
+    max-width: calc(100vw - 40px); /* Aplica a mesma lógica ao max-width */
+}
+
+
+.responsive-table-container {
+  overflow-x: auto;
+  width: calc(100% - 40px); /* Subtrai 40px no total, 20px de cada lado */
+  margin: 0 auto; /* Centraliza o contêiner */
+}
+
+/* Ajustes para garantir que a tabela respeite os limites do contêiner */
+.ant-table {
+  width: auto !important;
+}
+
+.ant-table-container {
+  min-width: 100%; /* Garante que a tabela não seja menor que o contêiner */
+}

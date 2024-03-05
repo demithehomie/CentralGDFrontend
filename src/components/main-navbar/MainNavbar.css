@@ -39,6 +39,7 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .all-the-main-navbar-content {
+        display: none; /* Hide the navbar on smaller screens */
         flex-direction: column; /* Stack items vertically on smaller screens */
         padding: 1rem;
     }
@@ -56,13 +57,23 @@
 
 @media (max-width: 768px) {
     .navbar-toggle {
-        display: block; /* Show toggle on small screens */
-        position: absolute;
-        top: 15px;
-        right: 20px;
+        display: block;
+        position: absolute; /* Posiciona o botão no canto */
+        top: 20px; /* Distância do topo */
+        right: 20px; /* Distância da direita */
+        color: white; /* Cor do texto */
+        z-index: 1051; /* Garante que fique acima de outros elementos */
+    }
+
+    /* Oculte a navbar tradicional e mostre o popup quando ativo */
+    .navbar-center-menu, .logout-button {
+        display: none; /* Oculta os elementos em telas pequenas */
+    }
+
+    .popup-menu {
+        display: block; /* Garante que o menu popup seja mostrado */
     }
 }
-
 
 /* .main-navbar-menu-item-text{
     cursor: pointer;
@@ -106,4 +117,23 @@
     margin-right: 5%;
   }
 
-  
+  /* Estilos para o menu popup */
+.popup-menu {
+    position: absolute;
+    background-color: #fff; /* Exemplo de cor de fundo */
+    top: 60px; /* Ajuste conforme necessário */
+    right: 0;
+    width: 200px; /* Ou 100% para largura total */
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    z-index: 1001; /* Garanta que esteja acima de outros elementos */
+}
+
+.menu-span {
+    background-color: #100d34;
+    padding: 10px;
+    font-size: larger;
+    font-weight: bold;
+    border: 1px solid #ffffff;
+    border-radius: 10px;
+
+}

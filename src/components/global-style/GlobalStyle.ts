@@ -34,6 +34,13 @@ export const GlobalStyle = createGlobalStyle`
     margin-bottom: 1rem;
   }
 
+  .swal2-container {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  
+
   /* Adicione o código do loader abaixo */
   .loader {
     border: 4px solid rgba(255, 255, 255, 0.3);

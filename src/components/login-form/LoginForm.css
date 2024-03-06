@@ -3,5 +3,13 @@
     margin-bottom: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    width: 100%;
+    width: 200px;
+}
+
+.input-password {
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 200px;
 }

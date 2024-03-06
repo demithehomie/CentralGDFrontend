@@ -1,7 +1,7 @@
 import './App.css';
 import axios from 'axios';
 
-import { createRoot } from 'react-dom/client';
+
 //import  { useEffect, useState } from 'react';
 import { GlobalStyle } from './components/global-style/GlobalStyle';
 import LoginForm from './components/login-form/LoginForm';
@@ -30,7 +30,7 @@ import SearchResultsGuerraTool from './screens/search-results/SearchResultsGuerr
 import UserProfileGuerraTool from './screens/user-profile/GuerraTool/UserProfileGuerraTool';
 import ReceiveCrypto from './screens/receive-crypto/ReceiveCrypto';
 import CryptoPaymentPage from './screens/crypto-payment-page/CryptoPaymentPage';
-//import ReportsDashboard from './screens/reports-dashboard/ReportsDashboard';
+import ReportsDashboard from './screens/reports-dashboard/ReportsDashboard';
 
 //import { User } from './components/user-table/UserTable';
 //import User from './components/user-table/UserTable';
@@ -53,6 +53,8 @@ import PresentationScreen from './screens/presentation-screen/PresentationScreen
 
 //import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { ToastProvider } from './context/toast/ToastProvider';
+import ReportView from './screens/report-page/ReportPage';
 
 
 
@@ -63,9 +65,9 @@ export const mercadoPagoApi = axios.create({
 
 
 
-const container = document.getElementById('root');
-const root = createRoot(container!);
-root.render(<App />);
+// const container = document.getElementById('root');
+// const root = createRoot(container!);
+// root.render(<App />);
 
 
 function App() {
@@ -79,6 +81,8 @@ function App() {
       <AuthProvider>
         <HelmetProvider>
         <GlobalStyle />
+
+        <ToastProvider>
         
         <BrowserRouter>
           <Routes>
@@ -108,9 +112,9 @@ function App() {
           <Route path="/mgmt-reports" element={<PrivateRoute><ManagementReports /></PrivateRoute>} />
           <Route path="/mgmt-reports-guerratool" element={<PrivateRoute><MgmtReportsGuerraTool /></PrivateRoute>} />
           <Route path="/receive-crypto" element={<PrivateRoute><ReceiveCrypto /></PrivateRoute>} />
-          {/* <Route path="/reports-dashboard/:typeOfReport" element={<PrivateRoute><ReportsDashboard /></PrivateRoute>} /> */}
+          <Route path="/reports-dashboard" element={<PrivateRoute><ReportsDashboard /></PrivateRoute>} />
           <Route path="/reports-data" element={<PrivateRoute><ReportDetailsPage /></PrivateRoute>} />
-          
+          <Route path="/reports-dashboard/:reportType" element={<PrivateRoute><ReportView /></PrivateRoute>} />
           <Route path="/tmt-task-logs" element={<PrivateRoute><TaskLogsTMT /></PrivateRoute>} />
           <Route path="/gt-task-logs" element={<PrivateRoute><TaskLogsGT /></PrivateRoute>} />
           
@@ -135,6 +139,8 @@ function App() {
           </div> */}
           {/* <ToastContainer position="bottom-left" /> */}
         </BrowserRouter>
+
+        </ToastProvider>
         </HelmetProvider>
       </AuthProvider>
 

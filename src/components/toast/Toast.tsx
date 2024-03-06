@@ -1,15 +1,13 @@
-import  { useEffect } from 'react';
-import './Toast.css'; // Assuma que este é o seu arquivo CSS para estilizar o toast
+// Toast.js
 
-export function Toast({ message, duration = 3000, onDismiss }: any) {
-  useEffect(() => {
-    const timer = setTimeout(onDismiss, duration);
-    return () => clearTimeout(timer);
-  }, [onDismiss, duration]);
+import './Toast.css'; // Importando o CSS para o Toast
 
+const Toast = ({ children, show, onClose, type }: any) => {
   return (
-    <div className="toast">
-      {message}
+    <div className={`toast ${show ? 'show' : ''} ${type}`} onClick={onClose}>
+      {children}
     </div>
   );
-}
+};
+
+export default Toast;

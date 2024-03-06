@@ -95,7 +95,7 @@ const LoginForm = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               bg="white"
-              className='input-login'
+              className='input-password'
             />
             <InputRightElement>
               <Button h="1.75rem" size="sm" onClick={() => setShowPassword(!showPassword)}>
@@ -106,7 +106,7 @@ const LoginForm = () => {
         </FormControl>
 
         <Button colorScheme="blue" isLoading={isLoading} type="submit">
-          Login
+         Launch
         </Button>
 
         {isLoading && (

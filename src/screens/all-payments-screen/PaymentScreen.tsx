@@ -4,10 +4,12 @@ import axios, { AxiosResponse } from 'axios';
 import { useNavigate, /*useParams*/ } from 'react-router-dom';
 import './PaymentScreen.css';
 import Swal from 'sweetalert2';
-import { toast } from 'react-toastify';
+//import { toast } from 'react-toastify';
 import { Helmet } from 'react-helmet-async';
 import MainNavbar from '../../components/main-navbar/MainNavbar';
 import { formatDate } from '../../services/ConversrionService';
+//import Toast from '../../components/toast/Toast';
+import { useToast } from '../../context/toast/ToastProvider';
 //import { useTimePassed } from '../../personalized-hooks/useTimePassed';
 
 
@@ -45,7 +47,7 @@ const PaymentScreen: React.FC = () => {
     cpf: '10050031732',
     transaction_amount: 0.01,
   });
-  const [isTransactionAmountEnabled, setIsTransactionAmountEnabled] = useState(true);
+  const [isTransactionAmountEnabled, setIsTransactionAmountEnabled] = useState(false);
 
   const [responsePayment, setResponsePayment] = useState<AxiosResponse | null>(null);
   const [linkBuyMercadoPago, setLinkBuyMercadoPago] = useState<string | null>(null);
@@ -56,11 +58,13 @@ const PaymentScreen: React.FC = () => {
   const [lastRefreshed , setLastRefreshed] = useState<Date | null>(null)
   const [renderedIds, setRenderedIds] = useState<string[]>([]);
   const [showPopup, setShowPopup] = useState(false);
-const [selectedTransfer, setSelectedTransfer] = useState<TransferData | null>(null);
+  const [selectedTransfer, setSelectedTransfer] = useState<TransferData | null>(null);
+  //const [toast, setToast] = useState({ show: false, type: '' });
 //const [remountKey, setRemountKey] = useState(0);
 
 
 
+const triggerToast = useToast();
 
 
 // Verifique se o item deve ser renderizado
@@ -132,13 +136,15 @@ const shouldRenderItem = (transfer: TransferData) => {
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text)
       .then(() => {
-        alert('Texto copiado para a área de transferência!');
-        toast.success('Texto copiado para a área de transferência!', {
-          position: "bottom-left",
-        });
+        triggerToast('success', 'Texto copiado para a área de transferência!');
+       // alert('Texto copiado para a área de transferência!');
+        // toast.success('Texto copiado para a área de transferência!', {
+        //   position: "bottom-left",
+        // });
       })
       .catch(err => {
         console.error('Erro ao copiar texto:', err);
+        triggerToast('error', 'Erro ao copiar texto.');
       });
   };
 
@@ -176,10 +182,11 @@ const shouldRenderItem = (transfer: TransferData) => {
           setStatusPaymentPending(false); // Set pending status to false when payment is approved
           console.log(`Payment status: ${response.data.status}`);
         } else {
-         alert("Pagamento ainda não foi feito"); //
-         toast.warn("Pagamento ainda não foi feito", {
-          position: "bottom-left",
-        });
+          triggerToast('warning', "Pagamento ainda não foi feito");
+        // alert("Pagamento ainda não foi feito"); //
+        //  toast.warn("Pagamento ainda não foi feito", {
+        //   position: "bottom-left",
+        // });
           console.log(`Not approved - Payment status: ${response.data.status}`);
         }
       } else {
@@ -215,10 +222,11 @@ const shouldRenderItem = (transfer: TransferData) => {
           setStatusPaymentPending(false); // Set pending status to false when payment is approved
           console.log(`Payment status: ${response.data.status}`);
         } else {
-         alert("Pagamento ainda não foi feito"); //
-         toast.warn("Pagamento ainda não foi feito", {
-          position: "bottom-left",
-        });
+          triggerToast('warning', "Pagamento ainda não foi feito");
+        // alert("Pagamento ainda não foi feito"); //
+        //  toast.warn("Pagamento ainda não foi feito", {
+        //   position: "bottom-left",
+        // });
           console.log(`Not approved - Payment status: ${response.data.status}`);
         }
       } else {
@@ -359,10 +367,11 @@ const shouldRenderItem = (transfer: TransferData) => {
   useEffect(() => {
     if (linkBuyMercadoPago && statusPaymentPending) {
       // Forçar recarga da página
-     alert("Seu pagamento está pendente. Aguarde a aprovação.");
-     toast.info("Seu pagamento está pendente. Aguarde a aprovação.", {
-      position: "bottom-left",
-    });
+    // alert("Seu pagamento está pendente. Aguarde a aprovação.");
+    //  toast.info("Seu pagamento está pendente. Aguarde a aprovação.", {
+    //   position: "bottom-left",
+    // });
+    triggerToast('info', "Seu pagamento está pendente. Aguarde a aprovação.");
     }
   }, [linkBuyMercadoPago, statusPaymentPending]);
 
@@ -533,6 +542,16 @@ if (pendingTransfers && Array.isArray(pendingTransfers)) {
   return (
     <>
    {/* <div key={remountKey} className="App"> */}
+   <div>
+      {/* <button onClick={() => triggerToast('success')}>Sucesso</button>
+      <button onClick={() => triggerToast('error')}>Erro</button>
+      {/* <button onClick={() => triggerToast('info')}>Informação</button> */}
+      {/* <button onClick={() => triggerToast('warning')}>Aviso</button>  */}
+      {/* <Toast show={toast.show} onClose={() => setToast({ show: false, type: '' })} type={toast.type}>
+        Mensagem do Toast ({toast.type})
+      </Toast> */}
+    </div>
+
     <div className="App">
       <MainNavbar />
       <br /><br /><br /><br /><br />

@@ -66,7 +66,7 @@ const goToAnalytics = () => {
 }
 
 const goToAllReports = () => {
-    navigate('/reports-dashboard');
+    navigate('/mgmt-reports');
     Swal.close();
 }
 

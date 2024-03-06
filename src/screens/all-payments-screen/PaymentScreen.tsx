@@ -47,7 +47,7 @@ const PaymentScreen: React.FC = () => {
     cpf: '10050031732',
     transaction_amount: 0.01,
   });
-  const [isTransactionAmountEnabled, setIsTransactionAmountEnabled] = useState(false);
+  const [isTransactionAmountEnabled, setIsTransactionAmountEnabled] = useState(true);
 
   const [responsePayment, setResponsePayment] = useState<AxiosResponse | null>(null);
   const [linkBuyMercadoPago, setLinkBuyMercadoPago] = useState<string | null>(null);
@@ -59,8 +59,7 @@ const PaymentScreen: React.FC = () => {
   const [renderedIds, setRenderedIds] = useState<string[]>([]);
   const [showPopup, setShowPopup] = useState(false);
   const [selectedTransfer, setSelectedTransfer] = useState<TransferData | null>(null);
-  //const [toast, setToast] = useState({ show: false, type: '' });
-//const [remountKey, setRemountKey] = useState(0);
+
 
 
 

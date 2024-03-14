@@ -11,3 +11,4 @@ const Toast = ({ children, show, onClose, type }: any) => {
 };
 
 export default Toast;
+// C:\Users\user\Documents\CODING\BaileDoBilinha\NovoBaile\frontend-bailedobilinha-web\dist\index.html

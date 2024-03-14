@@ -221,7 +221,7 @@ const prepareGraphData = (reportType: string) => {
     // Assuming 'created_at' can be used to order and label the data
     // and 'amount' is the data point you want to graph
     const labels = reportData.map(item => new Date(item.created_at).toLocaleDateString());
-    const dataPoints = reportData.map(item => item.amount);
+    const dataPoints = reportData.map(item => Math.round(item.amount * 0.99));
 
     const data = {
         labels,
@@ -392,7 +392,7 @@ const fetchCustomRangeReportData = async () => {
           <td>{item.name}</td>
           <td>{item.whatsapp}</td>
           <td>{item.service_provided}</td>
-          <td>R$ {item.amount.toFixed(2).replace('.', ',')}</td>
+          <td>R$ {Math.round(item.amount * 0.99).toFixed(2).replace('.', ',')}</td>
           <td>{item.pending_payments ? 'Sim' : 'Não'}</td>
           <td>{
             new Date(item.created_at).toLocaleString('pt-BR', {
@@ -469,7 +469,7 @@ const fetchCustomRangeReportData = async () => {
                             <td>{item.name}</td>
                             <td>{item.whatsapp}</td>
                             <td>{item.service_provided}</td>
-                            <td>R$ {item.amount.toFixed(2).replace('.', ',')}</td> 
+                            <td>R$ {Math.round(item.amount * 0.99).toFixed(2).replace('.', ',')}</td>
                                {/* <td>{item.username}</td> */}
                                <td>
                                 <select
@@ -569,7 +569,7 @@ const fetchCustomRangeReportData = async () => {
                             <td>{item.name}</td>
                             <td>{item.whatsapp}</td>
                             <td>{item.service_provided}</td>
-                            <td>R$ {item.amount.toFixed(2).replace('.', ',')}</td> 
+                            <td>R$ {Math.round(item.amount * 0.99).toFixed(2).replace('.', ',')}</td>
                                {/* <td>{item.username}</td> */}
                                <td>
                                 <select
@@ -661,7 +661,7 @@ const fetchCustomRangeReportData = async () => {
                             <td>{item.name}</td>
                             <td>{item.whatsapp}</td>
                             <td>{item.service_provided}</td>
-                            <td>R$ {item.amount.toFixed(2).replace('.', ',')}</td> 
+                            <td>R$ {Math.round(item.amount * 0.99).toFixed(2).replace('.', ',')}</td>
                                {/* <td>{item.username}</td> */}
                                <td>
                                 <select
@@ -752,7 +752,7 @@ const fetchCustomRangeReportData = async () => {
                             <td>{item.name}</td>
                             <td>{item.whatsapp}</td>
                             <td>{item.service_provided}</td>
-                            <td>R$ {item.amount.toFixed(2).replace('.', ',')}</td> 
+                            <td>R$ {Math.round(item.amount * 0.99).toFixed(2).replace('.', ',')}</td>
                                {/* <td>{item.username}</td> */}
                                <td>
                                 <select
@@ -842,7 +842,7 @@ const fetchCustomRangeReportData = async () => {
                             <td>{item.name}</td>
                             <td>{item.whatsapp}</td>
                             <td>{item.service_provided}</td>
-                            <td>R$ {item.amount.toFixed(2).replace('.', ',')}</td> 
+                            <td>R$ {Math.round(item.amount * 0.99).toFixed(2).replace('.', ',')}</td>
                                {/* <td>{item.username}</td> */}
                                <td>
                                 <select
@@ -932,7 +932,7 @@ const fetchCustomRangeReportData = async () => {
                             <td>{item.name}</td>
                             <td>{item.whatsapp}</td>
                             <td>{item.service_provided}</td>
-                            <td>R$ {item.amount.toFixed(2).replace('.', ',')}</td> 
+                            <td>R$ {Math.round(item.amount * 0.99).toFixed(2).replace('.', ',')}</td>
                                {/* <td>{item.username}</td> */}
                                <td>
                                 <select

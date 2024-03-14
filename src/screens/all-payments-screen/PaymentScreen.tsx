@@ -41,7 +41,7 @@ const PaymentScreen: React.FC = () => {
  // const { userId } = useParams<{ userId: string }>();
   const [userData, /* setUserData */] = useState<UserData | null>(null);
   const [formData, setFormData] = useState({
-    email: 'leandroguerratool@gmail.com',
+    email: '',
     nome: 'Leandro',
     sobrenome: 'Guerra',
     cpf: '10050031732',
@@ -79,6 +79,21 @@ const shouldRenderItem = (transfer: TransferData) => {
   );
 };
 
+useEffect(() => {
+  if (statusPaymentApproved) {
+    Swal.fire({
+      title: 'Transferência Aprovada',
+      text: 'Sua transferência foi aprovada com sucesso!',
+      icon: 'success',
+      confirmButtonText: 'OK'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.reload();
+      }
+    });
+  }
+}, [statusPaymentApproved]);
+
 
   useEffect(() => {
     // Fetch pending transfers when the component mounts
@@ -90,7 +105,8 @@ const shouldRenderItem = (transfer: TransferData) => {
     name: '',
     whatsapp: '',
     service_provided: '',
-    amount: formData.transaction_amount
+    amount: formData.transaction_amount,
+    email: '',
   });
 
   const handleClientFormChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -161,13 +177,13 @@ const shouldRenderItem = (transfer: TransferData) => {
       const paymentId = responsePayment?.data?.id;
       if (paymentId) {
         const token = 'APP_USR-5220412533742046-011815-549eea6144946c47d1c330d299e6fb6a-419577621'; // Replace with your MercadoPago API access token
-        const response = await axios.get(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
+        const response = await axios.get(`https://gdcompanion-prod.onrender.com/mercadopago/payment/check/${paymentId}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
         });
   
-        if (response.data.status === 'approved') {
+        if (response.data.status === 'approved' || 'refunded') {
           const paymentId = responsePayment?.data?.id;
           axios.post('https://gdcompanion-prod.onrender.com/atualizar-status-pagamento-cliente', { payment_id: paymentId })
             .then(response => {
@@ -177,15 +193,13 @@ const shouldRenderItem = (transfer: TransferData) => {
             .catch(error => {
               console.error('Erro ao atualizar o pagamento:', error);
             });
+
           setStatusPaymentApproved(true);
           setStatusPaymentPending(false); // Set pending status to false when payment is approved
           console.log(`Payment status: ${response.data.status}`);
         } else {
           triggerToast('warning', "Pagamento ainda não foi feito");
-        // alert("Pagamento ainda não foi feito"); //
-        //  toast.warn("Pagamento ainda não foi feito", {
-        //   position: "bottom-left",
-        // });
+
           console.log(`Not approved - Payment status: ${response.data.status}`);
         }
       } else {
@@ -201,13 +215,13 @@ const shouldRenderItem = (transfer: TransferData) => {
       const paymentId = selectedTransfer?.payment_id; 
       if (paymentId) {
         const token = 'APP_USR-5220412533742046-011815-549eea6144946c47d1c330d299e6fb6a-419577621'; // Replace with your MercadoPago API access token
-        const response = await axios.get(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
+        const response = await axios.get(`https://gdcompanion-prod.onrender.com/mercadopago/payment/check/${paymentId}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
         });
   
-        if (response.data.status === 'approved') {
+        if (response.data.status === 'approved' || 'refunded') {
           // Remova a redefinição de paymentId aqui, pois você já definiu como selectedTransfer.payment_link
           axios.post('https://gdcompanion-prod.onrender.com/atualizar-status-pagamento-cliente', { payment_id: paymentId })
             .then(response => {
@@ -236,48 +250,51 @@ const shouldRenderItem = (transfer: TransferData) => {
     }
   };
   
-  const backToDashboard = () => {
-    navigate('/dashboard');
-  };
+  // const backToDashboard = () => {
+  //   navigate('/dashboard');
+  // };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    let finalTransactionAmount = formData.transaction_amount;
-  if (isTransactionAmountEnabled) {
-    finalTransactionAmount = calculateTotalAmount(formData.transaction_amount);
-  } else {
-    finalTransactionAmount = formData.transaction_amount;
-  }
+    let finalTransactionAmount = isTransactionAmountEnabled 
+    ? calculateTotalAmount(formData.transaction_amount) 
+    : formData.transaction_amount;
 
     // Preparando o corpo da requisição para o MercadoPago
-    const token = 'APP_USR-5220412533742046-011815-549eea6144946c47d1c330d299e6fb6a-419577621';
-    const idempotencyKey = `${Date.now()}-${Math.random()}`; // Chave de idempotência
+    // const token = 'APP_USR-5220412533742046-011815-549eea6144946c47d1c330d299e6fb6a-419577621';
+    // const idempotencyKey = `${Date.now()}-${Math.random()}`; // Chave de idempotência
 
-    const paymentBody = {
-      transaction_amount: finalTransactionAmount,//calculateTotalAmount(formData.transaction_amount),
-      description: 'Família Guerra',
-      payment_method_id: 'pix',
+    // const paymentBody = {
+    //   transaction_amount: finalTransactionAmount,//calculateTotalAmount(formData.transaction_amount),
+    //   description: 'Família Guerra',
+    //   payment_method_id: 'pix',
+    //   payer: {
+    //     email: formData.email,
+    //     first_name: formData.nome,
+    //     last_name: formData.sobrenome,
+    //     identification: {
+    //       type: 'CPF',
+    //       number: formData.cpf,
+    //     },
+    //   },
+    //   notification_url: 'https://eorpjcvcjvhqnq6.m.pipedream.net',
+    // };
+
+    const paymentRequestBody = {
+      transaction_amount: finalTransactionAmount,
+      description: "Família Guerra",
+      payment_method_id: "pix",
       payer: {
-        email: formData.email,
-        first_name: formData.nome,
-        last_name: formData.sobrenome,
-        identification: {
-          type: 'CPF',
-          number: formData.cpf,
-        },
-      },
-      notification_url: 'https://eorpjcvcjvhqnq6.m.pipedream.net',
+        email: formData.email
+      }
     };
 
     try {
       // Enviando dados para o MercadoPago
-      const paymentResponse = await axios.post('https://api.mercadopago.com/v1/payments', paymentBody, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'X-Idempotency-Key': idempotencyKey,
-        },
-      });
+      const paymentResponse = await axios.post('https://gdcompanion-prod.onrender.com/mercadopago/payment/pix', paymentRequestBody);
+      console.log('Resposta do Servidor:', JSON.stringify(paymentResponse.data, null, 2));
+
       setResponsePayment(paymentResponse);
       setLinkBuyMercadoPago(paymentResponse.data.point_of_interaction.transaction_data.ticket_url);
 	    console.log('Resposta do Servidor:', JSON.stringify(paymentResponse.data, null, 2));
@@ -326,6 +343,7 @@ const shouldRenderItem = (transfer: TransferData) => {
               // Enviar dados do cliente para o servidor
               const response = await axios.post('https://gdcompanion-prod.onrender.com/inserir-cliente', clientData);
               console.log('Resposta do servidor:', response);
+              console.log('Client Data:', clientData);
               // Lógica adicional após o envio bem-sucedido
             } catch (error) {
               console.error('Erro ao enviar dados do cliente para o servidor:', error);
@@ -339,7 +357,7 @@ const shouldRenderItem = (transfer: TransferData) => {
       } catch (error) {
         console.error('Erro ao processar o pagamento:', error);
         console.log(`Deu ruim: ${JSON.stringify(error)}`);
-        console.log(`Deu ruim: ${JSON.stringify(paymentBody)}`);
+        console.log(`Deu ruim: ${JSON.stringify(paymentRequestBody)}`);
       }
     };
 
@@ -536,6 +554,10 @@ const shouldRenderItem = (transfer: TransferData) => {
 if (pendingTransfers && Array.isArray(pendingTransfers)) {
   pendingTransfers.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 }
+
+const recarregarPagina = () => {
+  window.location.reload();
+}
   
 
   return (
@@ -627,6 +649,14 @@ if (pendingTransfers && Array.isArray(pendingTransfers)) {
                 onChange={handleClientFormChange}
                 placeholder="Valor"
               />
+              <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Email do Cliente"
+            />
+
             </div>
 
             <button type="submit">Gerar QR Code e Copia e Cola</button>
@@ -635,12 +665,18 @@ if (pendingTransfers && Array.isArray(pendingTransfers)) {
 
         {linkBuyMercadoPago && (
           <>
+
+            <button className="payment-buttons-success" onClick={recarregarPagina}>
+            Recarregar Página
+              </button>
             <button className="payment-buttons" onClick={() => copyToClipboard(linkBuyMercadoPago)}>
-              Copiar Link de Pagamento
+              Copiar Link 
             </button>
             <button className="payment-buttons" onClick={() => window.open(linkBuyMercadoPago, '_blank')}>
-              Acessar Link de Pagamento
+              Acessar Link
             </button>
+
+      
           </>
         )}
 
@@ -652,9 +688,17 @@ if (pendingTransfers && Array.isArray(pendingTransfers)) {
 
         <div className="pix-payment-container">
           {responsePayment && (
-            <button className="payment-buttonstransferênc-danger" onClick={getStatusPaymentViaMercadoPagoWithResponse}>
-              Verificar status de pagamento
+            <>
+
+            <button className="payment-buttons-danger" onClick={getStatusPaymentViaMercadoPagoWithResponse}>
+              Verificar Status
             </button>
+
+     
+
+            
+            </>
+      
           )}
 
           {linkBuyMercadoPago && statusPaymentPending && (
@@ -664,7 +708,7 @@ if (pendingTransfers && Array.isArray(pendingTransfers)) {
           {statusPaymentApproved && (
             <>
               <h1 style={{ color: '#ffffff' }}>Transferência Aprovada</h1>
-              <button className="button" onClick={backToDashboard}>Voltar ao Início</button>
+   
             </>
           )}
         </div>

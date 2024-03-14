@@ -68,7 +68,14 @@
 .payment-buttons-danger {
   margin: 40px;
   color: #ffffff;
+  font-size: larger;
   background-color: red;
+}
+
+.payment-buttons-success {
+  margin: 40px;
+  color: #ffffff;
+  background-color: rgb(33, 166, 0);
 }
 
 .App {

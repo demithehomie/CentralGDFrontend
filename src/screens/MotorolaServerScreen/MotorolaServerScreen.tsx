@@ -2,15 +2,16 @@ import { useState } from 'react';
 import MainNavbar from '../../components/main-navbar/MainNavbar';
 import './MotorolaServerScreen.css';
 import Swal from 'sweetalert2';
-import { set } from 'date-fns';
+// import { set } from 'date-fns';
+import { Table } from 'antd';
 
 
 export default function MotorolaServerScreen() {
 
   const [credits, setCredits] = useState('');
   const [server, setServerStatus] = useState('');
-  const [randomKey, setRandomKey] = useState('');
-  const [unlockKey, setUnlockKey] = useState('');
+  // const [randomKey, setRandomKey] = useState('');
+  // const [unlockKey, setUnlockKey] = useState('');
   const [loading, setLoading] = useState(false);
 
   const apiUrl = 'https://frpbosstool-server.onrender.com/api';
@@ -68,78 +69,105 @@ export default function MotorolaServerScreen() {
 }
 
 
-  const handleGetRandomKey = async () => {
-      try {
-        setLoading(true);
-        const headers = new Headers();
-        headers.append('Access-Control-Allow-Origin', '*');
-        headers.append('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-        headers.append('Access-Control-Allow-Headers', 'Content-Type, Authorization', );
-        headers.append('Content-Type', 'application/json');
-        headers.append('appver', '1.0.0');
+const columns = [
+  {
+    title: 'Info',
+    dataIndex: 'info',
+    key: 'info',
+  },
+  {
+    title: 'Value',
+    dataIndex: 'value',
+    key: 'value',
+  },
+];
 
-          const response = await fetch(`${apiUrl}/getrkey`, {
-              method: 'POST',
-              headers: headers,
-              body: JSON.stringify({
-                  imei: 'YourIMEI',
-                  sn: 'YourSN',
-                  model: 'YourModel'
-              })
-          });
-          const data = await response.json();
-          setLoading(false);
-          setRandomKey(data.rkey);
-        } catch (error: any) {
-          // Em caso de erro, exibe uma mensagem de erro e registra o erro no console
-          setLoading(false); // Define o estado de carregamento como falso
-          console.error('Error fetching server status:', error);
-          Swal.fire({
-              icon: 'error',
-              title: 'Oops...',
-              text: 'An error occurred while fetching server status.'
-          });
-          // Verifica se há uma resposta de erro e a registra no console, se houver
-          if (error.response) {
-              console.log('Error response:', error.response);
-          }
-      }
-  };
 
-  const handleGetUnlockKey = async (workid: any, rsadata: any, imei: any, randomkey: any) => {
-      try {
-          const response = await fetch(`${apiUrl}/getukey`, {
-              method: 'POST',
-              headers: headers,
-              body: JSON.stringify({
-                  workid: workid,
-                  rsadata: rsadata,
-                  imei: imei,
-                  randomkey: randomkey
-              })
-          });
-          const data = await response.json();
-          setUnlockKey(data.ukey);
-      } catch (error) {
-          console.error('Error fetching unlock key:', error);
-      }
-  };
+const data = [
+  {
+    key: '1',
+    info: 'Server Status',
+    value: server,
+  },
+  {
+    key: '2',
+    info: 'Credits',
+    value: credits,
+  },
+];
 
-  const handlePostStatus = async (workid: any, status: any, imei: any) => {
-      try {
-          await fetch(`${apiUrl}/postStatus`, {
-              method: 'POST',
-              headers: headers,
-              body: JSON.stringify({
-                  workid: workid,
-                  status: status,
-                  imei: imei
-              })
-          });
-      } catch (error) {
-          console.error('Error posting status:', error);
-      }
-  };
+  // const handleGetRandomKey = async () => {
+  //     try {
+  //       setLoading(true);
+  //       const headers = new Headers();
+  //       headers.append('Access-Control-Allow-Origin', '*');
+  //       headers.append('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  //       headers.append('Access-Control-Allow-Headers', 'Content-Type, Authorization', );
+  //       headers.append('Content-Type', 'application/json');
+  //       headers.append('appver', '1.0.0');
+
+  //         const response = await fetch(`${apiUrl}/getrkey`, {
+  //             method: 'POST',
+  //             headers: headers,
+  //             body: JSON.stringify({
+  //                 imei: 'YourIMEI',
+  //                 sn: 'YourSN',
+  //                 model: 'YourModel'
+  //             })
+  //         });
+  //         const data = await response.json();
+  //         setLoading(false);
+  //         setRandomKey(data.rkey);
+  //       } catch (error: any) {
+  //         // Em caso de erro, exibe uma mensagem de erro e registra o erro no console
+  //         setLoading(false); // Define o estado de carregamento como falso
+  //         console.error('Error fetching server status:', error);
+  //         Swal.fire({
+  //             icon: 'error',
+  //             title: 'Oops...',
+  //             text: 'An error occurred while fetching server status.'
+  //         });
+  //         // Verifica se há uma resposta de erro e a registra no console, se houver
+  //         if (error.response) {
+  //             console.log('Error response:', error.response);
+  //         }
+  //     }
+  // };
+
+  // const handleGetUnlockKey = async (workid: any, rsadata: any, imei: any, randomkey: any) => {
+  //     try {
+  //         const response = await fetch(`${apiUrl}/getukey`, {
+  //             method: 'POST',
+  //             headers: headers,
+  //             body: JSON.stringify({
+  //                 workid: workid,
+  //                 rsadata: rsadata,
+  //                 imei: imei,
+  //                 randomkey: randomkey
+  //             })
+  //         });
+  //         const data = await response.json();
+  //         setUnlockKey(data.ukey);
+  //     } catch (error) {
+  //         console.error('Error fetching unlock key:', error);
+  //     }
+  // };
+
+  // const handlePostStatus = async (workid: any, status: any, imei: any) => {
+  //     try {
+  //         await fetch(`${apiUrl}/postStatus`, {
+  //             method: 'POST',
+  //             headers: headers,
+  //             body: JSON.stringify({
+  //                 workid: workid,
+  //                 status: status,
+  //                 imei: imei
+  //             })
+  //         });
+  //     } catch (error) {
+  //         console.error('Error posting status:', error);
+  //     }
+  // };
 
     // const goToMotorolaWebSite = () => {
     //     // Abre o website da Motorola em uma nova guia
@@ -159,9 +187,9 @@ export default function MotorolaServerScreen() {
                 <button onClick={goToMotorolaWebSite}>Click Here to Check Motorola Servers Availability</button> */}
                 <div>
                     {loading && <p>Loading...</p>}
-                    <button onClick={handleLogin}>Login</button>
-                    <p>Server Status: {server}</p>
-                    <p>Credits: {credits}</p>
+                   
+                    <Table columns={columns} dataSource={data} pagination={false} />
+                    <button onClick={handleLogin}>Fetch Data</button>
                 </div>
                 {/* <div>
                 {loading && <p>Loading...</p>}

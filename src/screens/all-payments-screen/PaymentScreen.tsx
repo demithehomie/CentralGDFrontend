@@ -41,7 +41,7 @@ const PaymentScreen: React.FC = () => {
  // const { userId } = useParams<{ userId: string }>();
   const [userData, /* setUserData */] = useState<UserData | null>(null);
   const [formData, setFormData] = useState({
-    email: '',
+    email: 'gdcompanion2024@gmail.com',
     nome: 'Leandro',
     sobrenome: 'Guerra',
     cpf: '10050031732',
@@ -152,10 +152,7 @@ useEffect(() => {
     navigator.clipboard.writeText(text)
       .then(() => {
         triggerToast('success', 'Texto copiado para a área de transferência!');
-       // alert('Texto copiado para a área de transferência!');
-        // toast.success('Texto copiado para a área de transferência!', {
-        //   position: "bottom-left",
-        // });
+
       })
       .catch(err => {
         console.error('Erro ao copiar texto:', err);
@@ -183,7 +180,7 @@ useEffect(() => {
           },
         });
   
-        if (response.data.status === 'approved' || 'refunded') {
+        if (response.data.status === 'approved') { //NÃO ESQUECE DE IMPLEMENTAR O REFUNDED
           const paymentId = responsePayment?.data?.id;
           axios.post('https://gdcompanion-prod.onrender.com/atualizar-status-pagamento-cliente', { payment_id: paymentId })
             .then(response => {
@@ -221,7 +218,7 @@ useEffect(() => {
           },
         });
   
-        if (response.data.status === 'approved' || 'refunded') {
+        if (response.data.status === 'approved') { // NÃO ESUQECE DE IMPLEMENTAR O REFUNDED
           // Remova a redefinição de paymentId aqui, pois você já definiu como selectedTransfer.payment_link
           axios.post('https://gdcompanion-prod.onrender.com/atualizar-status-pagamento-cliente', { payment_id: paymentId })
             .then(response => {
@@ -236,10 +233,7 @@ useEffect(() => {
           console.log(`Payment status: ${response.data.status}`);
         } else {
           triggerToast('warning', "Pagamento ainda não foi feito");
-        // alert("Pagamento ainda não foi feito"); //
-        //  toast.warn("Pagamento ainda não foi feito", {
-        //   position: "bottom-left",
-        // });
+   
           console.log(`Not approved - Payment status: ${response.data.status}`);
         }
       } else {
@@ -249,10 +243,7 @@ useEffect(() => {
       console.error('Error fetching payment status:', error);
     }
   };
-  
-  // const backToDashboard = () => {
-  //   navigate('/dashboard');
-  // };
+
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -261,25 +252,7 @@ useEffect(() => {
     ? calculateTotalAmount(formData.transaction_amount) 
     : formData.transaction_amount;
 
-    // Preparando o corpo da requisição para o MercadoPago
-    // const token = 'APP_USR-5220412533742046-011815-549eea6144946c47d1c330d299e6fb6a-419577621';
-    // const idempotencyKey = `${Date.now()}-${Math.random()}`; // Chave de idempotência
-
-    // const paymentBody = {
-    //   transaction_amount: finalTransactionAmount,//calculateTotalAmount(formData.transaction_amount),
-    //   description: 'Família Guerra',
-    //   payment_method_id: 'pix',
-    //   payer: {
-    //     email: formData.email,
-    //     first_name: formData.nome,
-    //     last_name: formData.sobrenome,
-    //     identification: {
-    //       type: 'CPF',
-    //       number: formData.cpf,
-    //     },
-    //   },
-    //   notification_url: 'https://eorpjcvcjvhqnq6.m.pipedream.net',
-    // };
+   
 
     const paymentRequestBody = {
       transaction_amount: finalTransactionAmount,
@@ -505,31 +478,6 @@ useEffect(() => {
     return `${seconds} segundo(s)`;
   };
   
-  // const useTimePassed = (createdAt: any) => {
-  //   const [timePassed, setTimePassed] = useState('');
-  
-  //   useEffect(() => {
-  //     const update = () => {
-  //       const startDate = new Date(createdAt).getTime();
-  //       const currentDate = new Date().getTime();
-  //       const diff = currentDate - startDate;
-  
-  //       const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  //       const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-  //       const minutes = Math.floor((diff / (1000 * 60)) % 60);
-  //       const seconds = Math.floor((diff / 1000) % 60);
-  
-  //       setTimePassed(`${days} dia(s) ${hours} hora(s) ${minutes} minuto(s) ${seconds} segundo(s)`);
-  //     };
-  
-  //     update(); // Inicializa imediatamente
-  //     const interval = setInterval(update, 1000); // Atualiza a cada segundo
-  
-  //     return () => clearInterval(interval); // Limpa o intervalo quando o componente é desmontado
-  //   }, [createdAt]);
-  
-  //   return timePassed;
-  // };
 
   const initializeComponent = () => {
     setIsLoading(true); // Supondo que você queira começar com o estado de carregamento
@@ -539,18 +487,11 @@ useEffect(() => {
   
   useEffect(() => {
     initializeComponent();
-    // Se você tiver outras operações de inicialização que só devem acontecer uma vez, elas ainda podem ser colocadas aqui
+
   }, []);
   
   
-  // const handleRefresh = () => {
-  //   setRemountKey(prevKey => prevKey + 1); // Isso irá forçar a remontagem
-  //   fetchPendingTransfers();
-  // };
-  
-  
 
-  // Antes de renderizar
 if (pendingTransfers && Array.isArray(pendingTransfers)) {
   pendingTransfers.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 }
@@ -562,15 +503,9 @@ const recarregarPagina = () => {
 
   return (
     <>
-   {/* <div key={remountKey} className="App"> */}
+ 
    <div>
-      {/* <button onClick={() => triggerToast('success')}>Sucesso</button>
-      <button onClick={() => triggerToast('error')}>Erro</button>
-      {/* <button onClick={() => triggerToast('info')}>Informação</button> */}
-      {/* <button onClick={() => triggerToast('warning')}>Aviso</button>  */}
-      {/* <Toast show={toast.show} onClose={() => setToast({ show: false, type: '' })} type={toast.type}>
-        Mensagem do Toast ({toast.type})
-      </Toast> */}
+    
     </div>
 
     <div className="App">
@@ -581,7 +516,7 @@ const recarregarPagina = () => {
       </Helmet>
       <div className="App-header">
         <h3 style={{ color: '#ffffff', fontSize: '30px' }}>Gerar PIX</h3>
-        <h4>Destino: Leandro Guerra - Mercado Pago</h4>
+        <h4 style={{ color: "#ffffff" }}>Destino: Leandro Guerra - Mercado Pago</h4>
         <h3 style={{ color: '#ffffff' }}>{userData?.user_id}</h3>
 
         {isLoading && <div></div>}
@@ -714,22 +649,7 @@ const recarregarPagina = () => {
         </div>
       </div>
 
-      {/* <button className="refresh-button" onClick={initializeComponent}>
-        Recarregar
-      </button> */}
 
-      {/* <button
-      className="refresh-button"
-      onClick={handleRefresh}
-      style={{
-        position: 'fixed',
-        bottom: '20px',
-        right: '20px',
-        zIndex: 1000,
-      }}
-    >
-      Atualizar
-    </button> */}
 
 
       <div className="PixPendentes">
@@ -824,27 +744,7 @@ const recarregarPagina = () => {
       </div>
     </div>
 
-    {/* {showPopup && selectedTransfer && (
-      <div className="popup">
-      <h2 style={{ color: '#000000' }}>Gerando PIX</h2>
-      <label style={{ color: '#000000' }}> Devedor:  {selectedTransfer.name}</label>
-      <label style={{ color: '#000000' }}> Quantia:  {selectedTransfer.amount}</label>
-      <label style={{ color: '#000000' }}> Payment ID:  {selectedTransfer.id}</label>
-      <label style={{ color: '#000000' }}> Serviço Prestado:  {selectedTransfer.service_provided}</label>
-      <img 
-        src={`data:image/png;base64,${selectedTransfer.qr_code}`} alt="QR Code" />
-      <button onClick={() => copyToClipboard(selectedTransfer.qr_code_cec)}>Copiar Pix</button>
-      <button onClick={() => openPaymentLinkInNewTab(selectedTransfer.payment_link)}>Abrir Link de Pagamento</button>
-        <button
-          style={{ backgroundColor: 'red', color: 'white' }}
-          onClick={getStatusPaymentViaMercadoPago}
-        >
-          Validar Pagamento
-        </button>
-        <button onClick={(() => setShowPopup(false))}>Fechar</button>
-      
-      </div>
-    )} */}
+  
 
 {showPopup && selectedTransfer && (
   <div className="popup-background">

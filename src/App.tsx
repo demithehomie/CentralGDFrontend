@@ -55,6 +55,10 @@ import PresentationScreen from './screens/presentation-screen/PresentationScreen
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastProvider } from './context/toast/ToastProvider';
 import ReportView from './screens/report-page/ReportPage';
+import AddSupplier from './screens/AddSupplier/AddSupplier';
+import UserPrintsPageGT from './screens/user-prints-page/user-prints-page-guerratool/UserPrintsPageGT';
+import AddClientManually from './screens/add-client-manually/AddClientManually';
+// import { ChakraProvider } from '@chakra-ui/react';
 
 
 
@@ -79,6 +83,7 @@ function App() {
   
 
       <AuthProvider>
+      {/* <ChakraProvider>         */}
         <HelmetProvider>
         <GlobalStyle />
 
@@ -87,6 +92,7 @@ function App() {
         <BrowserRouter>
           <Routes>
           <Route path="/" element={<LoginForm />} />
+          <Route path="/add-supplier" element={<PrivateRoute><AddSupplier/></PrivateRoute>} />
           <Route path="/logs-screen" element={<PrivateRoute><LogsScreen /></PrivateRoute>} />
           <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
           <Route path="/profile" element={<PrivateRoute><Profile nomeInicial={'Demetrius'} funcaoInicial={'Admin'}/></PrivateRoute>} />
@@ -109,6 +115,7 @@ function App() {
           <Route path="/target" element={<PrivateRoute><MiniTargetTable /></PrivateRoute>} />
           <Route path="/payments" element={<PrivateRoute><PaymentMenu /></PrivateRoute>} />
           <Route path="/user-prints-page/:userId" element={<PrivateRoute><UserPrintsPage /></PrivateRoute>} />
+          <Route path="/guerratool/user-prints-page/:userId" element={<PrivateRoute><UserPrintsPageGT /></PrivateRoute>} />
           <Route path="/mgmt-reports" element={<PrivateRoute><ManagementReports /></PrivateRoute>} />
           <Route path="/mgmt-reports-guerratool" element={<PrivateRoute><MgmtReportsGuerraTool /></PrivateRoute>} />
           <Route path="/receive-crypto" element={<PrivateRoute><ReceiveCrypto /></PrivateRoute>} />
@@ -117,6 +124,7 @@ function App() {
           <Route path="/reports-dashboard/:reportType" element={<PrivateRoute><ReportView /></PrivateRoute>} />
           <Route path="/tmt-task-logs" element={<PrivateRoute><TaskLogsTMT /></PrivateRoute>} />
           <Route path="/gt-task-logs" element={<PrivateRoute><TaskLogsGT /></PrivateRoute>} />
+          <Route path="/clients/add-manually" element={<PrivateRoute><AddClientManually /></PrivateRoute>} />
           
           <Route path="/tmt-credit-logs" element={<PrivateRoute><CreditLogsTMT /></PrivateRoute>} />
           <Route path="/gt-credit-logs" element={<PrivateRoute><CreditLogsGT /></PrivateRoute>} />
@@ -128,7 +136,7 @@ function App() {
 
           <Route path="/analytics" element={<PrivateRoute><LockingCentral /></PrivateRoute>} />
 
-          <Route path="/motorola-servers-screen" element={<PrivateRoute><MotorolaServerScreen /></PrivateRoute>} />
+          <Route path="/servers-screen" element={<PrivateRoute><MotorolaServerScreen /></PrivateRoute>} />
 
           <Route path="/crypto-payments/:paymentId" element={<CryptoPaymentPage />} />
         
@@ -142,6 +150,8 @@ function App() {
 
         </ToastProvider>
         </HelmetProvider>
+        {/* </ChakraProvider> */}
+
       </AuthProvider>
 
     </>

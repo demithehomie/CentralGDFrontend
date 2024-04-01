@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { User } from '../../../components/user-table/UserTable';
 import './SearchResultsGuerraTool.css';
+import MainNavbar from '../../../components/main-navbar/MainNavbar';
 
 
 const SearchResultsGuerraTool = () => {
@@ -54,6 +55,7 @@ const SearchResultsGuerraTool = () => {
 
   return (
     <div>
+      <MainNavbar/>
       <h2 className='title-fonts'>Resultados da pesquisa</h2>
       {results.length > 0 ? (
         <ul className="results-list">

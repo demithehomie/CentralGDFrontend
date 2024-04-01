@@ -32,7 +32,7 @@ import { Helmet } from 'react-helmet-async';
   
 
   const Dashboard: React.FC = () => {
-    const { currentUser, logout } = useAuth();
+    const { currentUser } = useAuth();
     const [isLoading, setIsLoading] = useState(true);
     const [cards, setCards] = useState<CardData[]>([]);
     const [isMenuOpen, /*setIsMenuOpen*/] = useState(false);
@@ -179,14 +179,7 @@ import { Helmet } from 'react-helmet-async';
       navigate('/users')
     }
 
-    // const toggleMenu = () => {
-    //   setIsMenuOpen(!isMenuOpen);
-    // };
-    
-    const handleLogout = () => {
-      // Chame a função de logout do contexto de autenticação
-      logout();
-    };
+
     
     if (isLoading) {
       return (
@@ -269,9 +262,7 @@ import { Helmet } from 'react-helmet-async';
       <div className="dashboard-container">
         
         <div className={`sidebar ${isMenuOpen ? 'open' : ''}`}>
-            {/* <div className="logo">
-              <img src={logo} alt="logo"  />
-            </div> */}
+        
             <div className="avatar" onClick={profile}>
               <img src={logo_profile} alt="logo_profile" className='profile-picture' />
             </div>
@@ -280,84 +271,68 @@ import { Helmet } from 'react-helmet-async';
             </div> 
         <div className="role">Admin</div>
             
-            <button className="button" onClick={getAllUsers}>Usuários</button>
-
-            <button className="button" onClick={payments}>Pagamentos</button>
-            <button className="button" onClick={getAllMGMTReports}>Relatórios</button>
-            <button className='button-filled' onClick={handleLogout}>Sair</button>
+      
             
-        {isMenuOpen && (
-          <>
-           
-            <button className="button" onClick={getAllUsers}>Usuários</button>
-            <button className="button" onClick={payments}>Pagamentos</button>
-            <button className="button" onClick={getAllMGMTReports}>Relatórios</button>
-            <button className='button-filled' onClick={handleLogout}>Sair</button>
-          </>
-        )}
+     
       </div>
 
-{/* <div className="hamburger-button" onClick={toggleMenu}>
-  <div className={`bar ${isMenuOpen ? 'open' : ''}`}></div>
-  <div className={`bar ${isMenuOpen ? 'open' : ''}`}></div>
-  <div className={`bar ${isMenuOpen ? 'open' : ''}`}></div>
-</div> */}
+
 
 
 
         <hr className='separador'/>
 
-        {/* <div className="main-content">
-          
-        <div className="cards-container">
-        {cards.map((card) => (
-          <DashboardCard
-          badge={card.badge}
-            key={card.id}
-            backgroundColor={card.backgroundColor}
-            color={getTextColor(card.backgroundColor)} 
-            title={card.title}
-            icon={card.icon}
-            ctaText={card.ctaText}
-            onCtaClick={() => handleCtaClick(card.id)}
-            className="dashboard-card"
-              />
-            ))}
-          </div>
-        </div> */}
-
-
-{/* style={{
-          alignItems: 'left',
-          textAlign: 'left',
-          display: 'flex',
-          flexDirection: 'row',
-        }} */}
+      
         <div className='row-of-frontal-buttons'>
           <div className='animated-background'>
 
           
            <div className='little-cards-gd' onClick={getAllMGMTReports} >
-            <h2 style={{ fontSize: 30 }}>GUERRADONE</h2>
-            {/* Supondo que dailySummary contém campos como totalServices e totalRevenue */}
-            <p >Total Hoje: <strong>R$: {summaryData.daily.totalServices.toFixed(2).replace('.', ',')}</strong></p>
-            <p >Total da Semana:<strong> R$: {summaryData.weekly.totalRevenue.toFixed(2).replace('.', ',')}</strong></p>
+              <h2 style={{ fontSize: 30 }}>GUERRADONE</h2>
+              {/* Supondo que dailySummary contém campos como totalServices e totalRevenue */}
+              <p >Total Hoje: 
+                <strong>R$: 
+                  {summaryData.daily.totalServices.toFixed(2).replace('.', ',')}
+                </strong>
+              </p>
+              <p >Total da Semana:
+                <strong> R$: 
+                  {summaryData.weekly.totalRevenue.toFixed(2).replace('.', ',')}
+                </strong>
+              </p>
+             
+          </div>
+          <div className='little-cards-tmt' onClick={getAllMGMTReports} >
+              <h2 style={{ fontSize: 30 }}>TheMagicTool</h2>
+     
+              <p >Total Hoje:
+                <strong>R$: 
+                  {/* {summaryData.daily.totalServices.toFixed(2).replace('.', ',')} */} 0.00
+                  </strong>
+                </p>
+              <p >Total da Semana:
+                <strong> R$: 
+                  {/* {summaryData.weekly.totalRevenue.toFixed(2).replace('.', ',')} */} 0.00
+                 </strong>
+              </p>
+          </div>
+          <div className='little-cards-gt' onClick={getAllMGMTReports} >
+              <h2 style={{ fontSize: 30 }}>GuerraTool</h2>
+
+              <p >Total Hoje: 
+                <strong>R$: 
+                  {/* {summaryData.daily.totalServices.toFixed(2).replace('.', ',')} */} 0.00
+                </strong>
+              </p>
+              <p >Total da Semana:
+                <strong> R$: 
+                  {/* {summaryData.weekly.totalRevenue.toFixed(2).replace('.', ',')} */} 0.00
+                </strong>
+              </p>
           </div>
           </div>
 
-            {/* <br />
-            <div className='little-cards-tmt' onClick={getAllMGMTReports}>
-              <h2  >The Magic Tool</h2>
-              <p >Total Hoje: R$: {summaryData.weekly.totalServices.toFixed(2).replace('.', ',')}</p>
-              <p >Receita Total: R$: {summaryData.weekly.totalRevenue.toFixed(2).replace('.', ',')}</p>
-            </div>
-           
-            <br />
-            <div className='little-cards-gt' onClick={getAllMGMTReports}>
-              <h2 >GuerraTool</h2>
-              <p >Total Hoje: R$: {summaryData.monthly.totalServices.toFixed(2).replace('.', ',')}</p>
-              <p >Receita Total: R$: {summaryData.monthly.totalRevenue.toFixed(2).replace('.', ',')}</p>
-            </div> */}
+          
           
           </div>
 

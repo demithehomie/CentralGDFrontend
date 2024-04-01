@@ -397,31 +397,31 @@
 
 .little-cards-tmt, h2, p{
   color: #ffffff;
-  font-size: 120%;
+  font-size: 100%;
 }
 
 
 .little-cards-gt, h2, p{
   color: #ffffff;
-  font-size: 120%;
+  font-size: 100%;
 }
 
 
 .little-cards-tmt {
   background-color: #24242b;
   border: 1px solid #ffffff;
-  max-height: 180px;
-  min-width: 40%;
+  max-height: 220px;
+  min-width: 100%;
   border-radius: 15px;
-  padding: 2%;
-  margin: 4%;
+  padding: 3%;
+  margin: 2%;
 }
 
 .little-cards-gt {
   background-color: #0a4c07;
   border: 1px solid #ffffff;
-  max-height: 180px;
-  min-width: 40%;
+  max-height: 220px;
+  min-width: 100%;
   border-radius: 15px;
   padding: 2%;
   margin: 4%;

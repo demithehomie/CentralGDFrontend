@@ -30,6 +30,8 @@ export default function PrintsTheMagicTool() {
           // Aqui você ajusta para usar os dados recebidos
           const reversedData = data.posts.reverse(); // Agora, os posts estão em data.posts
           setImages(reversedData);
+          console.log(` Conteúdo de data ${(JSON.stringify(data))}`)
+          console.log(` Conteúdo de reversedData ${(JSON.stringify(reversedData))}`)
   
           // Calcule o número total de páginas com base no totalPosts recebido
           const totalPages = Math.ceil(data.totalPosts / itemsPerPage);
@@ -37,6 +39,8 @@ export default function PrintsTheMagicTool() {
   
       } catch (err) {
           // ... manipulação de erros
+          console.log(`Ocorreu algum erro no fecth de prints - $(err}`)
+          console.error(err)
       } finally {
           setIsLoading(false);
       }
@@ -154,6 +158,8 @@ export default function PrintsTheMagicTool() {
           <h2 className='title-table'>Todos os Reports em The Magic Tool</h2>
           <div>
             <SearchBarPrintsTheMagicTool/>
+            <br />
+            <button onClick={() => navigate('/get-prints-guerra-tool')}>OBTER PRINTS GUERRATOOL</button>
           </div>
           <br />
           {renderContent()}

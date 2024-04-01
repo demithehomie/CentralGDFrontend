@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { User } from '../../components/user-table/UserTable';
 import './SearchPrintsResults.css';
+import MainNavbar from '../../components/main-navbar/MainNavbar';
 
 
 const SearchPrintsResults = () => {
@@ -59,6 +60,7 @@ const SearchPrintsResults = () => {
 
   return (
     <div>
+      <MainNavbar/>
       <h2 className='title-fonts'>Resultados da pesquisa</h2>
       {Array.isArray(results) && results.length > 0 ? (
         <ul className="results-list">

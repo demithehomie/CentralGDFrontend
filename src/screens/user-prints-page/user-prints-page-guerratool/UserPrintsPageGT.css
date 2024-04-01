@@ -1,0 +1,167 @@
+@import 'react-responsive-carousel/lib/styles/carousel.min.css';
+
+  /* Estilo do carrossel para dispositivos móveis */
+  @media (max-width: 768px) {
+    .custom-carousel {
+      max-height: 300px; /* Altura máxima para dispositivos móveis */
+    }
+  }
+  
+  
+.link {
+    color: #000000;
+}
+
+.button {
+    background-color: #4166f5;
+    color: #000000;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+    cursor: pointer;
+}
+
+.input {
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+}
+
+/* Estilo para o modal */
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.8); /* Fundo cinza transparente */
+    z-index: 1000; /* Certifique-se de que está na frente de outros elementos */
+    padding: 20px;
+    border-radius: 5px;
+    max-width: 90%;
+    max-height: 90%;
+    overflow: auto;
+  }
+  
+  /* Estilo para a imagem em tela cheia */
+  .modal-image {
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
+    margin: 0 auto;
+  }
+  
+  /* Estilo para o botão de fechar */
+  .close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 1001; /* Certifique-se de que está na frente do modal */
+  }
+  
+  /* Estilo para o overlay de fundo */
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6); /* Fundo cinza escuro transparente */
+    z-index: 999; /* Certifique-se de que está atrás do modal */
+  }
+
+/* Estilo do carrossel */
+.carousel-container {
+    max-width: 800px; /* Defina a largura máxima do carrossel */
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f0f0f0; /* Cor de fundo do container do carrossel */
+    border-radius: 10px;
+  }
+  
+  /* Estilo das imagens do carrossel */
+  .carousel-image {
+    max-width: 100%; /* Garante que a imagem não ultrapasse a largura do contêiner */
+    height: auto; /* Mantém a proporção da imagem */
+    display: block; /* Remove a margem inferior extra causada por imagens inline */
+    margin: 0 auto; /* Centraliza a imagem horizontalmente */
+    border-radius: 10px; /* Borda arredondada para as imagens */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Sombra suave para as imagens */
+  }
+  
+  /* Estilo dos botões do carrossel */
+  .carousel-button {
+    background-color: #007bff; /* Cor de fundo do botão */
+    color: #fff; /* Cor do texto do botão */
+    border: none; /* Remove a borda do botão */
+    border-radius: 5px; /* Borda arredondada para o botão */
+    padding: 10px 15px; /* Espaçamento interno do botão */
+    font-size: 16px; /* Tamanho da fonte do botão */
+    cursor: pointer; /* Cursor ao passar o mouse sobre o botão */
+    margin-right: 10px; /* Espaçamento entre os botões */
+  }
+  
+  /* Estilo para o botão "Abrir em Nova Guia" */
+  .open-in-new-tab-button {
+    background-color: #0c180c; /* Cor de fundo do botão */
+  }
+  
+  /* Estilo personalizado para o carrossel */
+.custom-carousel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Estilo para as imagens no carrossel */
+  .custom-carousel .carousel .slide img {
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
+    margin: 0 auto;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Estilizar as bolinhas de navegação */
+.carousel .thumbs-wrapper {
+    margin-top: 10px;
+  }
+  
+  /* Estilo das bolinhas inativas (azul escuro) */
+  .carousel .thumb {
+    background-color: #007bff; /* Cor azul escuro */
+    border: 2px solid #fff; /* Borda branca */
+  }
+  
+  /* Estilo da bolinha selecionada (tom mais claro) */
+  .carousel .thumb.selected {
+    background-color: #3d8bff; /* Cor azul claro */
+  }
+  
+  .labels-and-inputs {
+    border: 1px solid #ffffff;
+    padding: 10px;
+    border-radius: 10px;
+    width: 160px;
+  }
+
+  .labels-and-inputs input {
+    text-align: center;
+    border-radius: 10px;
+    font-size: 20px;
+    width: 100px;
+  }
+
+  .navigation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+  }

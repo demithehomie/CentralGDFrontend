@@ -1,0 +1,110 @@
+.the-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #ffffff;
+    text-align: center;
+}
+
+.the-big-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  
+}
+
+.the-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #ffffff;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+}
+
+.the-form input {
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #d1d1d1;
+    border-radius: 15px;
+}
+
+/* AddSupplier.css */
+.the-table {
+    width: 100%;
+    max-width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    table-layout: fixed; /* Adiciona isso para melhor controle do layout da tabela */
+  }
+  
+  .the-table th, .the-table td {
+    text-align: left;
+    padding: 8px;
+    word-wrap: break-word; /* Isso permite que o texto dentro das células seja quebrado conforme necessário */
+  }
+  
+  .the-table th {
+    background-color: #f2f2f2;
+  }
+
+  .the-big-container, .container {
+    width: 100%; /* Isso garante que os contêineres pai ocupem a largura total */
+  }
+  
+  /* Adicionando estilos para responsividade */
+  @media (max-width: 768px) {
+    .the-table {
+      display: block;
+      overflow-x: auto;
+    }
+  }
+  
+  /* Estilos adicionais para o formulário */
+.the-form button {
+    cursor: pointer;
+    background-color: #1890ff; /* Cor do tema Ant Design */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.the-form button:hover {
+    background-color: #40a9ff;
+}
+
+/* Melhorando a responsividade da tabela */
+.ant-table-wrapper {
+    max-width: 95%;
+    margin: 20px auto;
+    overflow-x: auto;
+}
+
+/* Cor de fundo da página para combinar com o tema */
+.the-big-container {
+    background-color: #f0f2f5; /* Cor de fundo suave */
+}
+
+/* Ajustes para inputs focados */
+.the-form input:focus {
+    outline: none;
+    border-color: #1890ff;
+    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+/* Ajustes na responsividade */
+@media (max-width: 768px) {
+    .the-form {
+        width: 90%;
+    }
+}

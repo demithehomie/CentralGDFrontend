@@ -81,8 +81,9 @@ const MiniTargetTable = () => {
   return (
     <>
      <MainNavbar/>
-      <br /><br /><br /><br /><br /><br />
+   
     <div className="miniTargetTable">
+    <br /><br /><br /><br /><br />    <br /><br /><br /><br />
         <h3 style={{ color: '#ffffff'}}>Inserir Alvo</h3>
       <div>
         <input

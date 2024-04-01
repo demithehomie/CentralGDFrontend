@@ -56,7 +56,7 @@ const goBackToDashboard = () => {
 }
 
 const goToServers = () => {
-  navigate('/motorola-servers-screen');
+  navigate('/servers-screen');
   Swal.close();
 }
 

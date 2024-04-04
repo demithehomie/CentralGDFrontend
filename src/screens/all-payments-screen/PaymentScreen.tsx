@@ -169,6 +169,44 @@ useEffect(() => {
     });
   };
 
+  const getStatusPaymentViaMercadoPago = async () => {
+    try {
+      const paymentId = selectedTransfer?.payment_id; 
+      if (paymentId) {
+        const token = 'APP_USR-5220412533742046-011815-549eea6144946c47d1c330d299e6fb6a-419577621'; // Replace with your MercadoPago API access token
+        const response = await axios.get(`https://gdcompanion-prod.onrender.com/mercadopago/payment/check/${paymentId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+  
+        if (response.data.status === 'approved') { // NÃO ESUQECE DE IMPLEMENTAR O REFUNDED
+          // Remova a redefinição de paymentId aqui, pois você já definiu como selectedTransfer.payment_link
+          axios.post('https://gdcompanion-prod.onrender.com/atualizar-status-pagamento-cliente', { payment_id: paymentId })
+            .then(response => {
+              console.log('Pagamento atualizado com sucesso:', response);
+              // Tratar a resposta, atualizar o estado do frontend se necessário
+            })
+            .catch(error => {
+              console.error('Erro ao atualizar o pagamento:', error);
+            });
+          setStatusPaymentApproved(true);
+          setStatusPaymentPending(false); // Set pending status to false when payment is approved
+          console.log(`Payment status: ${response.data.status}`);
+        } else {
+          triggerToast('warning', "Pagamento ainda não foi feito");
+   
+          console.log(`Not approved - Payment status: ${response.data.status}`);
+        }
+      } else {
+        console.error('Payment ID is undefined. Cannot fetch payment status.');
+      }
+    } catch (error) {
+      console.error('Error fetching payment status:', error);
+    }
+  };
+
+
   const getStatusPaymentViaMercadoPagoWithResponse = async () => {
     try {
       const paymentId = responsePayment?.data?.id;
@@ -207,42 +245,6 @@ useEffect(() => {
     }
   };
   
-  const getStatusPaymentViaMercadoPago = async () => {
-    try {
-      const paymentId = selectedTransfer?.payment_id; 
-      if (paymentId) {
-        const token = 'APP_USR-5220412533742046-011815-549eea6144946c47d1c330d299e6fb6a-419577621'; // Replace with your MercadoPago API access token
-        const response = await axios.get(`https://gdcompanion-prod.onrender.com/mercadopago/payment/check/${paymentId}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-  
-        if (response.data.status === 'approved') { // NÃO ESUQECE DE IMPLEMENTAR O REFUNDED
-          // Remova a redefinição de paymentId aqui, pois você já definiu como selectedTransfer.payment_link
-          axios.post('https://gdcompanion-prod.onrender.com/atualizar-status-pagamento-cliente', { payment_id: paymentId })
-            .then(response => {
-              console.log('Pagamento atualizado com sucesso:', response);
-              // Tratar a resposta, atualizar o estado do frontend se necessário
-            })
-            .catch(error => {
-              console.error('Erro ao atualizar o pagamento:', error);
-            });
-          setStatusPaymentApproved(true);
-          setStatusPaymentPending(false); // Set pending status to false when payment is approved
-          console.log(`Payment status: ${response.data.status}`);
-        } else {
-          triggerToast('warning', "Pagamento ainda não foi feito");
-   
-          console.log(`Not approved - Payment status: ${response.data.status}`);
-        }
-      } else {
-        console.error('Payment ID is undefined. Cannot fetch payment status.');
-      }
-    } catch (error) {
-      console.error('Error fetching payment status:', error);
-    }
-  };
 
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -371,7 +373,7 @@ useEffect(() => {
       getStatusPaymentViaMercadoPago();
       // ou
       // getStatusPaymentViaMercadoPagoWithResponse();
-    }, 10000); // 30000 ms = 30 segundos
+    }, 30000); // 30000 ms = 30 segundos
   
     // Limpa o intervalo quando o componente for desmontado
     return () => clearInterval(interval);

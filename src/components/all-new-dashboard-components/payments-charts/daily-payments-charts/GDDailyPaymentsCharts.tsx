@@ -106,21 +106,21 @@ export default function GDDailyPaymentsCharts() {
   return (
     <>
       {isLoading ? (
-        <div><h1 style={{ color: '#ffffff'}}>Loading...</h1></div>
+        <div><h1 style={{ color: '#ffffff'}}>Aguarde...</h1></div>
       ) : (
         <div className='new-info-card'>
           <label style={{ fontSize: 30 }}>GUERRADONE</label>
-          <p className='title-of-card'>Today:
+          <p className='title-of-card'>Hoje:
             <strong> R${' '} 
                {summaryData.daily.totalServices.toFixed(2).replace('.', ',')}
             </strong>
           </p>
-          <p> {summaryData.percentageIncrease > 0 ? 'Up' : 'Down'} <strong>
+          <p> {summaryData.percentageIncrease > 0 ? '🔼' : '🔻'} <strong>
             {summaryData.percentageIncrease.toFixed(2).replace('.', ',')}%
-            <span style={{ color: summaryData.percentageIncrease > 0 ? 'green' : 'red', marginLeft: '5px' }}>
-              {summaryData.percentageIncrease > 0 ? '↑' : '↓'}
-            </span>
-          </strong> since yesterday
+            {/* <span style={{ color: summaryData.percentageIncrease > 0 ? 'green' : 'red', marginLeft: '5px' }}>
+              {summaryData.percentageIncrease > 0 ? '🔼' : '🔻'}
+            </span> */}
+          </strong> desde ontem
           </p>
         </div>
       )}

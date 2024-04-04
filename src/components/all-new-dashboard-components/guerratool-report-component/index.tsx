@@ -31,13 +31,13 @@ export default function GTReportComponent() {
     return (
       <div>
         {isLoading ? (
-          <div>Loading...</div>
+          <div>Aguarde...</div>
         ) : reportData ? (
           <div className='new-info-card-gt'>
              <label style={{ fontSize: 30 }}>GUERRATOOL</label>
-            <h2 className="title-of-card-gt">Today: US$ {reportData.totalAmount.toFixed(2).replace('.', ',')}</h2>
+            <h2 className="title-of-card-gt">Hoje: US$ {reportData.totalAmount.toFixed(2).replace('.', ',')}</h2>
             {/* <p>Last Updated At: {reportData.last_updated_at}</p> */}
-            <p> {reportData.percentageIncrease > 0 ? 'Up' : 'Down'}  <strong>{reportData.percentageIncrease.toFixed(2).replace('.', ',')}% </strong>since yesterday</p>
+            <p> {reportData.percentageIncrease > 0 ? '🔼' : '🔻'}  <strong>{reportData.percentageIncrease.toFixed(2).replace('.', ',')}% </strong>desde ontem</p>
           </div>
         ) : (
           <div>No data available</div>

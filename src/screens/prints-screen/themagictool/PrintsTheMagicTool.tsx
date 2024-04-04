@@ -15,7 +15,7 @@ export default function PrintsTheMagicTool() {
     const [error, setError] = useState<string | null>(null);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(0);
-    const [itemsPerPage] = useState<number>(4);
+    const [itemsPerPage] = useState<number>(8);
     const apiurldev = `https://gdcompanion-prod.onrender.com`;
 
     const fetchAndUpdateImages = async () => {

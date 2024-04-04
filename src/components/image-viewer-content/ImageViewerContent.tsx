@@ -163,7 +163,7 @@ const copyText = async () => {
           <Table>
             <thead className='border'>
               <tr>
-                <th className='table-titles'>FileName</th>
+                <th className='table-titles'>Imagem</th>
                 <th className='table-titles'>User ID</th>
                 <th className='table-titles'>Username</th>
                 <th className='table-titles'>Criado em</th>

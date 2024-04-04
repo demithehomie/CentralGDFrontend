@@ -32,13 +32,13 @@ export default function TMTReportComponent() {
     return (
       <div>
         {isLoading ? (
-          <div>Loading...</div>
+          <div>Aguarde...</div>
         ) : reportData ? (
           <div className='new-info-card-tmt'>
              <label style={{ fontSize: 30 }}>The Magic Tool</label>
-            <h2 className="title-of-card-tmt">Today: US$ {reportData.totalAmount.toFixed(2).replace('.', ',')}</h2>
+            <h2 className="title-of-card-tmt">Hoje: US$ {reportData.totalAmount.toFixed(2).replace('.', ',')}</h2>
             {/* <p>Last Updated At: {reportData.last_updated_at}</p> */}
-            <p> {reportData.percentageIncrease > 0 ? 'Up' : 'Down'} {reportData.percentageIncrease}% since yesterday</p>
+            <p > {reportData.percentageIncrease > 0 ? '🔼' : '🔻'} {reportData.percentageIncrease}% desde ontem</p>
           </div>
         ) : (
           <div>No data available</div>

@@ -80,10 +80,10 @@ const toggleMenu = () => {
     title: 'Menu',
     html: `
     <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
-    <button id="home" class="swal2-confirm swal2-styled swal-button-custom" style="border: 2px solid #3085d6; color: #3085d6; background-color: transparent; width: 200px; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer;">Home</button>
-    <button id="payments" class="swal2-confirm swal2-styled swal-button-custom" style="border: 2px solid #3085d6; color: #3085d6; background-color: transparent; width: 200px; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer;">Payments</button>
-    <button id="reports" class="swal2-confirm swal2-styled swal-button-custom" style="border: 2px solid #3085d6; color: #3085d6; background-color: transparent; width: 200px; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer;">Reports</button>
-    <button id="servers" class="swal2-confirm swal2-styled swal-button-custom" style="border: 2px solid #3085d6; color: #3085d6; background-color: transparent; width: 200px; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer;">Servers</button>
+    <button id="home" class="swal2-confirm swal2-styled swal-button-custom" style="border: 2px solid #3085d6; color: #3085d6; background-color: transparent; width: 200px; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer;">Início</button>
+    <button id="payments" class="swal2-confirm swal2-styled swal-button-custom" style="border: 2px solid #3085d6; color: #3085d6; background-color: transparent; width: 200px; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer;">Pagamentos</button>
+    <button id="reports" class="swal2-confirm swal2-styled swal-button-custom" style="border: 2px solid #3085d6; color: #3085d6; background-color: transparent; width: 200px; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer;">Relatórios</button>
+    <button id="servers" class="swal2-confirm swal2-styled swal-button-custom" style="border: 2px solid #3085d6; color: #3085d6; background-color: transparent; width: 200px; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer;">Servidores</button>
     <button id="analytics" class="swal2-confirm swal2-styled swal-button-custom" style="border: 2px solid #3085d6; color: #3085d6; background-color: transparent; width: 200px; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer;">Analytics</button>
     <button id="users" class="swal2-confirm swal2-styled swal-button-custom" style="border: 2px solid #3085d6; color: #3085d6; background-color: transparent; width: 200px; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer;">Users</button>
     <button id="logs" class="swal2-confirm swal2-styled swal-button-custom" style="border: 2px solid #3085d6; color: #3085d6; background-color: transparent; width: 200px; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer;">Logs</button>
@@ -142,22 +142,22 @@ const toggleMenu = () => {
 
      
                 <div onClick={goBackToDashboard}>
-                    <h3 className='main-navbar-menu-item-text'>Home</h3>
+                    <h3 className='main-navbar-menu-item-text'>Início</h3>
                 </div>
                 <div onClick={goToPaymentScreen}>
-                    <h3 className='main-navbar-menu-item-text'>Payments</h3>
+                    <h3 className='main-navbar-menu-item-text'>Pagamentos</h3>
                 </div>
                 <div onClick={goToAllReports}>
-                    <h3 className='main-navbar-menu-item-text'>Reports</h3>
+                    <h3 className='main-navbar-menu-item-text'>Relatórios</h3>
                 </div>
                 <div onClick={goToServers}>
-                    <h3 className='main-navbar-menu-item-text'>Servers</h3>
+                    <h3 className='main-navbar-menu-item-text'>Servidores</h3>
                 </div>
                 {/* <div onClick={goToAnalytics}>
                     <h3 className='main-navbar-menu-item-text'>Analytics</h3>
                 </div> */}
                 <div onClick={goToUsers}>
-                    <h3 className='main-navbar-menu-item-text'>Users</h3>
+                    <h3 className='main-navbar-menu-item-text'>Usuários</h3>
                 </div>
                 <div onClick={goToLogs}>
                     <h3 className='main-navbar-menu-item-text'>Logs</h3>
@@ -175,22 +175,22 @@ const toggleMenu = () => {
             <>
             <div className='navbar-center-menu-mobile'>
                 <div onClick={goBackToDashboard}>
-                    <h3 className='main-navbar-menu-item-text'>Home</h3>
+                    <h3 className='main-navbar-menu-item-text'>Início</h3>
                 </div>
                 <div onClick={goToPaymentScreen}>
-                    <h3 className='main-navbar-menu-item-text'>Payments</h3>
+                    <h3 className='main-navbar-menu-item-text'>Pagamentos</h3>
                 </div>
                 <div onClick={goToAllReports}>
-                    <h3 className='main-navbar-menu-item-text'>Reports</h3>
+                    <h3 className='main-navbar-menu-item-text'>Relatórios</h3>
                 </div>
                 <div onClick={goToServers}>
-                    <h3 className='main-navbar-menu-item-text'>Servers</h3>
+                    <h3 className='main-navbar-menu-item-text'>Servidores</h3>
                 </div>
                 {/* <div onClick={goToAnalytics}>
                     <h3 className='main-navbar-menu-item-text'>Analytics</h3>
                 </div> */}
                 <div onClick={goToUsers}>
-                    <h3 className='main-navbar-menu-item-text'>Users</h3>
+                    <h3 className='main-navbar-menu-item-text'>Usuários</h3>
                 </div>
                 <div onClick={goToLogs}>
                     <h3 className='main-navbar-menu-item-text'>Logs</h3>

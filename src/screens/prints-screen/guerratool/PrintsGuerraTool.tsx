@@ -16,7 +16,7 @@ export default function PrintsGuerraTool() {
     const [error, setError] = useState<string | null>(null);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [, setTotalPages] = useState<number>(0);
-    const [itemsPerPage] = useState<number>(4);
+    const [itemsPerPage] = useState<number>(8);
     const apiurldev = `https://gdcompanion-prod.onrender.com`;
 
     const fetchAndUpdateUsers = async () => {

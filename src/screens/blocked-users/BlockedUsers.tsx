@@ -131,11 +131,11 @@ const fetchBlockedUsers = async () => {
         <h1 style={{
           color: "#ffffff"
         }}>Locking Center</h1>
-        <h2 className='title-table'>Blocked Users at The Magic Tool</h2>
+        <h2 className='title-table'>Blocked Usuários at The Magic Tool</h2>
         {/* <div>
           <SearchBar/>
         </div> */}
-        <button onClick={navigateToGTBlockedUsers}>Check Blocked Users at GUERRATOOL</button>
+        <button onClick={navigateToGTBlockedUsers}>Check Blocked Usuários at GUERRATOOL</button>
         <br />
         <br />
         {renderContent()}

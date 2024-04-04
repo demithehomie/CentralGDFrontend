@@ -105,14 +105,15 @@ const MiniTargetTable = () => {
   <tbody>
     {requests.map((request) => (
       <tr key={request.id}>
-        <td title={request.target} onClick={() => copyToClipboard(request.target)}>{request.target}</td>
+        <td style={{ color: "#000000", fontWeight: "bold"}} title={request.target} onClick={() => copyToClipboard(request.target)}>{request.target}</td>
         <td>
           <input
+          style={{ color: "#000000", fontWeight: "bold"}}
             value={editTargets[request.id] || ''}
             onChange={(e) => handleEditChange(request.id, e.target.value)}
             placeholder="Editar Target"
           />
-          <button onClick={() => handleUpdate(request.id)}>Editar</button>
+          <button  onClick={() => handleUpdate(request.id)}>Editar</button>
           <button onClick={() => handleDelete(request.id)}>Deletar</button>
         </td>
       </tr>

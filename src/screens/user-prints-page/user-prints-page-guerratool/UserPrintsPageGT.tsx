@@ -80,7 +80,7 @@ const UserPrintsPageGT: React.FC<UserPrintsPageGTProps> = () => {
   // };
 
   const backToDashboard = () => {
-    navigate('/dashboard');
+    navigate('/familiaguerra/all-new-dashboard');
   };
 
   const getAllPrintsTheMagicTool = () => {

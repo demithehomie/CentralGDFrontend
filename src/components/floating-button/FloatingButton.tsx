@@ -22,7 +22,7 @@ const FloatingButtons: React.FC = () => {
   return (
     <div className="floating-buttons-container">
       {/* Botão 1 */}
-      <Link to="/dashboard" className="floating-button">
+      <Link to="/familiaguerra/all-new-dashboard" className="floating-button">
         <div className="circle-dark-navy">
         <FontAwesomeIcon icon={faHome} className="white-arrow" />
 

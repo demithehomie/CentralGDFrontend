@@ -37,7 +37,7 @@ export default function GuerraToolBlockedUsers() {
   }, []);
 
   const backToDashboard = () => {
-    navigate('/dashboard');
+    navigate('/familiaguerra/all-new-dashboard');
   };
 
   const renderContent = () => {

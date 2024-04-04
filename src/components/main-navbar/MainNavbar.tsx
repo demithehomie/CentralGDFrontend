@@ -51,7 +51,7 @@ const goToUsers = async () => {
 // }
 
 const goBackToDashboard = () => {
-    navigate('/dashboard');
+    navigate('/familiaguerra/all-new-dashboard');
     Swal.close();
 }
 
@@ -153,9 +153,9 @@ const toggleMenu = () => {
                 <div onClick={goToServers}>
                     <h3 className='main-navbar-menu-item-text'>Servers</h3>
                 </div>
-                <div onClick={goToAnalytics}>
+                {/* <div onClick={goToAnalytics}>
                     <h3 className='main-navbar-menu-item-text'>Analytics</h3>
-                </div>
+                </div> */}
                 <div onClick={goToUsers}>
                     <h3 className='main-navbar-menu-item-text'>Users</h3>
                 </div>
@@ -186,9 +186,9 @@ const toggleMenu = () => {
                 <div onClick={goToServers}>
                     <h3 className='main-navbar-menu-item-text'>Servers</h3>
                 </div>
-                <div onClick={goToAnalytics}>
+                {/* <div onClick={goToAnalytics}>
                     <h3 className='main-navbar-menu-item-text'>Analytics</h3>
-                </div>
+                </div> */}
                 <div onClick={goToUsers}>
                     <h3 className='main-navbar-menu-item-text'>Users</h3>
                 </div>

@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Eater&family=Jomhuria&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Lexend+Exa:wght@100..900&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Jomhuria&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Lexend+Exa:wght@100..900&display=swap');
+
+.new-info-card-tmt {
+    font-family: 'Lexend Exa', sans-serif;
+    text-align: left;
+    background-color: rgb(46, 46, 46);
+    border-radius: 20px;
+    color: #ffffff;
+    width: 350px;
+    height: 150px;
+    padding: 25px;
+    box-shadow: #e0e0e0 2px 2px 10px;
+}
+
+
+.new-info-card-tmt label {
+    font-family: 'Eater', sans-serif;
+   
+    color: #ffffff;
+   
+}
+
+
+
+.new-info-card-tmt p {
+     color: #f4f4f4;
+     
+     
+}
+
+.title-of-card-tmt {
+    font-family: 'Lexend Exa', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: #fffdfd;
+}

@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Jomhuria&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Lexend+Exa:wght@100..900&display=swap');
+
+.new-info-card {
+    font-family: 'Lexend Exa', sans-serif;
+    text-align: left;
+    background-color: aliceblue;
+    border-radius: 20px;
+    color: #000000;
+    width: 350px;
+    height: 150px;
+    padding: 25px;
+    box-shadow: #000000 2px 2px 10px;
+}
+
+.new-info-card p {
+     color: #000000;
+
+}
+
+.title-of-card {
+    font-family: 'Lexend Exa', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: #000000;
+}

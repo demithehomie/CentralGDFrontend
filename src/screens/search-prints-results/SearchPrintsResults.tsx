@@ -41,7 +41,7 @@ const SearchPrintsResults = () => {
   }
 
   const backToDashboard = () => {
-    navigate('/dashboard');
+    navigate('/familiaguerra/all-new-dashboard');
   };
 
   const getAllPrintsGuerraTool = async () => {

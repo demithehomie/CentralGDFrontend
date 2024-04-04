@@ -66,7 +66,7 @@ const MiniTargetTable = () => {
   };
 
   const backToDashboard = () => {
-    navigate('/dashboard');
+    navigate('/familiaguerra/all-new-dashboard');
   };
 
   const copyToClipboard = (text: string) => {

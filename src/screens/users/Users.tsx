@@ -230,7 +230,7 @@ export default function Users() {
   };
 
   const backToDashboard = () => {
-    navigate('/dashboard');
+    navigate('/familiaguerra/all-new-dashboard');
   };
 
   const prints = async () => {

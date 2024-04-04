@@ -58,6 +58,7 @@ import ReportView from './screens/report-page/ReportPage';
 import AddSupplier from './screens/AddSupplier/AddSupplier';
 import UserPrintsPageGT from './screens/user-prints-page/user-prints-page-guerratool/UserPrintsPageGT';
 import AddClientManually from './screens/add-client-manually/AddClientManually';
+import NewDashboard from './screens/all-new-dashboard/AllNewDashboard';
 // import { ChakraProvider } from '@chakra-ui/react';
 
 
@@ -92,9 +93,10 @@ function App() {
         <BrowserRouter>
           <Routes>
           <Route path="/" element={<LoginForm />} />
+          <Route path="/familiaguerra/all-new-dashboard" element={<PrivateRoute><NewDashboard /></PrivateRoute>} />
+          <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
           <Route path="/add-supplier" element={<PrivateRoute><AddSupplier/></PrivateRoute>} />
           <Route path="/logs-screen" element={<PrivateRoute><LogsScreen /></PrivateRoute>} />
-          <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
           <Route path="/profile" element={<PrivateRoute><Profile nomeInicial={'Demetrius'} funcaoInicial={'Admin'}/></PrivateRoute>} />
           <Route path="/activity" element={<PrivateRoute><Activity /></PrivateRoute>} />
           <Route path="/scheduling" element={<PrivateRoute><Scheduling /></PrivateRoute>} />

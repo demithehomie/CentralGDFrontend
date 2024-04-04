@@ -214,7 +214,7 @@ export default function GuerraToolUsers() {
   };
 
   const backToDashboard = () => {
-    navigate('/dashboard');
+    navigate('/familiaguerra/all-new-dashboard');
   };
 
   const prints = async () => {

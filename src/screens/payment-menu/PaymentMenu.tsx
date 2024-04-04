@@ -14,7 +14,7 @@ export default function PaymentMenu() {
     // }
 
     const goBackToDashboard = () => {
-        navigate('/dashboard');
+        navigate('/familiaguerra/all-new-dashboard');
     }
 
     const goToAllReports = () => {
@@ -45,8 +45,8 @@ export default function PaymentMenu() {
                     {/* <button className='payment-button' onClick={goToPaymentScreen}>Enviar Crypto</button> */}
                     <button className='payment-button' onClick={addSupplier}>Cadastrar Fornecedor</button>
 
-                    <button className='payment-button' style={{ backgroundColor: 'blue', color: "#ffffff"}} onClick={addClientManually}>Cadastrar Cliente Manualmente</button> 
-                    <label style={{ backgroundColor: "yellow", borderRadius: 20, fontWeight: "bold"}} >(em fase de testes)</label>
+                    <button className='payment-button'  onClick={addClientManually}>Cadastrar Cliente Manualmente</button> 
+                 
                     <button className='payment-button' onClick={goToAllReports}>Todos os Relatórios</button>
                     {/* <button className='payment-button' onClick={showAlert}>Agendar Pagamento</button> */}
                 </div>

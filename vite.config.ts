@@ -11,14 +11,14 @@ export default defineConfig({
       org: "tripleavb",
       project: "gd-companion-web"
     }),
-    proxy({
-      '/api': {
-        target: 'https://frpbosstool-server.onrender.com',
-        changeOrigin: true,
-        rewrite: path => path.replace(/^\/api/, '/api'),
-        secure: false
-      }
-    })
+    // proxy({
+    //   '/api': {
+    //     target: 'https://frpbosstool-server.onrender.com',
+    //     changeOrigin: true,
+    //     rewrite: path => path.replace(/^\/api/, '/api'),
+    //     secure: false
+    //   }
+    // })
   
   ],
 

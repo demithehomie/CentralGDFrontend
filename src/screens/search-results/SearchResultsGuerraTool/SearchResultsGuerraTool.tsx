@@ -40,7 +40,7 @@ const SearchResultsGuerraTool = () => {
   }
 
   const backToDashboard = () => {
-    navigate('/dashboard');
+    navigate('/familiaguerra/all-new-dashboard');
   };
 
   const getAllUsers = async () => {

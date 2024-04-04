@@ -66,7 +66,7 @@ function ManagementReports() {
 
 
       const backToDashboard = () => {
-        navigate('/dashboard');
+        navigate('/familiaguerra/all-new-dashboard');
       };
 
 // Function to emit DOCX

@@ -66,7 +66,7 @@ export default function PrintsGuerraTool() {
       };
     
       const backToDashboard = () => {
-        navigate('/dashboard');
+        navigate('/familiaguerra/all-new-dashboard');
       };
     
       const renderContent = () => {

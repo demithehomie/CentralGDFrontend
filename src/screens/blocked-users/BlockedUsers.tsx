@@ -59,7 +59,7 @@ const fetchBlockedUsers = async () => {
   }, [triggerFetch]);
 
   const backToDashboard = () => {
-    navigate('/dashboard');
+    navigate('/familiaguerra/all-new-dashboard');
   };
 
   const navigateToGTBlockedUsers = () => {

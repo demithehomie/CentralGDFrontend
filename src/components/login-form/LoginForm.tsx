@@ -36,7 +36,7 @@ const LoginForm = () => {
     try {
       const isLoginSuccessful = await login(username, password);
       if (isLoginSuccessful) {
-        navigate('/dashboard'); // Redireciona em caso de sucesso
+        navigate('/familiaguerra/all-new-dashboard'); // Redireciona em caso de sucesso
       } else {
         toast({
           title: 'Erro no login.',

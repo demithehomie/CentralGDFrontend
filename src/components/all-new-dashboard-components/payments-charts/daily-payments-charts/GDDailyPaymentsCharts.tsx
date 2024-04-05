@@ -110,9 +110,14 @@ export default function GDDailyPaymentsCharts() {
       ) : (
         <div className='new-info-card'>
           <label style={{ fontSize: 30 }}>GUERRADONE</label>
-          <p className='title-of-card'>Hoje:
+          {/* <p className='title-of-card'>Hoje:
             <strong> R${' '} 
                {summaryData.daily.totalServices.toFixed(2).replace('.', ',')}
+            </strong>
+          </p> */}
+          <p>
+            <strong>
+              REPORT EM MANUTENÇÃO
             </strong>
           </p>
           <p> {summaryData.percentageIncrease > 0 ? '🔼' : '🔻'} <strong>

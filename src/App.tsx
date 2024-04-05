@@ -61,7 +61,8 @@ import AddClientManually from './screens/add-client-manually/AddClientManually';
 import NewDashboard from './screens/all-new-dashboard/AllNewDashboard';
 import GeracaoDeCliente from './screens/all-payments-screen/new-payment-screens/gerar-cliente';
 import CobrarPagamento from './screens/all-payments-screen/new-payment-screens/cobrar-pagamento';
-import ValidacaoeRelatiorios from './screens/all-payments-screen/new-payment-screens/validação-e-relatórios';
+import FastPaymentReports from './screens/all-payments-screen/new-payment-screens/validação-e-relatórios';
+import NewPaymentScreen from './screens/new-payment-screen/NewPaymentScreen';
 // import { ChakraProvider } from '@chakra-ui/react';
 
 
@@ -100,8 +101,12 @@ function App() {
 
         <Route path="/payments-central/generating-client" element={<GeracaoDeCliente/>}/>
         <Route path="/payments-central/charging-payments" element={<CobrarPagamento/>}/>
-        <Route path="/payments-central/validating-and-reporting" element={<ValidacaoeRelatiorios/>}/>
+        <Route path="/payments-central/fast-payment-reports" element={<FastPaymentReports/>}/>
 
+        <Route path="/payments-central/start-here" element={<NewPaymentScreen/>}/>
+
+
+        {/* <Route path="/payments-central/all-registered-data" element={<FastPaymentReports/>}/> */}
 
           <Route path="/familiaguerra/all-new-dashboard" element={<PrivateRoute><NewDashboard /></PrivateRoute>} />
           <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />

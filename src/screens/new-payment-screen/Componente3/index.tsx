@@ -1,13 +1,13 @@
-import { Badge, Button, Spin, Table } from "antd"
-import MainNavbar from "../../../../components/main-navbar/MainNavbar"
+import { Badge, /* Button, */ Spin, Table } from "antd"
+
 import { useEffect, useState } from "react";
 import axios from 'axios';
-import { TransferData } from "../../../../services/PaymentService";
-import { formatDate } from "../../../../services/ConversrionService";
+import { TransferData } from "../../../services/PaymentService";
+
 import Swal from 'sweetalert2';
 import './index.css';
 
-export default function FastPaymentReports() {
+export default function Component3() {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [pendingTransfers, setPendingTransfers] = useState<TransferData[]>([]);
     const [doneTransfers, setDoneTransfers] = useState<TransferData[]>([]);
@@ -163,7 +163,7 @@ const shouldRenderItem = (transfer: TransferData) => {
 
     const clientes = [
         {
-            title: 'Quantia',
+            title: '$$',
             dataIndex: 'amount',
             key: 'amount',
         },
@@ -194,156 +194,80 @@ const shouldRenderItem = (transfer: TransferData) => {
             
         
         {
-            title: 'Pendente',
+            title: 'Done?',
             dataIndex: 'status',
             key: 'status',
             render: (status: string) => {
               return status === 'pending' ? <Spin /> : <Badge status="success" text="Done" />;
           }
         },
+        // {
+        //     title: 'Iniciado em',
+        //     dataIndex: 'created_at',
+        //     key: 'created_at',
+        //     render: (createdAt: string) => formatDate(createdAt)
+        // },
         {
-            title: 'Iniciado em',
-            dataIndex: 'created_at',
-            key: 'created_at',
-            render: (createdAt: string) => formatDate(createdAt)
-        },
-        {
-            title: 'Iniciado Há?',
+            title: 'Tempo',
             dataIndex: 'created_at',
             key: 'created_at',
             render: (createdAt: string) => calculateTimePassed(createdAt)
         },
-        {
-            title: 'Excluir',
-            dataIndex: 'payment_id',
-            key: 'payment_id',
-            render: (_text: string, record: TransferData) => (
-                <button
-                style={{ 
-                    color: "#ffffff", 
-                    cursor: 'pointer',
-                    backgroundColor: 'red',
-                    fontWeight: 'bold',
-                  }}
-                  onClick={() => deleteCliente(record.payment_id.toString())}
-                >
-                  DELETE
-                </button>
-              ),
-        },
+        // {
+        //     title: 'Excluir',
+        //     dataIndex: 'payment_id',
+        //     key: 'payment_id',
+        //     render: (_text: string, record: TransferData) => (
+        //         <button
+        //         style={{ 
+        //             color: "#ffffff", 
+        //             cursor: 'pointer',
+        //             backgroundColor: 'red',
+        //             fontWeight: 'bold',
+        //           }}
+        //           onClick={() => deleteCliente(record.payment_id.toString())}
+        //         >
+        //           DELETE
+        //         </button>
+        //       ),
+        // },
 
     ]
 
 
-    const clientesOK = [
-      {
-          title: 'Quantia',
-          dataIndex: 'amount',
-          key: 'amount',
-      },
-      {
-          title: 'Nome',
-          dataIndex: 'name',
-          key: 'name'
-      },
-      {
-          title: 'PIX',
-         // dataIndex: 'pix',
-          key: 'pix',
-         // render: 
-         render: (_text: string, record: TransferData) => (
-          <button
-            style={{ 
-              color: "#ffffff", 
-              cursor: 'pointer',
-              backgroundColor: 'blue',
-              fontWeight: 'bold',
-            }}
-            onClick={() => handleCellClick(record)}
-          >
-            INFO
-          </button>
-        ),
-      },
-          
-      
-      {
-          title: 'Pendente',
-          dataIndex: 'status',
-          key: 'status',
-          render: (status: string) => {
-            return status === 'pending' ? <Spin /> : <Badge status="success" text="Done" />;
-        }
-      },
-      {
-          title: 'Iniciado em',
-          dataIndex: 'created_at',
-          key: 'created_at',
-          render: (createdAt: string) => formatDate(createdAt)
-      },
-      {
-          title: 'Iniciado Há?',
-          dataIndex: 'created_at',
-          key: 'created_at',
-          render: (createdAt: string) => calculateTimePassed(createdAt)
-      },
-      {
-          title: 'Excluir',
-          dataIndex: 'payment_id',
-          key: 'payment_id',
-          render: (_text: string, record: TransferData) => (
-              <button
-              style={{ 
-                  color: "#ffffff", 
-                  cursor: 'pointer',
-                  backgroundColor: 'red',
-                  fontWeight: 'bold',
-                }}
-                onClick={() => deleteCliente(record.payment_id.toString())}
-              >
-                DELETE
-              </button>
-            ),
-      },
 
-  ]
 
-  // const renderRow = (record: TransferData, index: number) => {
-  //   const isOlderThanTenDays = new Date(record.created_at) < new Date(new Date().getTime() - 10 * 24 * 60 * 60 * 1000);
-  //   const rowStyle = isOlderThanTenDays ? { backgroundColor: 'gray' } : {}; // Set background color conditionally
-
-  //   return (
-  //     <tr key={index} style={rowStyle}>
-  //    <td>{record.name}</td>
-  //     </tr>
-  //   );
-  // };
-  
 
   return (
     <>
-    <MainNavbar/>
-    <div>
+   
+    <div style={{
+        backgroundColor: "#ffffff"
+    }}>
         <br /><br /><br /><br />
-    <h3 className="title"> Clientes Pendentes </h3>
+        <div style={{
+                backgroundColor: 'black',
+                color: 'white',
+                fontSize: '50px',
+                width: '100px',
+                height: '100px',
+                alignContent: 'center',
+                borderRadius: '50%',
+                margin: 'auto'
+            }}>3</div>
+            
+            <br />
+            <h3 style={{ color: '#000000'}}>VALIDAR PAGAMENTO</h3>
+  
     <Table 
       columns={clientes} 
       dataSource={pendingTransfers} 
       loading={isLoading}  
-      // rowClassName={(record: TransferData) => {
-      //   const isOlderThanTenDays = new Date(record.created_at) < new Date(new Date().getTime() - 10 * 24 * 60 * 60 * 1000);
-      //   return isOlderThanTenDays ? 'gray' : ''; // Use 'gray' class for older rows
-      // }}
+      pagination={{ pageSize: 7 }}
       
       />
-    <br />
-  
-    <br /><br /><br />
-    <h3 className="title"> Clientes que Já Pagaram</h3>
-    <Table columns={clientesOK} dataSource={doneTransfers} loading={isLoading}  />
-    <br />
-    <Button type="default" size="large">🔙</Button>
-    <Button type="default" size="large">🔜</Button>
+   
+   
     </div>
 
     </>

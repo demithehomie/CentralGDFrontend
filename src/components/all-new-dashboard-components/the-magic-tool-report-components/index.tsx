@@ -19,7 +19,7 @@ export default function TMTReportComponent() {
           const response = await axios.get('https://gdcompanion-prod.onrender.com/themagictool/report/direct-payment/amount');
           setReportData(response.data);
           setIsLoading(false);
-          console.log(`Response: ${response}`)
+          console.log(`Response: ${JSON.stringify(response)}`)
         } catch (error) {
           console.error('Error fetching report data:', error);
           setIsLoading(false);
@@ -38,7 +38,7 @@ export default function TMTReportComponent() {
              <label style={{ fontSize: 30 }}>The Magic Tool</label>
             <h2 className="title-of-card-tmt">Hoje: US$ {reportData.totalAmount.toFixed(2).replace('.', ',')}</h2>
             {/* <p>Last Updated At: {reportData.last_updated_at}</p> */}
-            <p > {reportData.percentageIncrease > 0 ? '🔼' : '🔻'} {reportData.percentageIncrease}% desde ontem</p>
+            <p > <strong>  {reportData.percentageIncrease > 0 ? '🔼' : '🔻'} {reportData.percentageIncrease}% desde ontem </strong> </p>
           </div>
         ) : (
           <div>No data available</div>

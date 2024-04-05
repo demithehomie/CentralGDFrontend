@@ -1,0 +1,124 @@
+select {
+    font-family: inherit;
+    font-size: 16px;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #555;
+    appearance: none;
+  }
+  
+  select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+  }
+  
+  /* Personalizando a seta do select */
+  select::-ms-expand {
+    display: none;
+  }
+  
+  /* Adicionando seta personalizada */
+  select::after {
+    content: '\25BC';
+    position: absolute;
+    top: calc(50% - 8px);
+    right: 10px;
+    pointer-events: none;
+  }
+  
+
+
+.client-form {
+    max-width: 600px;
+    min-width: 300px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .client-form input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+
+  .client-form input[type="number"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  .client-form button[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+  }
+  
+  .client-form button[type="submit"]:hover {
+    background-color: #45a049;
+  }
+
+/* Adicionar estilos para o loader */
+.loader {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-left-color: #36d7b7;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  /* Adicionar estilos para os alertas do SweetAlert2 */
+  .swal2-popup {
+    font-size: 1.6rem;
+  }
+  
+  .swal2-title {
+    font-size: 2.4rem;
+  }
+  
+ 
+  
+  .swal2-actions {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .swal2-styled {
+    font-size: 1.6rem;
+    padding: 0.8rem 2.4rem;
+  }
+  
+  
+  .client-form .nullable {
+    /* Estilos para campos que podem ser nulos */
+    border: 1px solid #ccc; /* Exemplo de borda cinza */
+    opacity: 0.7; /* Exemplo de opacidade reduzida */
+  }
+  
+  .client-form .required {
+    /* Estilos para campos obrigatórios */
+    border: 2px solid red; /* Exemplo de borda vermelha para campos obrigatórios */
+  }
+  

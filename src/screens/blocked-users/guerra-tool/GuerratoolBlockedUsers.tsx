@@ -69,12 +69,12 @@ export default function GuerraToolBlockedUsers() {
         <br /><br /> <br /><br /> <br /><br />
         <h1 style={{
           color: "#ffffff"
-        }}>Locking Center</h1>
-        <h2 className='title-table'>Blocked Usuários at GUERRATOOL</h2>
+        }}>Central de Bloqueios</h1>
+        <h2 className='title-table'>Usuários Bloqueados em GUERRATOOL</h2>
         {/* <div>
           <SearchBar/>
         </div> */}
-        <button onClick={navigateToTMTBlockedUsers}>Check Blocked Usuários at The Magic Tool</button>
+        <button onClick={navigateToTMTBlockedUsers}>Checar Usuários Bloqueados em The Magic Tool</button>
         <br />
         <br />
         {renderContent()}

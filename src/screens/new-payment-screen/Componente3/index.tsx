@@ -1,10 +1,10 @@
-import { Badge, /* Button, */ Spin, Table } from "antd"
+import { Badge,  Button, Spin, Table, Modal } from "antd"
 
 import { useEffect, useState } from "react";
 import axios from 'axios';
 import { TransferData } from "../../../services/PaymentService";
 
-import Swal from 'sweetalert2';
+//import Swal from 'sweetalert2';
 import './index.css';
 
 export default function Component3() {
@@ -15,48 +15,49 @@ export default function Component3() {
     const [_lastRefreshed , setLastRefreshed] = useState<Date | null>(null);
     const [_selectedTransfer, setSelectedTransfer] = useState<TransferData | null>(null);
     const [_showPopup, setShowPopup] = useState(false);
+    const [showDevedoresPopup, setShowDevedoresPopup] = useState(false);
 
-    const deleteCliente = async (paymentId: string) => {
-  // SweetAlert de Confirmação
-  Swal.fire({
-    title: 'Tem certeza?',
-    text: "Você não poderá reverter isso!",
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Sim, delete isso!'
-  }).then(async (result: any) => {
-    if (result.isConfirmed) {
-      try {
-        const response = await axios.delete(`https://gdcompanion-prod.onrender.com/deletar-cliente/${paymentId}`);
-        if (response.status === 200) {
-          Swal.fire(
-            'Deletado!',
-            'O cliente foi deletado.',
-            'success'
-          );
-          // Atualize o estado da sua aplicação aqui
-          // Por exemplo, removendo o cliente deletado da lista de pendências
-          setPendingTransfers(prevTransfers => prevTransfers.filter(transfer => transfer.payment_id.toString() !== paymentId));
-        } else {
-          Swal.fire(
-            'Erro!',
-            'Cliente não encontrado ou já foi deletado.',
-            'error'
-          );
-        }
-      } catch (error) {
-        console.error('Erro ao deletar cliente:', error);
-        Swal.fire(
-          'Erro!',
-          'Erro ao tentar deletar o cliente.',
-          'error'
-        );
-      }
-    }
-  });
-};
+//     const deleteCliente = async (paymentId: string) => {
+//   // SweetAlert de Confirmação
+//   Swal.fire({
+//     title: 'Tem certeza?',
+//     text: "Você não poderá reverter isso!",
+//     icon: 'warning',
+//     showCancelButton: true,
+//     confirmButtonColor: '#3085d6',
+//     cancelButtonColor: '#d33',
+//     confirmButtonText: 'Sim, delete isso!'
+//   }).then(async (result: any) => {
+//     if (result.isConfirmed) {
+//       try {
+//         const response = await axios.delete(`https://gdcompanion-prod.onrender.com/deletar-cliente/${paymentId}`);
+//         if (response.status === 200) {
+//           Swal.fire(
+//             'Deletado!',
+//             'O cliente foi deletado.',
+//             'success'
+//           );
+//           // Atualize o estado da sua aplicação aqui
+//           // Por exemplo, removendo o cliente deletado da lista de pendências
+//           setPendingTransfers(prevTransfers => prevTransfers.filter(transfer => transfer.payment_id.toString() !== paymentId));
+//         } else {
+//           Swal.fire(
+//             'Erro!',
+//             'Cliente não encontrado ou já foi deletado.',
+//             'error'
+//           );
+//         }
+//       } catch (error) {
+//         console.error('Erro ao deletar cliente:', error);
+//         Swal.fire(
+//           'Erro!',
+//           'Erro ao tentar deletar o cliente.',
+//           'error'
+//         );
+//       }
+//     }
+//   });
+// };
 
      const fetchPendingTransfers = async () => {
         try {
@@ -240,6 +241,29 @@ const shouldRenderItem = (transfer: TransferData) => {
 
   return (
     <>
+
+<Modal
+        visible={showDevedoresPopup}
+        onCancel={() => setShowDevedoresPopup(false)}
+        footer={null} // Remove default footer for cleaner popup
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          backgroundColor: 'rgba(0, 0, 0, 0.5)', // Transparent background
+        }}
+      >
+         <Table 
+      columns={clientes} 
+      dataSource={pendingTransfers} 
+      loading={isLoading}  
+      pagination={{ pageSize: 7 }}
+      
+      />
+  
+  
+      </Modal>
    
     <div style={{
         backgroundColor: "#ffffff"
@@ -259,6 +283,7 @@ const shouldRenderItem = (transfer: TransferData) => {
             <br />
             <h3 style={{ color: '#000000'}}>VALIDAR PAGAMENTO</h3>
   
+  {/* {showDevedoresPopup && }
     <Table 
       columns={clientes} 
       dataSource={pendingTransfers} 
@@ -266,6 +291,12 @@ const shouldRenderItem = (transfer: TransferData) => {
       pagination={{ pageSize: 7 }}
       
       />
+
+      <button onClick={() => setShowDevedoresPopup(true)}>
+
+      </button> */}
+
+<Button onClick={() => setShowDevedoresPopup(true)}>Mostrar Devedores Antigos</Button>
    
    
     </div>

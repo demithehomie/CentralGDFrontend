@@ -38,7 +38,7 @@ export default function TMTReportComponent() {
              <label style={{ fontSize: 30 }}>The Magic Tool</label>
             <h2 className="title-of-card-tmt">Hoje: US$ {reportData.totalAmount.toFixed(2).replace('.', ',')}</h2>
             {/* <p>Last Updated At: {reportData.last_updated_at}</p> */}
-            <p > <strong>  {reportData.percentageIncrease > 0 ? '🔼' : '🔻'} {reportData.percentageIncrease}% desde ontem </strong> </p>
+            <p > <strong>  {reportData.percentageIncrease > 0 ? '🔼' : '🔻'} </strong> {reportData.percentageIncrease.toFixed(2).replace('.', ',')}% desde ontem  </p>
           </div>
         ) : (
           <div>No data available</div>

@@ -95,7 +95,7 @@ export default function PrintsGuerraTool() {
           <h2 className='title-table'>Todos os Reports em GuerraTool</h2>
           <SearchBarUsersGuerraTool/>
           <br />
-          <button onClick={() => navigate('/get-prints-themagictool')}>OBTER PRINTS THEMAGICTOOL</button>
+          <button onClick={() => navigate('/themagictool/get-all-prints')}>OBTER PRINTS THEMAGICTOOL</button>
           <br /><br />
           {renderContent()}
           <br />

@@ -9,7 +9,7 @@
     width: 100%;
     z-index: 1000;
     background-color: #100d34; /* A deep, rich background color */
-    padding: 1rem 2rem; /* Adjusted padding for better spacing */
+    padding: 0.2rem 2rem; /* Adjusted padding for better spacing */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
     transition: background-color 0.3s ease-in-out; /* Smooth transition for any background color change */
 }
@@ -84,8 +84,8 @@
 } */
 
 .logo-at-the-navbar {
-    width: 185px;
-    height: 100px;
+    width: 85px;
+    height: 00px;
     border-radius: 50px;
     margin-bottom: 20px;
     display: flex; /* Use flexbox to control alignment */
@@ -130,7 +130,7 @@
 
 .menu-span {
     background-color: #100d34;
-    padding: 10px;
+    padding: 8px;
     font-size: larger;
     font-weight: bold;
     border: 1px solid #ffffff;

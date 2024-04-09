@@ -286,7 +286,7 @@ interface BlockedUsersTableProps {
                     fontWeight: 'bold',
                   }}
                 >
-                  BLOCKED
+                  BLOQUEADO
                 </TableCell>
               </TableRow>
             ))}

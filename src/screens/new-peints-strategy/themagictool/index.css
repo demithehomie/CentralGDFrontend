@@ -1,0 +1,42 @@
+.the-prints-searchbar {
+    border-radius: 45px;
+    font-size: 45px;
+    border: 10px solid #6986ed;
+    background-color: #7992ee;
+    color: #ffffff;
+    text-align: center;
+}
+
+
+
+
+.user-logic {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content:space-between;
+    border-radius: 20px;
+    margin-top: 20px;
+    padding: 15px;
+    border: 3px solid #ccc; /* Adicionando uma borda para visualização */
+}
+
+.user-logic p {
+    margin: 2px; /* Espaçamento entre cada parágrafo */
+    font-size: larger;
+}
+
+
+.the-user-logic-item {
+    flex: 1; /* Faz com que os itens ocupem a mesma quantidade de espaço */
+    text-align: center; /* Centraliza o conteúdo dentro dos itens */
+    padding: 10px; /* Adiciona espaçamento interno para os itens */
+    border-radius: 10px; /* Arredonda as bordas dos itens */
+    background-color: #131b61; /* Cor de fundo dos itens */
+    margin: 10 5px; /* Margem entre os itens */
+    margin-left: 10px; /* Margem à esquerda dos itens */
+    margin-right: 10px; /* Margem à esquerda dos itens */
+    color:  #f0f0f0; /* Cor do texto dos itens */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adiciona uma sombra suave aos itens */
+    border: 2px #f0f0f0f0 solid; /* Adiciona uma borda aos itens */
+}

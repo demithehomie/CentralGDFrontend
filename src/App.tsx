@@ -63,6 +63,8 @@ import GeracaoDeCliente from './screens/all-payments-screen/new-payment-screens/
 import CobrarPagamento from './screens/all-payments-screen/new-payment-screens/cobrar-pagamento';
 import FastPaymentReports from './screens/all-payments-screen/new-payment-screens/validação-e-relatórios';
 import NewPaymentScreen from './screens/new-payment-screen/NewPaymentScreen';
+import GuerraToolNewPrintStrategy from './screens/new-peints-strategy/guerratool';
+import TheMagictoolPrintsStrategy from './screens/new-peints-strategy/themagictool';
 // import { ChakraProvider } from '@chakra-ui/react';
 
 
@@ -127,8 +129,16 @@ function App() {
           <Route path="/presentation-screen" element={ /* <PrivateRoute> */ <PresentationScreen /> /* </PrivateRoute > */} />
           <Route path="/user-profile-guerratool/:userId" element={ /*<PrivateRoute>*/ <UserProfileGuerraTool /> /*</PrivateRoute> */}/>
           <Route path="/payment-screen/execute-action" element={<PrivateRoute><PaymentScreen /></PrivateRoute>} />
-          <Route path="/get-prints-guerra-tool" element={<PrivateRoute><PrintsGuerraTool /></PrivateRoute>} />
-          <Route path="/get-prints-themagictool" element={<PrivateRoute><PrintsTheMagicTool /></PrivateRoute>} />
+
+          
+          <Route path="/guerratool/new-screen/get-all-prints" element={<PrivateRoute><GuerraToolNewPrintStrategy /></PrivateRoute>} />
+          <Route path="/themagictool/new-screen/get-all-prints" element={<PrivateRoute><TheMagictoolPrintsStrategy /></PrivateRoute>} />
+
+
+          <Route path="/guerratool/get-all-prints" element={<PrivateRoute><PrintsGuerraTool /></PrivateRoute>} />
+          <Route path="/themagictool/get-all-prints" element={<PrivateRoute><PrintsTheMagicTool /></PrivateRoute>} />
+
+          
           <Route path="/target" element={<PrivateRoute><MiniTargetTable /></PrivateRoute>} />
           <Route path="/payments" element={<PrivateRoute><PaymentMenu /></PrivateRoute>} />
           <Route path="/user-prints-page/:userId" element={<PrivateRoute><UserPrintsPage /></PrivateRoute>} />

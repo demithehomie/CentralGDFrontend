@@ -123,6 +123,37 @@ const ImageViewer: React.FC<ImageViewerProps> = ({ images }) => {
       
     }
 
+    // Agrupa as imagens pelo nome do arquivo e conta a quantidade de ocorrências
+      //   const groupedImages = images.reduce((acc: { [key: string]: number }, image) => {
+      //     acc[image.file_name] = acc[image.file_name] ? acc[image.file_name] + 1 : 1;
+      //     return acc;
+      // }, {});
+
+      const userImageCounts: { [key: number]: number } = {};
+      images.forEach(image => {
+          if (!userImageCounts[image.user_id]) {
+              userImageCounts[image.user_id] = 1;
+          } else {
+              userImageCounts[image.user_id]++;
+          }
+      });
+  
+      // Filtrar imagens para ter apenas uma imagem por user_id
+      const uniqueImages = Object.keys(userImageCounts).map(userId => {
+          const imageForUser = images.find(image => image.user_id === parseInt(userId));
+          return imageForUser ? imageForUser : null;
+      }).filter(image => image !== null) as Image[];
+  
+
+      const userCounts: { [key: number]: number } = {};
+    images.forEach(image => {
+        if (!userCounts[image.user_id]) {
+            userCounts[image.user_id] = 1;
+        } else {
+            userCounts[image.user_id]++;
+        }
+    });
+
     // const getAllScreenshotRequests = async () => {
 
     //         try {
@@ -136,12 +167,12 @@ const ImageViewer: React.FC<ImageViewerProps> = ({ images }) => {
 
       // Inverta a ordem das imagens aqui
 
-      const processedImages = [...images].reverse().map((image, index) => ({
-        ...image, 
-        uid: uuidv4(), 
-        index
-       // index: images.length - 1 - index
-    }));
+    //   const processedImages = [...images].reverse().map((image, index) => ({
+    //     ...image, 
+    //     uid: uuidv4(), 
+    //     index
+    //    // index: images.length - 1 - index
+    // }));
 
 // Exemplo: Copiando os detalhes do primeiro item do array 'images'
 const copyText = async () => {
@@ -167,13 +198,14 @@ const copyText = async () => {
                 <th className='table-titles'>User ID</th>
                 <th className='table-titles'>Username</th>
                 <th className='table-titles'>Criado em</th>
+                <th className='table-titles'>Quantidade</th>
                 <th className='table-titles'>Detalhes</th>
               </tr>
             </thead>
             <tbody>
-              {processedImages.map((image, index) => (
-                <TableRow key={image.uid} index={index}>
-                <TableCell key={image.uid}>
+              {uniqueImages.map((image, index) => (
+                <TableRow key={uuidv4()} index={index}>
+                <TableCell>
                 <StyledImageContainer
                   onMouseEnter={() => handleMouseEnter(image.id)}
                   onMouseLeave={handleMouseLeave}
@@ -222,6 +254,9 @@ const copyText = async () => {
                       });
                     })()}
             </TableCell>
+            <TableCell>
+                                {userImageCounts[image.user_id]}
+                            </TableCell>
             <TableCell onClick={() => showPopup(image)} style={{ cursor: 'pointer' }}>
                     Clique para <br /> mais detalhes.
               </TableCell>

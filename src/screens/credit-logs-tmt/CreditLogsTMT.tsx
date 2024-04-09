@@ -144,19 +144,19 @@ const handleCopy = async () => {
 
 
     const columns = [
-        { title: 'Type', dataIndex: 'type', key: 'type' },
+        { title: 'Tipo', dataIndex: 'type', key: 'type' },
         { title: 'Key', dataIndex: 'key', key: 'key' },
-        { title: 'Source', dataIndex: 'source', key: 'source' },
-        { title: 'Credit Cost', dataIndex: 'credit_cost', key: 'credit_cost' },
-        { title: 'Credits Qty', dataIndex: 'credits_qty', key: 'credits_qty' },
-        { title: 'Balance Before', dataIndex: 'balance_before', key: 'balance_before' },
-        { title: 'Balance After', dataIndex: 'balance_after', key: 'balance_after' },
+        { title: 'De onde vem', dataIndex: 'source', key: 'source' },
+        { title: 'Valor dos Creditos', dataIndex: 'credit_cost', key: 'credit_cost' },
+        { title: 'Quantidade dos Créditos', dataIndex: 'credits_qty', key: 'credits_qty' },
+        { title: 'Saldo Antes', dataIndex: 'balance_before', key: 'balance_before' },
+        { title: 'Saldo Depois', dataIndex: 'balance_after', key: 'balance_after' },
         { title: 'Ref User ID', dataIndex: 'ref_user_id', key: 'ref_user_id' },
-        { title: 'Order ID', dataIndex: 'order_id', key: 'order_id' },
+        { title: 'ID do Pedido', dataIndex: 'order_id', key: 'order_id' },
         { title: 'Note', dataIndex: 'note', key: 'note' },
         { title: 'Status', dataIndex: 'status', key: 'status' },
-        { title: 'Created At', dataIndex: 'created_at', key: 'created_at', render: (text: string) => (new Date(text)).toLocaleDateString() + ' ' + (new Date(text)).toLocaleTimeString() },
-        { title: 'Updated At', dataIndex: 'updated_at', key: 'updated_at', render: (text: string) => (new Date(text)).toLocaleDateString() + ' ' + (new Date(text)).toLocaleTimeString() },
+        { title: 'Criado Em', dataIndex: 'created_at', key: 'created_at', render: (text: string) => (new Date(text)).toLocaleDateString() + ' ' + (new Date(text)).toLocaleTimeString() },
+        { title: 'Atualizado Em', dataIndex: 'updated_at', key: 'updated_at', render: (text: string) => (new Date(text)).toLocaleDateString() + ' ' + (new Date(text)).toLocaleTimeString() },
       ];
       
 
@@ -208,7 +208,7 @@ const handleCopy = async () => {
       <br />
       <h3 style={{ color: '#ffffff'}}>The Magic Tool - Credit Logs</h3>
 
-      <button onClick={CreditLogsGt}>Check GUERRATOOL Credit Logs</button>
+      <button onClick={CreditLogsGt}>Checar GUERRATOOL Credit Logs</button>
       <br /><br />
 
       <div>

@@ -15,7 +15,7 @@ export default function PrintsTheMagicTool() {
     const [error, setError] = useState<string | null>(null);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(0);
-    const [itemsPerPage] = useState<number>(8);
+    const [itemsPerPage] = useState<number>(2222);
     const apiurldev = `https://gdcompanion-prod.onrender.com`;
 
     const fetchAndUpdateImages = async () => {
@@ -159,7 +159,7 @@ export default function PrintsTheMagicTool() {
           <div>
             <SearchBarPrintsTheMagicTool/>
             <br />
-            <button onClick={() => navigate('/get-prints-guerra-tool')}>OBTER PRINTS GUERRATOOL</button>
+            <button onClick={() => navigate('/guerratool/get-all-prints')}>OBTER PRINTS GUERRATOOL</button>
           </div>
           <br />
           {renderContent()}

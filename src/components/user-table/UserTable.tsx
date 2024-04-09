@@ -88,7 +88,7 @@ const UserTable: React.FC<UserTableProps> = ({ users, onToggleResellerStatus, on
                                     fontWeight: 'bold',
                                 }}
                             >
-                                {user.user_status === 'on' ? 'ACTIVE' : 'BLOCKED'}
+                                {user.user_status === 'on' ? 'ATIVO' : 'BLOQUEADO'}
                             </TableCell>
                         </TableRow>
                     ))}

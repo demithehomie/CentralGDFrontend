@@ -1,21 +1,24 @@
 import axios from 'axios';
 import { TransferData } from '../../../services/PaymentService';
 import { useEffect, useState } from 'react';
-import { useToast } from '../../../context/toast/ToastProvider';
-import Swal from 'sweetalert2';
+import { useToast } from '../../../context/toast/ToastProvider';//
+//import Swal from 'sweetalert2';
 import './index.css';
-import { Badge, Spin, Table, Tag } from 'antd';
+import { Badge, Spin, Table } from 'antd';
+import Swal from 'sweetalert2';
 
 
 export const Component2 = () => {
  const [selectedTransfer, setSelectedTransfer] = useState<TransferData | null>(null);
- const [statusPaymentApproved, setStatusPaymentApproved] = useState<boolean>(false);
- const [statusPaymentPending, setStatusPaymentPending] = useState<boolean>(true);
- const [pendingTransfers, setPendingTransfers] = useState<TransferData[]>([]);
+ const [_statusPaymentApproved, setStatusPaymentApproved] = useState<boolean>(false);
+ const [_statusPaymentPending, setStatusPaymentPending] = useState<boolean>(true);
+ const [_pendingTransfers, _setPendingTransfers] = useState<TransferData[]>([]);
  const [isLoading, setIsLoading] = useState(true); 
  const [potentialClients, setPotentialClients] = useState<TransferData[]>([])
-    const [renderedIds, setRenderedIds] = useState<string[]>([]);
-    const [lastRefreshed, setLastRefreshed] = useState<Date | null>(null);
+    const [_renderedIds, setRenderedIds] = useState<string[]>([]);
+    const [_lastRefreshed, setLastRefreshed] = useState<Date | null>(null);
+  
+  const [showPopup, setShowPopup] = useState(false); // State for popup visibility
 
 
  const triggerToast = useToast();
@@ -104,47 +107,47 @@ const shouldRenderItem = (transfer: TransferData) => {
       });
   };
 
-  const deleteCliente = async (paymentId: string) => {
-    // SweetAlert de Confirmação
-    Swal.fire({
-      title: 'Tem certeza?',
-      text: "Você não poderá reverter isso!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Sim, delete isso!'
-    }).then(async (result: any) => {
-      if (result.isConfirmed) {
-        try {
-          const response = await axios.delete(`https://gdcompanion-prod.onrender.com/deletar-cliente/${paymentId}`);
-          if (response.status === 200) {
-            Swal.fire(
-              'Deletado!',
-              'O cliente foi deletado.',
-              'success'
-            );
-            // Atualize o estado da sua aplicação aqui
-            // Por exemplo, removendo o cliente deletado da lista de pendências
-            setPendingTransfers(prevTransfers => prevTransfers.filter(transfer => transfer.payment_id.toString() !== paymentId));
-          } else {
-            Swal.fire(
-              'Erro!',
-              'Cliente não encontrado ou já foi deletado.',
-              'error'
-            );
-          }
-        } catch (error) {
-          console.error('Erro ao deletar cliente:', error);
-          Swal.fire(
-            'Erro!',
-            'Erro ao tentar deletar o cliente.',
-            'error'
-          );
-        }
-      }
-    });
-  };
+  // const deleteCliente = async (paymentId: string) => {
+  //   // SweetAlert de Confirmação
+  //   Swal.fire({
+  //     title: 'Tem certeza?',
+  //     text: "Você não poderá reverter isso!",
+  //     icon: 'warning',
+  //     showCancelButton: true,
+  //     confirmButtonColor: '#3085d6',
+  //     cancelButtonColor: '#d33',
+  //     confirmButtonText: 'Sim, delete isso!'
+  //   }).then(async (result: any) => {
+  //     if (result.isConfirmed) {
+  //       try {
+  //         const response = await axios.delete(`https://gdcompanion-prod.onrender.com/deletar-cliente/${paymentId}`);
+  //         if (response.status === 200) {
+  //           Swal.fire(
+  //             'Deletado!',
+  //             'O cliente foi deletado.',
+  //             'success'
+  //           );
+  //           // Atualize o estado da sua aplicação aqui
+  //           // Por exemplo, removendo o cliente deletado da lista de pendências
+  //           setPendingTransfers(prevTransfers => prevTransfers.filter(transfer => transfer.payment_id.toString() !== paymentId));
+  //         } else {
+  //           Swal.fire(
+  //             'Erro!',
+  //             'Cliente não encontrado ou já foi deletado.',
+  //             'error'
+  //           );
+  //         }
+  //       } catch (error) {
+  //         console.error('Erro ao deletar cliente:', error);
+  //         Swal.fire(
+  //           'Erro!',
+  //           'Erro ao tentar deletar o cliente.',
+  //           'error'
+  //         );
+  //       }
+  //     }
+  //   });
+  // };
   
 
 
@@ -189,11 +192,56 @@ const shouldRenderItem = (transfer: TransferData) => {
         window.open(url, '_blank');
       };
 
+      const chargeClients = async () => {
+        try {
+          const response = await axios.post('https://gdcompanion-prod.onrender.com/mercadopago/payment/pix/multiple-entries');
+          if (response.status === 200) {
+            triggerToast('success', 'Clientes cobrados com sucesso!');
+          } else {
+            triggerToast('error', 'Erro ao cobrar clientes.');
+          }
+        } catch (error) {
+          console.error('Erro ao cobrar clientes:', error);
+          triggerToast('error', 'Erro ao cobrar clientes.');
+        }
+      }
+
       const handleRowClick = (record: any) => {
-        // Aqui você pode fazer o que quiser com o registro clicado
-        console.log('Registro clicado:', record);
-        // Chame sua função aqui
-       
+        setSelectedTransfer(record); // Set selected transfer on row click
+
+        if(
+
+          record.qr_code == null || 
+          record.qr_code == undefined || 
+          record.qr_code == '' || 
+          record.qr_code == 'null' || 
+          record.qr_code == 'undefined' || 
+          record.qr_code == ' ') // Check if QR code is null or empty
+
+          {
+              Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Parece que esse cliente ainda não foi cobrado, você deseja cobrá-lo agora?',
+                showCancelButton: true,
+                confirmButtonText: 'Sim',
+                cancelButtonText: 'Não'
+              }).then((result) => {
+                if (result.isConfirmed) {
+                } else {
+                 // setShowPopup(true); // Open popup
+                 chargeClients();
+                }
+              }
+              );
+
+          } else {
+            setShowPopup(true); // Open popup
+          }
+      };
+    
+      const closePopup = () => {
+        setShowPopup(false); // Close popup
       };
 
     
@@ -214,19 +262,53 @@ const shouldRenderItem = (transfer: TransferData) => {
             }}>2</div>
                <br />
        
-            <h3>COBRAR PIX</h3>
+            <h3>COBRAR E VALIDAR PIX</h3>
             <Table 
                 columns={potenciaisPagadores} 
                 dataSource={potentialClients} 
                 loading={isLoading}  
                 pagination={{ pageSize: 5 }}
-                onRow={(record, rowIndex) => {
+                onRow={(record /*, rowIndex */) => {
                     return {
                       onClick: () => handleRowClick(record),
                     };
                   }}
       
             />
+
+{showPopup && ( // Conditionally render popup based on showPopup state
+        <div className="popup-background">
+          <div className="popup">
+            <h2 style={{ color: '#000000' }}>Gerando PIX</h2>
+            <label style={{ color: '#000000' }}> Devedor: {selectedTransfer?.name}</label>
+            <label style={{ color: '#000000' }}> Quantia: {selectedTransfer?.amount}</label>
+            <label style={{ color: '#000000' }}> Payment ID: {selectedTransfer?.id}</label>
+            <label style={{ color: '#000000' }}> Serviço Prestado: {selectedTransfer?.service_provided}</label>
+            <img
+              src={`data:image/png;base64,${selectedTransfer?.qr_code}`}
+              alt="QR Code"
+            />
+            <button onClick={() => copyToClipboard(selectedTransfer?.qr_code_cec ?? '')}>Copiar Pix</button>
+            <button onClick={() => openPaymentLinkInNewTab(selectedTransfer?.payment_link)}>Abrir Link de Pagamento</button>
+            <button
+              style={{ backgroundColor: 'red', color: 'white' }}
+              onClick={getStatusPaymentViaMercadoPago}
+            >
+              Validar Pagamento
+            </button>
+            <button>
+              Deletar Potencial Cliente
+            </button>
+            <button
+              style={{ backgroundColor: 'red', color: 'white' }}
+              onClick={closePopup} // Close popup on button click
+            >
+              Fechar
+            </button>
+          </div>
+        </div>
+      )}
+
           
         </div>
   

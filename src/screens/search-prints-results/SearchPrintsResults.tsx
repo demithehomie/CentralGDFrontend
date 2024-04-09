@@ -45,11 +45,11 @@ const SearchPrintsResults = () => {
   };
 
   const getAllPrintsGuerraTool = async () => {
-    navigate('/get-prints-guerra-tool')
+    navigate('/guerratool/get-all-prints')
   }
 
   const getAllPrints = async () => {
-    navigate('/get-prints-themagictool')
+    navigate('/themagictool/get-all-prints')
   }
 
   const navigateToUserProfile = (user_id: string) => {

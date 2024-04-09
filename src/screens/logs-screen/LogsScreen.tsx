@@ -44,7 +44,7 @@ export default function LogsScreen() {
         width: 120,
       },
       {
-        title: 'Date',
+        title: 'Data',
         dataIndex: 'Date',
         key: 'Date',
         width: 200,
@@ -57,22 +57,31 @@ export default function LogsScreen() {
         width: 180,
       },
       {
-        title: 'Type',
+        title: 'Tipo',
         dataIndex: 'type',
         key: 'Type',
         width: 90,
       },
       {
-        title: 'Amount (CRD)',
+        title: 'Quantia (CRD)',
         dataIndex: 'Amount_CRD',
         key: 'Amount_CRD',
         width: 90,
       },
       {
-        title: 'Description',
+        title: 'Descrição',
         dataIndex: 'Description',
         key: 'Description',
         width: 120,
+        // render: (record: any) => {
+     
+        //   if (record.Description === 'Credit for purchase') {
+        //     return <p>Crédito para compra. </p>;
+        //   } else {
+        //     return <p>Crédito para outra coisa {record.Description}</p>;
+        //   }
+    
+        // }
       },
       {
         title: 'Status',
@@ -81,31 +90,31 @@ export default function LogsScreen() {
         width: 100,
       },
       {
-        title: 'Action',
+        title: 'Ação',
         dataIndex: 'Action',
         key: 'Action',
         width: 90,
       },
       {
-        title: 'Amount Details',
+        title: 'Detalhes da Quantia',
         key: 'amountDetails',
         width: 200,
         render: (record: any) => (
           <>
-            <p className='amount--details'>Previous Amount: {record.balance_before}</p>
-            <p className='amount--details'>Added Amount: {record.credits_qty}</p>
-            <p className='amount--details'>Final Amount: {record.balance_after}</p>
+            <p className='amount--details'>Quantia anterior: {record.balance_before}</p>
+            <p className='amount--details'>Quantia adicionada: {record.credits_qty}</p>
+            <p className='amount--details'>Quantia final: {record.balance_after}</p>
           </>
         ),
       },
       {
-        title: 'App',
+        title: 'Veio de Onde?',
         dataIndex: 'app',
         key: 'app',
         width: 100,
       },
       {
-        title: 'Staff Member',
+        title: 'Membro da Equipe',
         dataIndex: 'staff_member',
         key: 'staff_member',
         width: 100
@@ -121,12 +130,12 @@ export default function LogsScreen() {
                     <div className="logs-screen-container">
                     <div className="responsive-table-container">
                         <br />
-                        <h2>Logs Screen</h2>
+                        <h2>Central de Logs</h2>
                         <hr />
-                        <h2>The Magic Tool and GUERRATOOL - Credit Logs</h2>
+                        <h2>The Magic Tool e GUERRATOOL - Logs de Creditos</h2>
                         <h4 style={{
                           color: 'white',
-                        }}>Credits inserted by the GUERRADONE Team</h4>
+                        }}>Creditos inseridos pela equipe GUERRADONE</h4>
                       
                         <Table
                             dataSource={logs}

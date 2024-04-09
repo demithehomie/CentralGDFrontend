@@ -8,6 +8,8 @@ import './UserPrintsPageGT.css';
 import Loader from '../../../components/loader/Loader';
 import FloatingButtons from '../../../components/floating-button/FloatingButton';
 import MainNavbar from '../../../components/main-navbar/MainNavbar';
+import { FolderOpenOutline } from 'react-ionicons';
+
 
 Modal.setAppElement('#root');
 
@@ -29,9 +31,10 @@ const UserPrintsPageGT: React.FC<UserPrintsPageGTProps> = () => {
     const [isFullSizeModalOpen, setIsFullSizeModalOpen] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true); // Adicione o estado isLoading
     const { userId } = useParams<{ userId: string }>();
+    const [user, setUser] = useState<any>({});
     const [userPrints, setUserPrints] = useState<Print[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const itemsPerPage: number = 4;
+    const itemsPerPage: number = 15;
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [inputPage, setInputPage] = useState<number>(currentPage);
     const openFullSizeModal = () => {
@@ -65,6 +68,24 @@ const UserPrintsPageGT: React.FC<UserPrintsPageGTProps> = () => {
     fetchUserPrints();
   }, [userId, currentPage, itemsPerPage]);
 
+  const getUserById = async (userId: string) => {
+    try {
+      const response = await axios.get(`https://gdcompanion-prod.onrender.com/users-guerratool/${userId}`);
+      setUser(response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching user by id:', error);
+    }
+  }
+
+  useEffect(() => {
+    if (userId) {
+      getUserById(userId).then((user) => {
+        console.log(`User: ${JSON.stringify(user)}`);
+      });
+    }
+  }, [userId]);
+
   const totalPages = Math.ceil(totalPrints / itemsPerPage);
 
   // const paginate = (items: Print[], currentPage: number, itemsPerPage: number) => {
@@ -84,7 +105,7 @@ const UserPrintsPageGT: React.FC<UserPrintsPageGTProps> = () => {
   };
 
   const getAllPrintsTheMagicTool = () => {
-    navigate('/get-prints-themagictool');
+    navigate('/guerratool/new-screen/get-all-prints');
   };
 
 //   const closeImageModal = () => {
@@ -122,7 +143,18 @@ function formatDate(dateString: string) {
       <MainNavbar/>
       <br /><br /><br /><br /><br /><br />
       <FloatingButtons/>
-    <h2 style={{ color: '#ffffff' }}>Prints do usuário {userId} </h2>
+    <h2 style={{ color: '#ffffff' }}>
+
+                          <FolderOpenOutline
+                            color={'#ffffff'} 
+                            title={"folder-icon"}
+                            height="25px"
+                            width="50px"
+                            /> 
+      
+      Prints do usuário {userId} - {user.username}
+      
+    </h2>
     
     {isLoading ? (
       <Loader />

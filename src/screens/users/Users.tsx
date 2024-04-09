@@ -234,7 +234,7 @@ export default function Users() {
   };
 
   const prints = async () => {
-    navigate('/get-prints-themagictool')
+    navigate('/themagictool/new-screen/get-all-prints')
   }
 
   const usersGuerraTool = async () => {

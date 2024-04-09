@@ -208,7 +208,7 @@ const handleCopy = async () => {
       <br />
       <h3 style={{ color: '#ffffff'}}>GUERRATOOL - Credit Logs</h3>
 
-      <button onClick={CreditLogsTMT}>Check The Magic Tool Task Logs</button>
+      <button onClick={CreditLogsTMT}>ChECAR The Magic Tool Task Logs</button>
       <br /><br />
 
       <div>

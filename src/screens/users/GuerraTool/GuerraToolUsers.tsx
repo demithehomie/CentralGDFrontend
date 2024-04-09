@@ -218,7 +218,7 @@ export default function GuerraToolUsers() {
   };
 
   const prints = async () => {
-    navigate('/get-prints-themagictool')
+    navigate('/themagictool/get-all-prints')
   }
 
   const targets = async () => {

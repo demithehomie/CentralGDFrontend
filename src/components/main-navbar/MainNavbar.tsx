@@ -1,6 +1,8 @@
 import './MainNavbar.css';
 //import { Navbar, Nav, Container, Modal, Button } from 'react-bootstrap';
-import logo from '../../assets/fGuerra.png';
+
+// import logo from '../../assets/fGuerra.png';
+
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { useAuth } from '../../context/auth/AuthContext';
@@ -131,12 +133,13 @@ const toggleMenu = () => {
                 <span className='menu-span'>Menu</span>
             </div>
     <div className='all-the-main-navbar-content'>
-       
-
+     
+          <h2 style={{ fontFamily: 'Lexend Exa' }}>GUERRADONE</h2>
+          <h4 style={{ color: 'dodgerblue'}}> Companion</h4>
       
-            <div className="logo-at-the-navbar" onClick={goBackToDashboard}>
+            {/* <div className="logo-at-the-navbar" onClick={goBackToDashboard}>
               <img src={logo} alt="logo"  />
-            </div>
+            </div> */}
       
       <div className='navbar-center-menu'>
 

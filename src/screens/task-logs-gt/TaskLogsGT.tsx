@@ -86,7 +86,7 @@ fetchData();
 
   // Função para montar a mensagem a ser compartilhada
 const formatMessageForSharing = (item: TaskDataType) => {
-    const message = `Task Name: ${item.task_name}\nModel: ${item.model}\nIMEI: ${item.imei}\nSerial: ${item.serial}\nCarrier: ${item.carrier}\nStatus: ${item.status}\nDate: ${new Date(item.date).toLocaleString()}\nClient IP: ${item.client_ip}\nLogs: ${item.logs}`;
+    const message = `Nome da Tarefa: ${item.task_name}\nModel: ${item.model}\nIMEI: ${item.imei}\nSerial: ${item.serial}\nCarrier: ${item.carrier}\nStatus: ${item.status}\nDate: ${new Date(item.date).toLocaleString()}\nClient IP: ${item.client_ip}\nLogs: ${item.logs}`;
     return encodeURIComponent(message);
   };
   
@@ -118,7 +118,7 @@ const handleCopy = async () => {
 
 
   const columns = [
-    { title: 'Task Name', dataIndex: 'task_name', key: 'task_name' },
+    { title: 'Nome da Tarefa', dataIndex: 'task_name', key: 'task_name' },
     { title: 'Model', dataIndex: 'model', key: 'model' },
     { title: 'IMEI', dataIndex: 'imei', key: 'imei' },
     { title: 'Serial', dataIndex: 'serial', key: 'serial' },
@@ -175,7 +175,7 @@ const handleCopy = async () => {
         <br />
     <h3 style={{ color: '#ffffff'}}>GUERRATOOL - Task Logs</h3>
    
-   <button onClick={taskLogsTMT}>Check The Magic Tool Task Logs</button>
+   <button onClick={taskLogsTMT}>ChECAR The Magic Tool Task Logs</button>
    <br /><br />
 
 <div>
@@ -234,7 +234,7 @@ const handleCopy = async () => {
             </Button>,
           ]}
         >
-        <p className='modal-items'><strong>Task Name:</strong> {selectedItem?.task_name}</p>
+        <p className='modal-items'><strong>Nome da Tarefa:</strong> {selectedItem?.task_name}</p>
         <p className='modal-items'><strong>Model:</strong> {selectedItem?.model}</p>
         <p className='modal-items'><strong>IMEI:</strong> {selectedItem?.imei}</p>
         <p className='modal-items'><strong>Serial:</strong> {selectedItem?.serial}</p>

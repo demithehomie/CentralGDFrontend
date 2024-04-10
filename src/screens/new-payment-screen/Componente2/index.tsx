@@ -168,6 +168,8 @@ const shouldRenderItem = (transfer: TransferData) => {
                 .then(response => {
                   console.log('Pagamento atualizado com sucesso:', response);
                   // Tratar a resposta, atualizar o estado do frontend se necessário
+                  Swal.fire("Tudo certo", "Pagamento confirmado com sucesso", "success")
+                  window.location.reload();
                 })
                 .catch(error => {
                   console.error('Erro ao atualizar o pagamento:', error);

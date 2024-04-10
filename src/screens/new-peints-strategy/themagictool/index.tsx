@@ -50,7 +50,7 @@ export default function TheMagictoolPrintsStrategy() {
     const getAllUsersIDs = async () => {
         try {
             setLoading(true); // Set loading state to true before fetching data
-            const response = await fetch('https://gdcompanion-prod.onrender.com/themagictool/screenshots/get-all-user-ids');
+            const response = await fetch('https://gdcompanion-prod.onrender.com/themagictool;/screenshots/get-all-user-ids');
             if (!response.ok) {
                 throw new Error('Erro na requisição: ' + response.statusText);
             }
@@ -68,27 +68,7 @@ export default function TheMagictoolPrintsStrategy() {
         }
     };
 
-    // const changeUserStatus = async (userID: number, status: string) => {
-    //     try {
-    //         const response = await fetch(`https://gdcompanion-prod.onrender.com/themagictool/hide-or-show-print/${userID}`, {
-    //             method: 'PUT',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //             },
-    //             body: JSON.stringify({ status }),
-    //         });
-    //         if (!response.ok) {
-    //             throw new Error('Erro na requisição: ' + response.statusText);
-    //         }
-    //         const data = await response.text(); // Alterado para response.text() em vez de response.json()
-    //         console.log("API Response for user ID", userID, ":", data); // Log the API response
-    //         return data;
-    //     } catch (err: any) {
-    //         console.log("Erro ao ocultar o print do usuário:", err.message); // Log the error message (if any)
-    //         console.error(err);
-    //         return null; // Return null if an error occurs
-    //     }
-    // }
+
     
     const handleClick = async (userID: number) => {
         Swal.fire({
@@ -131,35 +111,12 @@ export default function TheMagictoolPrintsStrategy() {
     };
 
 
-    // const getGuerraToolUserByID = async (userID: number) => {
-    //     try {
-    //         const response = await fetch(`https://gdcompanion-prod.onrender.com/users/${userID}`);
-    //         if (!response.ok) {
-    //             throw new Error('Erro na requisição: ' + response.statusText);
-    //         }
-    //         const data = await response.json();
-    //         console.log("API Response for user ID", userID, ":", data); // Log the API response
-    //         return data;
-    //     } catch (err) {
-    //         console.error(err);
-    //         return null; // Return null if an error occurs
-    //     }
-    // };
 
     useEffect(() => {
         getAllUsersIDs();
     }, []);
 
-    // useEffect(() => {
-    //     // Fetch user details only when guerraToolIDs array changes
-    //     console.log("Before setting guerraToolUser:", guerraToolUser);
-    //     guerraToolIDs.forEach(async (user) => {
-    //         const userData = await getGuerraToolUserByID(user.user_id);
-    //         if (userData) {
-    //             setGuerraToolUser((prevUsers) => [...prevUsers, userData]);
-    //         }
-    //     });
-    // }, [guerraToolIDs]);
+   
 
     return (
         <>
@@ -178,7 +135,7 @@ export default function TheMagictoolPrintsStrategy() {
                         <br />
                         <button onClick={() => window.location.reload()}>REGARREGAR CONTEÚDO</button>
                         <br />
-                        <button>ACESSAR USUÁRIOS OCULTADOS</button>
+                        {/* <button>ACESSAR USUÁRIOS OCULTADOS</button> */}
                     </div>
 
                     

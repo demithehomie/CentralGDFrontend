@@ -279,19 +279,7 @@ function formatDate(dateString: string) {
         {/* <button className="button" onClick={backToDashboard}>Voltar ao Início</button> */}
         </div>
       
-        {/* <button
-          className="button"
-          onClick={() => {
-            if (
-              currentPage >= 1 &&
-              currentPage <= Math.ceil(userPrints.length / itemsPerPage)
-            ) {
-              setCurrentPage(currentPage);
-            }
-          }}
-        >
-          Ir
-        </button> */}
+    
       </div>
       <div className='navigation'>
       <button className="button" onClick={getAllPrintsTheMagicTool}>Voltar para Todos os Prints</button>

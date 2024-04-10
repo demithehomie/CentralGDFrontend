@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { FolderOutline } from 'react-ionicons';
 import { Spin } from 'antd';
 import Swal from 'sweetalert2';
+import axios from "axios";
 
 interface User {
     user_id: number; // Adjust type according to your API response
@@ -67,30 +68,30 @@ export default function TheMagictoolPrintsStrategy() {
         }
     };
 
-    const changeUserStatus = async (userID: number, status: string) => {
-        try {
-            const response = await fetch(`https://gdcompanion-prod.onrender.com/themagictool/hide-or-show-print/${userID}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ status }),
-            });
-            if (!response.ok) {
-                throw new Error('Erro na requisição: ' + response.statusText);
-            }
-            const data = await response.text(); // Alterado para response.text() em vez de response.json()
-            console.log("API Response for user ID", userID, ":", data); // Log the API response
-            return data;
-        } catch (err: any) {
-            console.log("Erro ao ocultar o print do usuário:", err.message); // Log the error message (if any)
-            console.error(err);
-            return null; // Return null if an error occurs
-        }
-    }
+    // const changeUserStatus = async (userID: number, status: string) => {
+    //     try {
+    //         const response = await fetch(`https://gdcompanion-prod.onrender.com/themagictool/hide-or-show-print/${userID}`, {
+    //             method: 'PUT',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify({ status }),
+    //         });
+    //         if (!response.ok) {
+    //             throw new Error('Erro na requisição: ' + response.statusText);
+    //         }
+    //         const data = await response.text(); // Alterado para response.text() em vez de response.json()
+    //         console.log("API Response for user ID", userID, ":", data); // Log the API response
+    //         return data;
+    //     } catch (err: any) {
+    //         console.log("Erro ao ocultar o print do usuário:", err.message); // Log the error message (if any)
+    //         console.error(err);
+    //         return null; // Return null if an error occurs
+    //     }
+    // }
     
- const  handleClick = async (userID: number) => {
-        Swal.fire({ 
+    const handleClick = async (userID: number) => {
+        Swal.fire({
             title: 'Você tem certeza?',
             text: 'Você deseja ocultar o print deste usuário?',
             icon: 'warning',
@@ -101,16 +102,33 @@ export default function TheMagictoolPrintsStrategy() {
             cancelButtonText: 'Cancelar',
         }).then(async (result) => {
             if (result.isConfirmed) {
-                const data = await changeUserStatus(userID, 'hidden');
-                if (data) {
-                    Swal.fire('Sucesso!', 'O print foi ocultado com sucesso.', 'success');
-                    changeUserStatus(userID, 'hidden');
-                } else {
+                try {
+                    // Faz a requisição para ocultar o print
+                    const response = await axios.put(`https://gdcompanion-prod.onrender.com/themagictool/hide-or-show-print/${userID}`);
+                    
+                    // Verifica se a requisição foi bem-sucedida
+                    if (response.status === 200) {
+                        Swal.fire({
+                            title: 'Sucesso!',
+                            text: 'O print foi ocultado com sucesso. A página será recarregada em 5 segundos.',
+                            icon: 'success',
+                            timer: 5000, // 5 segundos
+                            timerProgressBar: true,
+                            showConfirmButton: false
+                        }).then(() => {
+                            // Recarrega a página após o timer de 5 segundos
+                            window.location.reload();
+                        });
+                    } else {
+                        Swal.fire('Erro!', 'Ocorreu um erro ao ocultar o print.', 'error');
+                    }
+                } catch (error) {
+                    console.error('Erro ao ocultar o print:', error);
                     Swal.fire('Erro!', 'Ocorreu um erro ao ocultar o print.', 'error');
                 }
             }
         });
-    }
+    };
 
 
     // const getGuerraToolUserByID = async (userID: number) => {
@@ -156,7 +174,11 @@ export default function TheMagictoolPrintsStrategy() {
                     <div style={{ flexDirection: 'column', display: 'flex' }}>
                         <input type="text" className='the-prints-searchbar' placeholder="Digite aqui a sua pesquisa..." onInput={searchUser} />
                         <br />
-                        <button onClick={() => navigate('/guerratool/new-screen/get-all-prints')}>Clique para acessar os prints do GUERRATOOL</button>
+                        <button style={{ backgroundColor: "dodgerblue", color: "#ffffff", fontWeight: "bold", border: "2px solid #ffffff"}} onClick={() => navigate('/guerratool/new-screen/get-all-prints')}>ACESSAR PRINTS DO GUERRATOOL</button>
+                        <br />
+                        <button onClick={() => window.location.reload()}>REGARREGAR CONTEÚDO</button>
+                        <br />
+                        <button>ACESSAR USUÁRIOS OCULTADOS</button>
                     </div>
 
                     

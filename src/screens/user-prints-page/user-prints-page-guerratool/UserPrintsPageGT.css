@@ -78,10 +78,10 @@
 
 /* Estilo do carrossel */
 .carousel-container {
-    max-width: 800px; /* Defina a largura máxima do carrossel */
+     /* Defina a largura máxima do carrossel */
     margin: 0 auto;
     padding: 20px;
-    background-color: #f0f0f0; /* Cor de fundo do container do carrossel */
+    /* background-color: #f0f0f0;  */
     border-radius: 10px;
   }
   

@@ -1,14 +1,15 @@
 import  { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { Carousel } from 'react-responsive-carousel';
-import Modal from 'react-modal';
 
+import Modal from 'react-modal';
+import 'react-image-gallery/styles/css/image-gallery.css'; // Importando o estilo padrão do react-image-gallery
 import './UserPrintsPageGT.css';
 import Loader from '../../../components/loader/Loader';
 import FloatingButtons from '../../../components/floating-button/FloatingButton';
 import MainNavbar from '../../../components/main-navbar/MainNavbar';
 import { FolderOpenOutline } from 'react-ionicons';
+import ImageGallery from 'react-image-gallery';
 
 
 Modal.setAppElement('#root');
@@ -26,7 +27,7 @@ interface Print {
 const UserPrintsPageGT: React.FC<UserPrintsPageGTProps> = () => {
   const navigate = useNavigate();
  
-
+  const [hasMore, setHasMore] = useState<boolean>(true);
     const [totalPrints, setTotalPrints] = useState<number>(0);
     const [isFullSizeModalOpen, setIsFullSizeModalOpen] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true); // Adicione o estado isLoading
@@ -37,6 +38,7 @@ const UserPrintsPageGT: React.FC<UserPrintsPageGTProps> = () => {
     const itemsPerPage: number = 15;
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [inputPage, setInputPage] = useState<number>(currentPage);
+    
     const openFullSizeModal = () => {
       setIsFullSizeModalOpen(true);
     };
@@ -49,24 +51,52 @@ const UserPrintsPageGT: React.FC<UserPrintsPageGTProps> = () => {
       const newPage = parseInt(event.target.value);
       setInputPage(newPage);
     };
+
+
   
   
+  // useEffect(() => {
+  //   const fetchUserPrints = async () => {
+  //     setIsLoading(true);
+  //     try {
+  //       const response = await axios.get(`https://gdcompanion-prod.onrender.com/guerratool/get-all-prints-by-one-id-with-pagination/${userId}?page=${currentPage}&limit=${itemsPerPage}`);
+  //       setTotalPrints(response.data.total);
+  //       setUserPrints(response.data.prints);
+  //     } catch (error) {
+  //       console.error('Error fetching user prints:', error);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+
+  //   fetchUserPrints();
+  // }, [userId, currentPage, itemsPerPage]);
+
   useEffect(() => {
+    const today = new Date().toISOString().split('T')[0]; // Data de hoje
+    const tenDaysAgo = new Date(new Date().setDate(new Date().getDate() - 10)).toISOString().split('T')[0]; // Dez dias atrás
+  
     const fetchUserPrints = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get(`https://gdcompanion-prod.onrender.com/guerratool/get-all-prints-by-one-id-with-pagination/${userId}?page=${currentPage}&limit=${itemsPerPage}`);
-        setTotalPrints(response.data.total);
-        setUserPrints(response.data.prints);
+        const response = await axios.get(`https://gdcompanion-prod.onrender.com/guerratool/get-all-prints-by-one-id/${userId}?start_date=${tenDaysAgo}&end_date=${today}`);
+        setUserPrints((prevPrints) => [...prevPrints, ...response.data]);
+        setHasMore(response.data.length >= 10);
       } catch (error) {
-        console.error('Error fetching user prints:', error);
+        console.error('Erro ao buscar prints do usuário:', error);
       } finally {
         setIsLoading(false);
       }
     };
-
+  
     fetchUserPrints();
-  }, [userId, currentPage, itemsPerPage]);
+  }, [userId]);
+
+  const images = userPrints.map((print) => ({
+    original: `https://ewr1.vultrobjects.com/screen/GUERRATOOL_1911554/${print.file_name}`,
+    thumbnail: `https://ewr1.vultrobjects.com/screen/GUERRATOOL_1911554/${print.file_name}`,
+    description: `Criado em ${formatDate(print.created_at)}`,
+  }));
 
   const getUserById = async (userId: string) => {
     try {
@@ -160,7 +190,7 @@ function formatDate(dateString: string) {
       <Loader />
     ) : (
       <div className="carousel-container">
-       <Carousel
+       {/* <Carousel
   showThumbs={false}
   showStatus={false}
   dynamicHeight={true}
@@ -187,7 +217,15 @@ function formatDate(dateString: string) {
      
     </div>
   )) : [<p key="no-prints">No prints available.</p>]}
-</Carousel>
+</Carousel> */}
+
+      <ImageGallery 
+        items={images} 
+        additionalClass="custom-image-gallery" // Adicionando uma classe adicional para estilização personalizada
+        thumbnailPosition="left" // Posicionando as miniaturas à esquerda
+        autoPlay={false} // Definindo autoPlay como false para desativar o autoplay
+        showPlayButton={false} // Ocultando o botão de autoplay
+        />
 
       </div>
     )}
@@ -228,7 +266,7 @@ function formatDate(dateString: string) {
 
 
 <div className="pagination">
-      <button
+      {/* <button
         className="button"
         disabled={currentPage === 1}
         onClick={() => setCurrentPage(1)}
@@ -241,8 +279,8 @@ function formatDate(dateString: string) {
         onClick={() => setCurrentPage(currentPage - 1)}
       >
         Anterior
-      </button>
-      <div className='labels-and-inputs'>
+      </button> */}
+      {/* <div className='labels-and-inputs'>
       <span style={{ color: '#ffffff'}}> {currentPage} de {totalPages}</span>
       <input
         type="number"
@@ -256,8 +294,8 @@ function formatDate(dateString: string) {
           }
         }}
       />
-      </div>
-      <button
+      </div> */}
+      {/* <button
         className="button"
         disabled={currentPage === totalPages}
         onClick={() => setCurrentPage(currentPage + 1)}
@@ -272,7 +310,7 @@ function formatDate(dateString: string) {
         onClick={() => setCurrentPage(totalPages)}
       >
         Última Página
-      </button>
+      </button> */}
         <br />
         <br />
         <div>
@@ -281,11 +319,15 @@ function formatDate(dateString: string) {
       
     
       </div>
-      <div className='navigation'>
-      <button className="button" onClick={getAllPrintsTheMagicTool}>Voltar para Todos os Prints</button>
-      <button className="button" onClick={backToDashboard}>Voltar ao Início</button>
-      </div>
+
+      {/* <div className='navigation'>
+        <button className="button" onClick={getAllPrintsTheMagicTool}>Voltar para Todos os Prints</button>
+        <button className="button" onClick={backToDashboard}>Voltar ao Início</button>
+      </div> */}
+
     </div>
+
+
     </div>
   );
 };

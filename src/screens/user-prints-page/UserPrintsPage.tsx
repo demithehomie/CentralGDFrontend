@@ -2,8 +2,9 @@ import  { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Carousel } from 'react-responsive-carousel';
+import ImageGallery from 'react-image-gallery';
 import Modal from 'react-modal';
-
+import 'react-image-gallery/styles/css/image-gallery.css'; // Importando o estilo padrão do react-image-gallery
 import './UserPrintsPage.css';
 import Loader from '../../components/loader/Loader';
 import FloatingButtons from '../../components/floating-button/FloatingButton';
@@ -25,7 +26,7 @@ interface Print {
 const UserPrintsPage: React.FC<UserPrintsPageProps> = () => {
   const navigate = useNavigate();
  
-
+  const [hasMore, setHasMore] = useState<boolean>(true);
     const [totalPrints, setTotalPrints] = useState<number>(0);
     const [isFullSizeModalOpen, setIsFullSizeModalOpen] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true); // Adicione o estado isLoading
@@ -33,8 +34,10 @@ const UserPrintsPage: React.FC<UserPrintsPageProps> = () => {
     const [user, setUser] = useState<any>({});
     const [userPrints, setUserPrints] = useState<Print[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const itemsPerPage: number = 15;
+    const itemsPerPage: number = 1;
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
+    const [startDate, setStartDate] = useState<string>('');
+    const [endDate, setEndDate] = useState<string>('');
     const [inputPage, setInputPage] = useState<number>(currentPage);
 
     const handleClickVoltar = () => {
@@ -55,22 +58,34 @@ const UserPrintsPage: React.FC<UserPrintsPageProps> = () => {
     };
   
   
-  useEffect(() => {
-    const fetchUserPrints = async () => {
+    const fetchMorePrints = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get(`https://gdcompanion-prod.onrender.com/get-all-prints-by-one-id-with-pagination/${userId}?page=${currentPage}&limit=${itemsPerPage}`);
-        setTotalPrints(response.data.total);
-        setUserPrints(response.data.prints);
+        const response = await axios.get(`https://gdcompanion-prod.onrender.com/themagictool/get-all-prints-with-date-intervals/${userId}?start_date=${oneDayAgo}&end_date=${today}&page=${currentPage}&limit=${itemsPerPage}`);
+        setUserPrints((prevPrints) => [...prevPrints, ...response.data]);
+        setHasMore(response.data.length >= itemsPerPage);
       } catch (error) {
-        console.error('Error fetching user prints:', error);
+        console.error('Erro ao buscar mais prints do usuário:', error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchUserPrints();
-  }, [userId, currentPage, itemsPerPage]);
+    const today = new Date().toISOString().split('T')[0]; // Data de hoje
+      const oneDayAgo = new Date(new Date().setDate(new Date().getDate() - 2)).toISOString().split('T')[0]; // Dez dias atrás
+  
+    useEffect(() => {
+      const today = new Date().toISOString().split('T')[0]; // Data de hoje
+      const tenDaysAgo = new Date(new Date().setDate(new Date().getDate() - 10)).toISOString().split('T')[0]; // Dez dias atrás
+  
+      fetchMorePrints();
+    }, [userId, currentPage]);
+
+    const images = userPrints.map((print) => ({
+      original: `https://ewr1.vultrobjects.com/screen/THEMAGICT_2102255/${print.file_name}`,
+      thumbnail: `https://ewr1.vultrobjects.com/screen/THEMAGICT_2102255/${print.file_name}`,
+      description: `Criado em ${formatDate(print.created_at)}`,
+    }));
 
   const getUserById = async (userId: string) => {
     try {
@@ -140,7 +155,15 @@ function formatDate(dateString: string) {
 
 // O restante do componente permanece o mesmo
 
+const handleInsertCurrentDate = () => {
+  const currentDate = new Date().toISOString().split('T')[0];
+  setStartDate(currentDate);
+};
 
+const handleInsertTenDaysAgo = () => {
+  const tenDaysAgo = new Date(new Date().setDate(new Date().getDate() - 10)).toISOString().split('T')[0];
+  setEndDate(tenDaysAgo);
+};
 
   return (
     <div>
@@ -157,12 +180,18 @@ function formatDate(dateString: string) {
                             /> 
 
                              Pasta de prints do usuário {userId}  - {user.username} </h2>
+                             <div className="date-buttons">
+                             <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+        <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+                              <button onClick={handleInsertCurrentDate}>Inserir Data Atual</button>
+                              <button onClick={handleInsertTenDaysAgo}>Inserir Data de 10 Dias Atrás</button>
+                            </div>
     
     {isLoading ? (
       <Loader />
     ) : (
       <div className="carousel-container">
-       <Carousel
+       {/* <Carousel
   showThumbs={false}
   showStatus={false}
   dynamicHeight={true}
@@ -189,7 +218,25 @@ function formatDate(dateString: string) {
      
     </div>
   )) : [<p key="no-prints">No prints available.</p>]}
-</Carousel>
+</Carousel> */}
+
+<ImageGallery 
+        items={images} 
+        additionalClass="custom-image-gallery" // Adicionando uma classe adicional para estilização personalizada
+        thumbnailPosition="left" // Posicionando as miniaturas à esquerda
+        autoPlay={false} // Definindo autoPlay como false para desativar o autoplay
+        showPlayButton={false} // Ocultando o botão de autoplay
+        showThumbnails={true} // Exibir miniaturas
+            showNav={true} // Exibir navegação entre as miniaturas
+        />
+{hasMore && (
+            <button
+              onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
+              disabled={isLoading}
+            >
+              {isLoading ? 'Carregando...' : 'Carregar mais'}
+            </button>
+          )}
 
       </div>
     )}

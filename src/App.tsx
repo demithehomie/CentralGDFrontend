@@ -67,17 +67,15 @@ import GuerraToolNewPrintStrategy from './screens/new-peints-strategy/guerratool
 import TheMagictoolPrintsStrategy from './screens/new-peints-strategy/themagictool';
 import GuerraToolNewPrintStrategyButJustTheCancelled from './screens/new-peints-strategy/guerratool/cancelled-prints';
 import TheMagictoolPrintsStrategyButJustTheCancelled from './screens/new-peints-strategy/themagictool/cancelled-prints';
+import GTPRINTS from './screens/second-screenshots/guerratool';
 // import { ChakraProvider } from '@chakra-ui/react';
 
-import { tmtDataItems } from './screens/screenshots/themagictool/index'
-import GalleryDetail from './screens/screenshots/carousel-components/detail';
 
 export const mercadoPagoApi = axios.create({
   baseURL: 'https://api.mercadopago.com/v1'
 });
 
 
-const galleriesData = tmtDataItems();
 
 // const container = document.getElementById('root');
 // const root = createRoot(container!);
@@ -154,11 +152,7 @@ function App() {
 
           {/* NOVA USER PRINTS PAGE  */}
 
-          <Route
-            path="/themagictool/screenshots/get-all-prints/:userId"
-            element={<PrivateRoute><GalleryDetail galleries={galleriesData} thumbsPerView={3} /></PrivateRoute>}
-          />
-          <Route path="/guerratool/get-all-prints/:userId" element={<PrivateRoute><UserPrintsPageGT /></PrivateRoute>} />
+          <Route path="/guerratool/get-all-prints/:userId" element={<PrivateRoute><GTPRINTS/></PrivateRoute>} />
 
 
 

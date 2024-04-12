@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
-import './index.css';
-import MainNavbar from '../../../components/main-navbar/MainNavbar';
+import { useEffect, useState } from 'react';
+import '../index.css';
+import MainNavbar from '../../../../components/main-navbar/MainNavbar';
 import { useNavigate } from 'react-router-dom';
-import { EyeOffOutline, FolderOutline, RefreshOutline } from 'react-ionicons';
+import { FolderOutline, Person, RefreshOutline } from 'react-ionicons';
 import { Spin } from 'antd';
 import Swal from 'sweetalert2';
 import axios from "axios";
@@ -13,82 +13,44 @@ interface User {
 }
 
 
-export default function TheMagictoolPrintsStrategy() {
-
-    const inputRef = useRef<HTMLInputElement>(null); // Referência para o input
+export default function TheMagictoolPrintsStrategyButJustTheCancelled() {
     const navigate = useNavigate();
     const [guerraToolIDs, setGuerraToolID] = useState<User[]>([]); // Specify type as User[]
     const [guerraToolUser, setGuerraToolUser] = useState<User[]>([]); // Specify type as User[]
     const [loading, setLoading] = useState(false); // State to manage loading state
-    const [inputValue, setInputValue] = useState<string>('');
-
-    useEffect(() => {
-        const timeoutId = setTimeout(() => {
-          if (inputRef.current) {
-            const fakeEvent = { target: { value: inputRef.current.value.trim() } } as React.ChangeEvent<HTMLInputElement>;
-            searchUser(fakeEvent);
-          }
-        }, 1000);
-      
-        // Clean up the timeout to avoid memory leaks
-        return () => clearTimeout(timeoutId);
-      }, []);
-
-    // useEffect(() => {
-    //     const fakeEvent = {} as React.ChangeEvent<HTMLInputElement>; // Criar um evento vazio
-    //     searchUser(fakeEvent);
-    // }, [inputValue]);
     
-
+    function searchUser(event: React.ChangeEvent<HTMLInputElement>) {
+        const searchTerm = (event.target as HTMLInputElement).value.toLowerCase(); // Convertendo o termo de busca para minúsculas
     
-    async function searchUser(event: React.ChangeEvent<HTMLInputElement>) {
-        const searchTerm = event.target.value.toLowerCase(); // Convertendo o termo de busca para minúsculas
+        let foundFirstUser = false; // Flag para controlar se o primeiro usuário foi encontrado
     
-        // Verificando se há um valor no input
-        if (searchTerm.trim() === '') {
-            // Se o input estiver vazio, exiba todos os usuários novamente
-            document.querySelectorAll('.user-logic').forEach(user => {
-                (user as HTMLElement).style.display = 'block';
-            });
-            return; // Sai da função, pois não há necessidade de continuar
-        }
-    
-        // Percorre todos os usuários e verifica se o nome do usuário contém o termo de busca
         document.querySelectorAll('.user-logic').forEach(user => {
             const titleElement = user.querySelector('#username');
             if (titleElement) {
                 const username = titleElement.textContent?.toLowerCase(); // Obtendo o nome do usuário
                 // Verificando se o nome do usuário contém o termo de busca
                 if (username && username.includes(searchTerm)) {
-                    // Se o nome do usuário corresponder, exiba o usuário
-                    (user as HTMLElement).style.display = 'block';
+                    // Se já encontramos o primeiro usuário, saímos do loop
+                    if (foundFirstUser) {
+                        return;
+                    } else {
+                        // Mostramos o primeiro usuário encontrado e atualizamos a flag
+                        (user as HTMLElement).style.display = 'block';
+                        foundFirstUser = true;
+                    }
                 } else {
-                    // Se o nome do usuário não corresponder, oculte o usuário
+                    // Ocultamos os usuários que não correspondem ao filtro
                     (user as HTMLElement).style.display = 'none';
                 }
             }
         });
     }
     
-          // Função para atualizar o valor do localStorage sempre que o valor do input mudar
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setInputValue(value);
-    localStorage.setItem('inputValue', value);
-  };
-
-    // Função para carregar o valor do localStorage quando a aplicação é montada
-    useEffect(() => {
-        const savedValue = localStorage.getItem('inputValue');
-        if (savedValue) {
-          setInputValue(savedValue);
-        }
-      }, []);
 
     const getAllUsersIDs = async () => {
         try {
             setLoading(true); // Set loading state to true before fetching data
-            const response = await fetch('https://gdcompanion-prod.onrender.com/themagictool/screenshots/get-all-user-ids');
+            const response = await fetch('https://gdcompanion-prod.onrender.com/themagictool/screenshots/get-user-ids/hidden');
             if (!response.ok) {
                 throw new Error('Erro na requisição: ' + response.statusText);
             }
@@ -111,7 +73,7 @@ export default function TheMagictoolPrintsStrategy() {
     const handleClick = async (userID: number) => {
         Swal.fire({
             title: 'Você tem certeza?',
-            text: 'Você deseja ocultar o print deste usuário?',
+            text: 'Você deseja fazer aparecer novamente os prints deste usuário?',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -128,7 +90,7 @@ export default function TheMagictoolPrintsStrategy() {
                     if (response.status === 200) {
                         Swal.fire({
                             title: 'Sucesso!',
-                            text: 'O print foi ocultado com sucesso. A página será recarregada em 5 segundos.',
+                            text: 'O print voltou a lista visível com sucesso. A página será recarregada em 5 segundos.',
                             icon: 'success',
                             timer: 5000, // 5 segundos
                             timerProgressBar: true,
@@ -138,11 +100,11 @@ export default function TheMagictoolPrintsStrategy() {
                             window.location.reload();
                         });
                     } else {
-                        Swal.fire('Erro!', 'Ocorreu um erro ao ocultar o print.', 'error');
+                        Swal.fire('Erro!', 'Ocorreu um erro ao fazer aparecer novamente o print.', 'error');
                     }
                 } catch (error) {
                     console.error('Erro ao ocultar o print:', error);
-                    Swal.fire('Erro!', 'Ocorreu um erro ao ocultar o print.', 'error');
+                    Swal.fire('Erro!', 'Ocorreu um erro ao fazer aparecer novamente o print.', 'error');
                 }
             }
         });
@@ -154,7 +116,6 @@ export default function TheMagictoolPrintsStrategy() {
         getAllUsersIDs();
     }, []);
 
-
    
 
     return (
@@ -163,47 +124,54 @@ export default function TheMagictoolPrintsStrategy() {
             <MainNavbar />
             <div>
                 <div>
-                    <h1 style={{ color: "#ffffff", paddingTop: 100 }}>Acesso aos Prints - THE MAGIC TOOL</h1>
-                    <h3 className='title' style={{ }}>Digite O Nome Do Usuário </h3>
-                    <h5>Em seguida, clique para acessar prints específicos</h5>
+                    <h1 style={{ color: "#ffffff", paddingTop: 100 }}>Usuários com Prints Ocultados </h1>
+                    <h1 style={{ color: "#ffffff"}}> THE MAGIC TOOL</h1>
+                    <h3 className='title' style={{ }}>Digite O Nome Do Usuário Ocultado </h3>
+                    <h5  style={{ color: '#ffffff'}}>Em seguida, clique para acessar prints específicos</h5>
                  
                     <div style={{ flexDirection: 'column', display: 'flex' }}>
-                        <input 
-                        ref={inputRef}
-                            type="text" 
-                            className='the-prints-searchbar' 
-                            placeholder="Digite aqui a sua pesquisa..." 
-                            onInput={searchUser} 
-                            value={inputValue} 
-                            onChange={handleInputChange} 
-                            onLoad={searchUser}
-                            />
-                       
+                        <input type="text" className='the-prints-searchbar' placeholder="Digite aqui a sua pesquisa..." onInput={searchUser} />
                         <br />
 
                         <div className='row-of-buttons-for-prints'>
-                        <button style={{ backgroundColor: "dodgerblue", color: "#ffffff", fontWeight: "bold", border: "2px solid #ffffff"}} onClick={() => navigate('/guerratool/new-screen/get-all-prints')}>ACESSAR PRINTS DO GUERRATOOL</button>
+                        <button style={{ backgroundColor: "dodgerblue", color: "#ffffff", fontWeight: "bold", border: "2px solid #ffffff"}} onClick={() => navigate('/guerratool/new-screen/get-prints/cancelled')}>ACESSAR USUÁRIOS OCULTADOS GUERRATOOL</button>
                         <br />
                         <button onClick={() => window.location.reload()}>
-                            REGARREGAR CONTEÚDO{" "}
-                            <RefreshOutline
-                                color={'#ffffff'} 
-                                title={"Recarregar"}
-                                height="20px"
-                                width="20px"
-                                />
+                        <RefreshOutline
+                       
+                       color={'#ffffff'} 
+                       title={"Recarregar"}
+                       height="20px"
+                       width="20px"
+                       />
+
                             </button>
                         <br />
-                        <button  onClick={() => navigate('/themagictool/new-screen/get-prints/cancelled')}>
-                            ACESSAR USUÁRIOS OCULTADOS{" "}
-                            <EyeOffOutline
-                                color={'#ffffff'} 
-                                title={"Recarregar"}
-                                height="20px"
-                                width="20px"
-                                />
-                            </button>
-                        </div>
+                        <button onClick={() => navigate('/themagictool/new-screen/get-all-prints')}>
+                        <Person
+                        color={'#ffffff'} 
+                     
+                        title={"Person"}
+                        height="20px"
+                        width="20px"
+                        />
+                            <Person
+                        color={'#ffffff'} 
+                     
+                        title={"Person"}
+                        height="20px"
+                        width="20px"
+                        />
+                             <Person
+                        color={'#ffffff'} 
+                     
+                        title={"Person"}
+                        height="20px"
+                        width="20px"
+                        />
+                        </button>
+                    </div>
+
                     </div>
 
                     
@@ -232,9 +200,9 @@ export default function TheMagictoolPrintsStrategy() {
                             </button>
                             <button 
                                 className="the-user-logic-item" 
-                                style={{ backgroundColor: "red"}} 
+                                style={{ backgroundColor: "green"}} 
                                 onClick={() => handleClick(Number(guerraToolIDs[index]))}>
-                                {`Ocultar`}
+                                {`Tornar Visível`}
                             </button>
                             <br />
                         </div>

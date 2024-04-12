@@ -3,7 +3,7 @@ import axios from 'axios';
 
 
 //import  { useEffect, useState } from 'react';
-import { GlobalStyle } from './components/global-style/GlobalStyle';
+// import { GlobalStyle } from './components/global-style/GlobalStyle';
 import LoginForm from './components/login-form/LoginForm';
 import Dashboard from './screens/dashboard/Dashboard';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
@@ -65,16 +65,19 @@ import FastPaymentReports from './screens/all-payments-screen/new-payment-screen
 import NewPaymentScreen from './screens/new-payment-screen/NewPaymentScreen';
 import GuerraToolNewPrintStrategy from './screens/new-peints-strategy/guerratool';
 import TheMagictoolPrintsStrategy from './screens/new-peints-strategy/themagictool';
+import GuerraToolNewPrintStrategyButJustTheCancelled from './screens/new-peints-strategy/guerratool/cancelled-prints';
+import TheMagictoolPrintsStrategyButJustTheCancelled from './screens/new-peints-strategy/themagictool/cancelled-prints';
 // import { ChakraProvider } from '@chakra-ui/react';
 
-
+import { tmtDataItems } from './screens/screenshots/themagictool/index'
+import GalleryDetail from './screens/screenshots/carousel-components/detail';
 
 export const mercadoPagoApi = axios.create({
   baseURL: 'https://api.mercadopago.com/v1'
 });
 
 
-
+const galleriesData = tmtDataItems();
 
 // const container = document.getElementById('root');
 // const root = createRoot(container!);
@@ -92,7 +95,7 @@ function App() {
       <AuthProvider>
       {/* <ChakraProvider>         */}
         <HelmetProvider>
-        <GlobalStyle />
+        {/* <GlobalStyle /> */}
 
         <ToastProvider>
         
@@ -105,7 +108,7 @@ function App() {
         <Route path="/payments-central/charging-payments" element={<CobrarPagamento/>}/>
         <Route path="/payments-central/fast-payment-reports" element={<FastPaymentReports/>}/>
 
-        <Route path="/payments-central/start-here" element={<NewPaymentScreen/>}/>
+        <Route path="/payments-central/start-here" element={<PrivateRoute><NewPaymentScreen/></PrivateRoute>}/>
 
 
         {/* <Route path="/payments-central/all-registered-data" element={<FastPaymentReports/>}/> */}
@@ -134,6 +137,9 @@ function App() {
           <Route path="/guerratool/new-screen/get-all-prints" element={<PrivateRoute><GuerraToolNewPrintStrategy /></PrivateRoute>} />
           <Route path="/themagictool/new-screen/get-all-prints" element={<PrivateRoute><TheMagictoolPrintsStrategy /></PrivateRoute>} />
 
+          <Route path="/guerratool/new-screen/get-prints/cancelled" element={<PrivateRoute><GuerraToolNewPrintStrategyButJustTheCancelled /></PrivateRoute>} />
+          <Route path="/themagictool/new-screen/get-prints/cancelled" element={<PrivateRoute><TheMagictoolPrintsStrategyButJustTheCancelled /></PrivateRoute>} />
+
 
           <Route path="/guerratool/get-all-prints" element={<PrivateRoute><PrintsGuerraTool /></PrivateRoute>} />
           <Route path="/themagictool/get-all-prints" element={<PrivateRoute><PrintsTheMagicTool /></PrivateRoute>} />
@@ -141,8 +147,26 @@ function App() {
           
           <Route path="/target" element={<PrivateRoute><MiniTargetTable /></PrivateRoute>} />
           <Route path="/payments" element={<PrivateRoute><PaymentMenu /></PrivateRoute>} />
+
+          
           <Route path="/user-prints-page/:userId" element={<PrivateRoute><UserPrintsPage /></PrivateRoute>} />
           <Route path="/guerratool/user-prints-page/:userId" element={<PrivateRoute><UserPrintsPageGT /></PrivateRoute>} />
+
+          {/* NOVA USER PRINTS PAGE  */}
+
+          <Route
+            path="/themagictool/screenshots/get-all-prints/:userId"
+            element={<PrivateRoute><GalleryDetail galleries={galleriesData} thumbsPerView={3} /></PrivateRoute>}
+          />
+          <Route path="/guerratool/get-all-prints/:userId" element={<PrivateRoute><UserPrintsPageGT /></PrivateRoute>} />
+
+
+
+
+
+          {/* NOVA USER PRINTS PAGE  */}
+
+
           <Route path="/mgmt-reports" element={<PrivateRoute><ManagementReports /></PrivateRoute>} />
           <Route path="/mgmt-reports-guerratool" element={<PrivateRoute><MgmtReportsGuerraTool /></PrivateRoute>} />
           <Route path="/receive-crypto" element={<PrivateRoute><ReceiveCrypto /></PrivateRoute>} />

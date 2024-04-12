@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import './index.css';
-import MainNavbar from '../../../components/main-navbar/MainNavbar';
+import '../index.css';
+import MainNavbar from '../../../../components/main-navbar/MainNavbar';
 import { useNavigate } from 'react-router-dom';
-import { EyeOffOutline, FolderOutline, RefreshOutline } from 'react-ionicons'
+import { FolderOutline, Person, RefreshOutline } from 'react-ionicons'
 import { Spin } from 'antd';
 import axios from "axios";
 import Swal from 'sweetalert2';
@@ -12,7 +12,7 @@ interface User {
     username: string; // Adjust type according to your API response
 }
 
-export default function GuerraToolNewPrintStrategy() {
+export default function GuerraToolNewPrintStrategyButJustTheCancelled() {
     const navigate = useNavigate();
     const [guerraToolIDs, setGuerraToolID] = useState<User[]>([]); // Specify type as User[]
     const [guerraToolUser, setGuerraToolUser] = useState<User[]>([]); // Specify type as User[]
@@ -66,7 +66,7 @@ export default function GuerraToolNewPrintStrategy() {
                     if (response.status === 200) {
                         Swal.fire({
                             title: 'Sucesso!',
-                            text: 'O print foi ocultado com sucesso. A página será recarregada em 5 segundos.',
+                            text: 'O print voltou a lista visível com sucesso. A página será recarregada em 5 segundos.',
                             icon: 'success',
                             timer: 5000, // 5 segundos
                             timerProgressBar: true,
@@ -76,11 +76,11 @@ export default function GuerraToolNewPrintStrategy() {
                             window.location.reload();
                         });
                     } else {
-                        Swal.fire('Erro!', 'Ocorreu um erro ao ocultar o print.', 'error');
+                        Swal.fire('Erro!', 'Ocorreu um erro ao fazer aparecer novamente o print.', 'error');
                     }
                 } catch (error) {
                     console.error('Erro ao ocultar o print:', error);
-                    Swal.fire('Erro!', 'Ocorreu um erro ao ocultar o print.', 'error');
+                    Swal.fire('Erro!', 'Ocorreu um erro ao fazer aparecer novamente o print.', 'error');
                 }
             }
         });
@@ -90,7 +90,7 @@ export default function GuerraToolNewPrintStrategy() {
     const getAllUsersIDs = async () => {
         try {
             setLoading(true); // Set loading state to true before fetching data
-            const response = await fetch('https://gdcompanion-prod.onrender.com/guerratool/screenshots/get-all-user-ids');
+            const response = await fetch('https://gdcompanion-prod.onrender.com/guerratool/screenshots/get-user-ids/hidden');
             if (!response.ok) {
                 throw new Error('Erro na requisição: ' + response.statusText);
             }
@@ -122,42 +122,53 @@ export default function GuerraToolNewPrintStrategy() {
             <MainNavbar />
             <div>
                 <div>
-                    <h1 style={{ color: "#ffffff", paddingTop: 100 }}>Acesso aos Prints - GUERRATOOL</h1>
-                    <h3 className='title' style={{ }}>Digite O Nome Do Usuário </h3>
-                    <h5 style={{ color: '#ffffff' }}>Em seguida, clique para acessar prints específicos</h5>
+                <h1 style={{ color: "#ffffff", paddingTop: 100 }}>Usuários com Prints Ocultados </h1>
+                    <h1 style={{ color: "#ffffff"}}> GUERRATOOL</h1>
+                    <h3 className='title' style={{ }}>Digite O Nome Do Usuário Ocultado</h3>
+                    <h5  style={{ color: '#ffffff'}}>Em seguida, clique para acessar prints específicos</h5>
                  
                     <div style={{ flexDirection: 'column', display: 'flex' }}>
                         <input type="text" className='the-prints-searchbar' onInput={searchUser} />
                         <br />
-                        <div className='row-of-buttons-for-prints'>
 
-                      
-                        <button style={{ backgroundColor: "dodgerblue", color: "#ffffff", fontWeight: "bold", border: "2px solid #ffffff"}} onClick={() => navigate('/themagictool/new-screen/get-all-prints')}>ACESSAR PRINTS THE MAGIC TOOL</button>
+                        <div className='row-of-buttons-for-prints'>
+                        <button style={{ backgroundColor: "dodgerblue", color: "#ffffff", fontWeight: "bold", border: "2px solid #ffffff"}} onClick={() => navigate('/themagictool/new-screen/get-prints/cancelled')}>ACESSAR USUÁRIOS OCULTADOS THE MAGIC TOOL</button>
                         <br />
                         <button onClick={() => window.location.reload()}>
-                              
-                            REGARREGAR CONTEÚDO{" "}
-                            <RefreshOutline
-                                color={'#00000'} 
-                                title={"Recarregar"}
-                                height="20px"
-                                width="20px"
-                                />
-                            </button>
-                        <br />
-                        <button onClick={() => navigate('/guerratool/new-screen/get-prints/cancelled')}>
-
-                            ACESSAR OCULTADOS{" "}
-                            <EyeOffOutline
-                                color={'#00000'} 
-                                title={"Recarregar"}
-                                height="20px"
-                                width="20px"
-                                />
-                            </button>
-                    
+                        <RefreshOutline
                        
-                        </div>
+                                color={'#ffffff'} 
+                                title={"Recarregar"}
+                                height="20px"
+                                width="20px"
+                                />
+                        </button>
+                        <br />
+                        <button onClick={() => navigate('/guerratool/new-screen/get-all-prints')}>
+
+                        <Person
+                        color={'#00000'} 
+                     
+                        title={"Person"}
+                        height="20px"
+                        width="20px"
+                        />
+                            <Person
+                        color={'#00000'} 
+                     
+                        title={"Person"}
+                        height="20px"
+                        width="20px"
+                        />
+                            <Person
+                        color={'#00000'} 
+                     
+                        title={"Person"}
+                        height="20px"
+                        width="20px"
+                        />
+                        </button>
+                         </div>
                     </div>
 
                     
@@ -186,16 +197,16 @@ export default function GuerraToolNewPrintStrategy() {
                             </button>
                             <button 
                                 className="the-user-logic-item" 
-                                style={{ backgroundColor: "red"}} 
+                                style={{ backgroundColor: "green"}} 
                                 onClick={() => handleClick(Number(guerraToolIDs[index]))}>
-                                {`Ocultar`}
+                                {`Tornar Visiível`}
                             </button>
                             <br />
                         </div>
                     ))}
                 </div>
             </div>
-            {/* <h6 className='title' style={{ fontSize: '20px' }}>ID do usuário</h6> get-prints/cancelled */}
+            {/* <h6 className='title' style={{ fontSize: '20px' }}>ID do usuário</h6> */}
         </>
     );
 }

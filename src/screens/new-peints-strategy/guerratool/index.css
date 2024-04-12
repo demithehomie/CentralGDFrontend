@@ -1,3 +1,13 @@
+.row-of-buttons-for-prints {
+
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    justify-content: center;
+}
+
+
+
 .the-prints-searchbar {
     border-radius: 45px;
     font-size: 45px;

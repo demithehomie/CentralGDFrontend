@@ -36,6 +36,11 @@ const UserPrintsPage: React.FC<UserPrintsPageProps> = () => {
     const itemsPerPage: number = 15;
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [inputPage, setInputPage] = useState<number>(currentPage);
+
+    const handleClickVoltar = () => {
+      navigate(-1); // Navegar uma página para trás no histórico
+    };
+
     const openFullSizeModal = () => {
       setIsFullSizeModalOpen(true);
     };
@@ -291,6 +296,7 @@ function formatDate(dateString: string) {
         </button> */}
       </div>
       <div className='navigation'>
+        <button className='button' style={{ backgroundColor: '#ffffff' }} onClick={handleClickVoltar}>Voltar</button>
       <button className="button" onClick={getAllPrintsTheMagicTool}>Voltar para Todos os Prints</button>
       <button className="button" onClick={backToDashboard}>Voltar ao Início</button>
       </div>

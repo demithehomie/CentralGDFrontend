@@ -1,0 +1,20 @@
+.pdp-modal-preview {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: white;
+    z-index: 9999;
+    &__close {
+      border: 0;
+      background: #ccc;
+      position: absolute;
+      right: 15px;
+      top: 15px;
+      border-radius: 100%;
+      width: 30px;
+      height: 30px;
+      z-index: 2;
+    }
+  }

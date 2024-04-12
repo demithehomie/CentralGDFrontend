@@ -10,9 +10,10 @@ import Swal from 'sweetalert2';
 
 export const Component2 = () => {
  const [selectedTransfer, setSelectedTransfer] = useState<TransferData | null>(null);
+ const [_selectedTransferForPayment, setSelectedTransferForPayment] = useState<TransferData | null>(null);
  const [_statusPaymentApproved, setStatusPaymentApproved] = useState<boolean>(false);
  const [_statusPaymentPending, setStatusPaymentPending] = useState<boolean>(true);
- const [_pendingTransfers, _setPendingTransfers] = useState<TransferData[]>([]);
+ const [_pendingTransfers, setPendingTransfers] = useState<TransferData[]>([]);
  const [isLoading, setIsLoading] = useState(true); 
  const [potentialClients, setPotentialClients] = useState<TransferData[]>([])
     const [_renderedIds, setRenderedIds] = useState<string[]>([]);
@@ -30,6 +31,7 @@ export const Component2 = () => {
       if (response.data) {
         const potentialClientsData: TransferData[] = response.data;
         setPotentialClients(potentialClientsData);
+        setSelectedTransferForPayment(response.data)
         console.log(response.data)
       }
     } catch (error) {
@@ -107,48 +109,77 @@ const shouldRenderItem = (transfer: TransferData) => {
       });
   };
 
-  // const deleteCliente = async (paymentId: string) => {
-  //   // SweetAlert de Confirmação
-  //   Swal.fire({
-  //     title: 'Tem certeza?',
-  //     text: "Você não poderá reverter isso!",
-  //     icon: 'warning',
-  //     showCancelButton: true,
-  //     confirmButtonColor: '#3085d6',
-  //     cancelButtonColor: '#d33',
-  //     confirmButtonText: 'Sim, delete isso!'
-  //   }).then(async (result: any) => {
-  //     if (result.isConfirmed) {
-  //       try {
-  //         const response = await axios.delete(`https://gdcompanion-prod.onrender.com/deletar-cliente/${paymentId}`);
-  //         if (response.status === 200) {
-  //           Swal.fire(
-  //             'Deletado!',
-  //             'O cliente foi deletado.',
-  //             'success'
-  //           );
-  //           // Atualize o estado da sua aplicação aqui
-  //           // Por exemplo, removendo o cliente deletado da lista de pendências
-  //           setPendingTransfers(prevTransfers => prevTransfers.filter(transfer => transfer.payment_id.toString() !== paymentId));
-  //         } else {
-  //           Swal.fire(
-  //             'Erro!',
-  //             'Cliente não encontrado ou já foi deletado.',
-  //             'error'
-  //           );
-  //         }
-  //       } catch (error) {
-  //         console.error('Erro ao deletar cliente:', error);
-  //         Swal.fire(
-  //           'Erro!',
-  //           'Erro ao tentar deletar o cliente.',
-  //           'error'
-  //         );
-  //       }
-  //     }
-  //   });
-  // };
-  
+  const deleteCliente = async (paymentId: string) => {
+    // SweetAlert de Confirmação
+    Swal.fire({
+      title: 'Tem certeza?',
+      text: "Você não poderá reverter isso!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sim, delete isso!'
+    }).then(async (result: any) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await axios.delete(`https://gdcompanion-prod.onrender.com/deletar-cliente/${paymentId}`);
+          if (response.status === 200) {
+            Swal.fire(
+              'Deletado!',
+              'O cliente foi deletado.',
+              'success'
+            );
+            setShowPopup(false)
+            // Atualize o estado da sua aplicação aqui
+            // Por exemplo, removendo o cliente deletado da lista de pendências
+            setPendingTransfers(prevTransfers => prevTransfers.filter(transfer => transfer.payment_id.toString() !== paymentId));
+          } else {
+            Swal.fire(
+              'Erro!',
+              'Cliente não encontrado ou já foi deletado.',
+              'error'
+            );
+          }
+        } catch (error) {
+          console.error('Erro ao deletar cliente:', error);
+          Swal.fire(
+            'Erro!',
+            'Erro ao tentar deletar o cliente.',
+            'error'
+          );
+        }
+      }
+    });
+  };
+
+
+  const updateClienteAsPayer = async (paymentId: string) => {
+    try {
+      const response = await axios.post(`https://gdcompanion-prod.onrender.com/mercadopago/payment/pix/for-new-payment-screen/${paymentId}`);
+      if (response.status === 200) {
+        Swal.fire(
+          'Perfeito!',
+          'A cobrança foi iniciada com sucesso.',
+          'success'
+        );
+        // Atualize o estado da sua aplicação aqui, se necessário
+      } else {
+        console.error('Erro ao iniciar a cobrança:', response.data.error);
+        Swal.fire(
+          'Erro!',
+          'Ocorreu um erro ao iniciar a cobrança.',
+          'error'
+        );
+      }
+    } catch (error) {
+      console.error('Erro ao iniciar a cobrança:', error);
+      Swal.fire(
+        'Erro!',
+        'Ocorreu um erro ao iniciar a cobrança.',
+        'error'
+      );
+    }
+  };
 
 
     const getStatusPaymentViaMercadoPago = async () => {
@@ -194,19 +225,19 @@ const shouldRenderItem = (transfer: TransferData) => {
         window.open(url, '_blank');
       };
 
-      const chargeClients = async () => {
-        try {
-          const response = await axios.post('https://gdcompanion-prod.onrender.com/mercadopago/payment/pix/multiple-entries');
-          if (response.status === 200) {
-            triggerToast('success', 'Clientes cobrados com sucesso!');
-          } else {
-            triggerToast('error', 'Erro ao cobrar clientes.');
-          }
-        } catch (error) {
-          console.error('Erro ao cobrar clientes:', error);
-          triggerToast('error', 'Erro ao cobrar clientes.');
-        }
-      }
+      // const chargeClients = async () => {
+      //   try {
+      //     const response = await axios.post('https://gdcompanion-prod.onrender.com/mercadopago/payment/pix/multiple-entries');
+      //     if (response.status === 200) {
+      //       triggerToast('success', 'Clientes cobrados com sucesso!');
+      //     } else {
+      //       triggerToast('error', 'Erro ao cobrar clientes.');
+      //     }
+      //   } catch (error) {
+      //     console.error('Erro ao cobrar clientes:', error);
+      //     triggerToast('error', 'Erro ao cobrar clientes.');
+      //   }
+      // }
 
       const handleRowClick = (record: any) => {
         setSelectedTransfer(record); // Set selected transfer on row click
@@ -230,9 +261,16 @@ const shouldRenderItem = (transfer: TransferData) => {
                 cancelButtonText: 'Não'
               }).then((result) => {
                 if (result.isConfirmed) {
+                  const id = selectedTransfer?.id?.toString();
+                  if (id) {
+                   updateClienteAsPayer(id);
+                  }
+
                 } else {
                  // setShowPopup(true); // Open popup
-                 chargeClients();
+                 Swal.fire('Cobrança não iniciada', 'não foi possível iniciar sua cobrança', 'error')
+               
+               
                 }
               }
               );
@@ -298,7 +336,12 @@ const shouldRenderItem = (transfer: TransferData) => {
             >
               Validar Pagamento
             </button>
-            <button>
+            <button onClick={() => {
+                const id = selectedTransfer?.payment_id?.toString();
+                if (id) {
+                  deleteCliente(id);
+                }
+              }}>
               Deletar Potencial Cliente
             </button>
             <button

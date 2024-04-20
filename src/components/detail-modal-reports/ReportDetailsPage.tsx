@@ -21,21 +21,40 @@ import { ReportData } from '../../screens/management-reports/ManagementReports';
 function ReportDetailsPage() {
   const { reportType } = useParams();
   const [reportData, setReportData] = useState<ReportData[]>([]);
+  const [ _isLoading, setIsLoading] = useState(false);
 
   // Função para buscar dados do relatório
-  const fetchReportData = async () => {
-    try {
-      const response = await axios.get(`https://gdcompanion-prod.onrender.com/report/json?type=${reportType}`);
-      setReportData(response.data);
-    } catch (error) {
+const fetchReportData = async (type: any) => {
+  try {
+      const response = await axios.get(`https://gdcompanion-prod.onrender.com/report/json?type=${type}`);
+      return response.data;
+  } catch (error) {
       console.error('Erro ao buscar os dados do relatório:', error);
-    }
+      throw error; // Lançar o erro para que possa ser tratado no componente
+  }
+};
+
+  // Componente
+useEffect(() => { // DONE
+  const fetchData = async () => {
+      setIsLoading(true);
+      try {
+          const data = await fetchReportData(reportType);
+          setReportData(data);
+      } catch (error) {
+          // Tratar erros aqui, se necessário
+      } finally {
+          setIsLoading(false);
+      }
   };
 
-  // Use o useEffect para buscar os dados do relatório com base no tipo selecionado
-  useEffect(() => {
-    fetchReportData();
-  }, [reportType]);
+  fetchData();
+
+  // Cleanup function
+  return () => {
+      // Qualquer limpeza necessária pode ser adicionada aqui
+  };
+}, [reportType]); // Certifique-se de incluir reportType na lista de dependências
 
   // Função para renderizar o gráfico de barras
   const renderBarChart = () => {

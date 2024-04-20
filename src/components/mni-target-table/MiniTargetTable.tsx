@@ -18,48 +18,78 @@ const MiniTargetTable = () => {
   const [newTarget, setNewTarget] = useState('');
   const [editTargets, setEditTargets] = useState<{ [key: number]: string }>({});
 
-  useEffect(() => {
-    fetchRequests();
-  }, []);
-
-  const fetchRequests = async () => {
-    try {
-      const response = await axios.get(`${apiURL}/get-all-screenshot-requests`);
+ // Função para buscar as solicitações de captura de tela
+const fetchRequests = async (signal: any) => {
+  try {
+      const response = await axios.get(`${apiURL}/get-all-screenshot-requests`, { signal });
       setRequests(response.data);
-    } catch (error) {
+  } catch (error) {
       console.error('Erro ao buscar os dados', error);
-    }
-  };
+  }
+};
 
-  const handleCreate = async () => {
-    try {
-      await axios.post(`${apiURL}/create-screenshot-request`, { target: newTarget });
-      fetchRequests();
+useEffect(() => { // DONE
+  // Cria um novo AbortController para a solicitação
+  const abortController = new AbortController();
+  const signal = abortController.signal;
+
+  // Execute a função para buscar as solicitações de captura de tela
+  fetchRequests(signal);
+
+  // Retorna uma função de limpeza para cancelar a solicitação se o componente for desmontado
+  return () => {
+      abortController.abort();
+  };
+}, []); // Execute o efeito apenas uma vez, quando o componente for montado
+
+
+const handleCreate = async () => {
+  try {
+      // Cria um novo AbortController para a solicitação
+      const abortController = new AbortController();
+      const signal = abortController.signal;
+
+      await axios.post(`${apiURL}/create-screenshot-request`, { target: newTarget }, { signal }); // Adicione o argumento 'signal' aqui
+
+      // Execute a função para buscar as solicitações de captura de tela
+      fetchRequests(signal);
+
       setNewTarget('');
-    } catch (error) {
+  } catch (error) {
       console.error('Erro ao criar', error);
-    }
-  };
+  }
+};
 
-  const handleUpdate = async (id: number) => {
-    const targetToUpdate = editTargets[id]; // Usar a variável correta
-    try {
-      await axios.put(`${apiURL}/update-screenshot-request/${id}`, { target: targetToUpdate });
-      fetchRequests();
-    } catch (error) {
+const handleUpdate = async (id: number) => {
+  const targetToUpdate = editTargets[id]; // Usar a variável correta
+  try {
+      // Cria um novo AbortController para a solicitação
+      const abortController = new AbortController();
+      const signal = abortController.signal;
+
+      await axios.put(`${apiURL}/update-screenshot-request/${id}`, { target: targetToUpdate }, { signal }); // Adicione o argumento 'signal' aqui
+
+      // Execute a função para buscar as solicitações de captura de tela
+      fetchRequests(signal);
+  } catch (error) {
       console.error('Erro ao atualizar', error);
-    }
-  };
-  
+  }
+};
 
-  const handleDelete = async (id: number) => {
-    try {
-      await axios.delete(`${apiURL}/delete-screenshot-request/${id}`);
-      fetchRequests();
-    } catch (error) {
+const handleDelete = async (id: number) => {
+  try {
+      // Cria um novo AbortController para a solicitação
+      const abortController = new AbortController();
+      const signal = abortController.signal;
+
+      await axios.delete(`${apiURL}/delete-screenshot-request/${id}`, { signal }); // Adicione o argumento 'signal' aqui
+
+      // Execute a função para buscar as solicitações de captura de tela
+      fetchRequests(signal);
+  } catch (error) {
       console.error('Erro ao deletar', error);
-    }
-  };
+  }
+};
 
   const handleEditChange = (id: number, value: string) => {
     setEditTargets(prev => ({ ...prev, [id]: value }));

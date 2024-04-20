@@ -101,21 +101,32 @@ const ImageViewerGT: React.FC<ImageViewerProps> = ({ images }) => {
         setIsZoomed(null);
     };
     
+// Função para buscar o nome de usuário pelo ID
+const getUserByID = async (user_id: number, signal: AbortSignal) => {
+  if (!userNames[user_id]) { // Verifica se já buscamos este nome de usuário
+      try {
+          const res = await axios.get(`${apiurldev}/users-guerratool/${user_id}`, { signal });
+          setUserNames(prev => ({ ...prev, [user_id]: res.data.username })); // Supondo que a resposta tem uma propriedade 'username'
+      } catch (error) {
+          console.error('Erro ao recuperar usuário:', error);
+      }
+  }
+};
 
-    const getUserByID = async (user_id: number) => {
-        if (!userNames[user_id]) { // Verifica se já buscamos este nome de usuário
-            try {
-                const res = await axios.get(`${apiurldev}/users-guerratool/${user_id}`);
-                setUserNames(prev => ({ ...prev, [user_id]: res.data.username })); // Supondo que a resposta tem uma propriedade 'username'
-            } catch (error) {
-                console.error('Erro ao recuperar usuário:', error);
-            }
-        }
-    };
+useEffect(() => { // done
+  // Cria um novo AbortController para a solicitação
+  const abortController = new AbortController();
+  const signal = abortController.signal;
 
-    useEffect(() => {
-        images.forEach(image => getUserByID(image.user_id));
-    }, [images]);
+  // Itera sobre todas as imagens e busca o nome de usuário pelo ID
+  images.forEach(image => getUserByID(image.user_id, signal));
+
+  // Retorna uma função de limpeza para cancelar a solicitação se o componente for desmontado
+  return () => {
+      abortController.abort();
+  };
+}, [images]); // Execute o efeito sempre que a lista de imagens mudar
+
 
     const zoomImage = (image: Image) => {
     

@@ -18,10 +18,14 @@ export default function PrintsTheMagicTool() {
     const [itemsPerPage] = useState<number>(2222);
     const apiurldev = `https://gdcompanion-prod.onrender.com`;
 
+
+    const controller = new AbortController();
+const signal = controller.signal;
+
     const fetchAndUpdateImages = async () => {
       try {
           setIsLoading(true);
-          const response = await fetch(`${apiurldev}/prints-with-pagination?page=${currentPage}&limit=${itemsPerPage}`);
+          const response = await fetch(`${apiurldev}/prints-with-pagination?page=${currentPage}&limit=${itemsPerPage}`, { signal });
           if (!response.ok) {
               throw new Error('Erro na requisição: ' + response.statusText);
           }
@@ -37,10 +41,12 @@ export default function PrintsTheMagicTool() {
           const totalPages = Math.ceil(data.totalPosts / itemsPerPage);
           setTotalPages(totalPages); // Supondo que você tem um estado para armazenar o total de páginas
   
-      } catch (err) {
-          // ... manipulação de erros
-          console.log(`Ocorreu algum erro no fecth de prints - $(err}`)
-          console.error(err)
+        } catch (err: any) {
+          if (err.name === 'AbortError') {
+              console.log('Solicitação cancelada.');
+          } else {
+              console.error('Erro na requisição:', err);
+          }
       } finally {
           setIsLoading(false);
       }
@@ -48,9 +54,13 @@ export default function PrintsTheMagicTool() {
   
   
     
-      useEffect(() => {
-        fetchAndUpdateImages();
-      }, [currentPage, itemsPerPage]);
+  useEffect(() => { // DONE ?
+    fetchAndUpdateImages();
+
+    return () => {
+        controller.abort();
+    };
+}, [currentPage, itemsPerPage]);
 
       const toggleResellerStatus = async (userId: number) => {
         try {

@@ -41,27 +41,37 @@ function ManagementReports() {
     const [semiAnnualyReportData, setSemiAnnualyReportData] = useState<ReportData[]>([]);
     const [annualReportData, setAnnualReportData] = useState<ReportData[]>([]);
    
-    const fetchReportData = async (reportType: string, setReportData: React.Dispatch<React.SetStateAction<ReportData[]>>) => {
-      try {
-          const response = await axios.get(`https://gdcompanion-prod.onrender.com/report/json?type=${reportType}`);
+    const fetchReportData = async (reportType: string, setReportData: React.Dispatch<React.SetStateAction<ReportData[]>>, signal: AbortSignal) => {
+        try {
+          const response = await axios.get(`https://gdcompanion-prod.onrender.com/report/json?type=${reportType}`, { signal });
           setReportData(response.data);
           console.log('Dados do relatório:', response.data);
-      } catch (error) {
-          console.error('Erro ao buscar os dados do relatório:', error);
-         
-      }
-  };
-
-  useEffect(() => {
-      // Aqui você pode definir o reportType inicial, por exemplo: 'daily'
-      fetchReportData('customDays', setCustomRangeReportData);
-      fetchReportData('daily', setDailyReportData);
-      fetchReportData('weekly', setWeeklyReportData);
-      fetchReportData('monthly', setMonthlyReportData);
-      fetchReportData('quarterly', setQuarterlyReportData);
-      fetchReportData('semiannual', setSemiAnnualyReportData);
-      fetchReportData('annual', setAnnualReportData);
-  }, []);
+        } catch (error: any) {
+          if (error.name === 'AbortError') {
+            console.log('Request aborted');
+          } else {
+            console.error('Erro ao buscar os dados do relatório:', error);
+          }
+        }
+      };
+      
+      useEffect(() => { // DONE
+        const abortController = new AbortController();
+        const signal = abortController.signal;
+      
+        fetchReportData('customDays', setCustomRangeReportData, signal);
+        fetchReportData('daily', setDailyReportData, signal);
+        fetchReportData('weekly', setWeeklyReportData, signal);
+        fetchReportData('monthly', setMonthlyReportData, signal);
+        fetchReportData('quarterly', setQuarterlyReportData, signal);
+        fetchReportData('semiannual', setSemiAnnualyReportData, signal);
+        fetchReportData('annual', setAnnualReportData, signal);
+      
+        return () => {
+          abortController.abort();
+        };
+      }, []);
+      
 
 
 
@@ -243,36 +253,52 @@ const formatDate = (dateString: any) => {
   };
   
 
-// Método para buscar dados do relatório com intervalo de datas personalizado
+// Mantenha uma referência ao CancelToken da solicitação
+let cancelToken: any;
+
 const fetchCustomRangeReportData = async () => {
-    if (!startDate || !endDate) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: 'Por favor, selecione as datas de início e fim.',
-        });
-        return;
-      }
+  if (!startDate || !endDate) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Por favor, selecione as datas de início e fim.',
+    });
+    return;
+  }
 
-      const formattedStartDate = formatDate(startDate);
-      const formattedEndDate = formatDate(endDate);
-    try {
-      const response = await axios.post('https://gdcompanion-prod.onrender.com/report/json/custom-range', {
-        startDate: formattedStartDate,
-        endDate: formattedEndDate
+  const formattedStartDate = formatDate(startDate);
+  const formattedEndDate = formatDate(endDate);
+
+  // Cancela a solicitação anterior se houver
+  if (cancelToken) {
+    cancelToken.cancel('Nova solicitação iniciada');
+  }
+
+  // Cria um novo CancelToken
+  cancelToken = axios.CancelToken.source();
+
+  try {
+    const response = await axios.post('https://gdcompanion-prod.onrender.com/report/json/custom-range', {
+      startDate: formattedStartDate,
+      endDate: formattedEndDate
+    }, {
+      cancelToken: cancelToken.token // Passa o cancelToken para a configuração da solicitação
+    });
+
+    if (!response.data || response.data.length === 0) {
+      Swal.fire({
+        icon: 'info',
+        title: 'Sem dados',
+        text: 'Não foram encontrados dados para o período selecionado.',
       });
-
-      if (!response.data || response.data.length === 0) {
-        Swal.fire({
-          icon: 'info',
-          title: 'Sem dados',
-          text: 'Não foram encontrados dados para o período selecionado.',
-        });
-        return;
-      }
-      setCustomRangeReportData(response.data);
-      console.log('Dados do relatório personalizado:', response.data);
-    } catch (error) {
+      return;
+    }
+    setCustomRangeReportData(response.data);
+    console.log('Dados do relatório personalizado:', response.data);
+  } catch (error) {
+    if (axios.isCancel(error)) {
+      console.log('Solicitação cancelada:', error.message);
+    } else {
       console.error('Erro ao buscar os dados do relatório personalizado:', error);
       Swal.fire({
         icon: 'error',
@@ -280,15 +306,22 @@ const fetchCustomRangeReportData = async () => {
         text: 'Ocorreu um erro ao buscar os dados do relatório.',
       });
     }
-  };
-  
-  // UseEffect para buscar dados quando startDate ou endDate mudar
-  useEffect(() => {
-    // Garante que ambos startDate e endDate estão preenchidos antes de fazer a requisição
-    if (startDate && endDate) {
-      fetchCustomRangeReportData();
+  }
+};
+
+useEffect(() => { // DONE
+  // Garante que ambos startDate e endDate estão preenchidos antes de fazer a requisição
+  if (startDate && endDate) {
+    fetchCustomRangeReportData();
+  }
+
+  // Limpa o cancelToken ao desmontar o componente
+  return () => {
+    if (cancelToken) {
+      cancelToken.cancel('Componente desmontado');
     }
-  }, [startDate, endDate]);
+  };
+}, [startDate, endDate]);
 
   const deleteCliente = async (paymentId: number) => {
     Swal.fire({

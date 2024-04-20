@@ -65,44 +65,48 @@ type FingerPrintStoriesDataType = {
   // Make sure to adjust your useEffect hook or any other place you're calling fetchData or fetchDataWithDates to use this new logic.
   
   
-
-  useEffect(() => {
+  useEffect(() => { // DONE
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+  
     const fetchData = async () => {
       try {
-        // Make the API call
         const response = await axios.get(`${apiurl}/guerratool/users/fingerprints-with-pagination`, {
           params: {
             page: currentPage,
-            limit: 10, // This should match the limit you're using in your API call
+            limit: 10,
             startDate: startDate ? startDate.format('YYYY-MM-DD') : undefined,
             endDate: endDate ? endDate.format('YYYY-MM-DD') : undefined,
           },
+          signal: signal // Pass the signal to the request
         });
   
-        // Assuming the response structure is { data: [...], totalRecords: number }
-        setData(response.data.data); // Set the data for the current page
-        console.log(`Esse é responde.data.data ${JSON.stringify(response.data)}`)
-        // Calculate total pages based on the total number of records and the page size (limit)
-        // const totalRecords = response.data.totalRecords;
-        // const totalPages = Math.ceil(totalRecords / 10); // Use the same limit here for calculation
-        // setTotalPages(totalPages); // Update state with the total number of pages
-        // console.log(`Esse é total pages ${Number(totalPages)}`)
-        const totalRecords = response.data.totalRecords; // Ajuste baseado na sua resposta da API
-        if (typeof totalRecords === "number") { // Verifica se totalRecords é um número
-          const totalPages = Math.ceil(totalRecords / 10); // Substitua 10 pelo seu limite de registros por página
+        setData(response.data.data);
+        const totalRecords = response.data.totalRecords;
+        if (typeof totalRecords === "number") {
+          const totalPages = Math.ceil(totalRecords / 10);
           setTotalPages(totalPages);
         } else {
           console.error('totalRecords is not a number:', totalRecords);
         }
-
-      } catch (error) {
-        console.error('Erro ao buscar dados:', error);
+  
+      } catch (error: any) {
+        if (error.name === 'AbortError') {
+          console.log('Request aborted');
+        } else {
+          console.error('Erro ao buscar dados:', error);
+        }
       }
     };
   
-    // Call fetchData whenever currentPage, startDate, or endDate changes
     fetchData();
-  }, [currentPage, startDate, endDate]); // Dependencies array ensures fetchData runs when any of these values change
+  
+    return () => {
+      // Cancel the request when the component is unmounted
+      abortController.abort();
+    };
+  }, [currentPage, startDate, endDate]);
+  
   
 
   const handleRowClick = (record: FingerPrintStoriesDataType) => {

@@ -13,28 +13,33 @@ const SearchPrintsResults = () => {
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
 
-  useEffect(() => {
-    const searchQuery = new URLSearchParams(location.search).get('query');
-    if (searchQuery) {
-      fetchResults(searchQuery);
-    }
-  }, [location]);
+  // Declaração da função fetchResults fora do componente
+const fetchResults = async (query: any) => {
+  setIsLoading(true);
+  try {
+    const response = await axios.get(`https://your-api-url.com`, {
+      params: { keyword: query }
+    });
+    setResults(response.data);
+  } catch (error) {
+    console.error('Erro ao buscar resultados:', error);
+    // Trate o erro conforme necessário
+  }
+  setIsLoading(false);
+};
 
-  // Tipar o parâmetro query como string
-  const fetchResults = async (query: string) => {
-    setIsLoading(true);
-    try {
-      const response = await axios.get(`npm run build
-      `, {
-        params: { keyword: query }
-      });
-      setResults(response.data);
-    } catch (error) {
-      console.error('Erro ao buscar resultados:', error);
-      // Trate o erro conforme necessário
-    }
-    setIsLoading(false);
-  };
+useEffect(() => { // DONE
+  const searchQuery = new URLSearchParams(location.search).get('query');
+  
+  if (searchQuery) {
+    fetchResults(searchQuery);
+  }
+
+  // Retorna uma função vazia para o cleanup do useEffect
+  return () => {};
+}, [location]);
+
+// Agora a função fetchResults é acessível externamente
 
   if (isLoading) {
     return <div>Carregando...</div>;

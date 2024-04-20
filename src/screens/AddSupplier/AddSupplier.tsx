@@ -17,11 +17,6 @@ export default function AddSupplier() {
     const [suppliers, setSuppliers] = useState([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
 
-    useEffect(() => {
-        fetchSuppliers();
-        console.log(suppliers)
-    }, []);
-
     const fetchSuppliers = async () => {
         try {
             const response = await axios.get('https://gdcompanion-prod.onrender.com/buscar-fornecedores');
@@ -39,6 +34,15 @@ export default function AddSupplier() {
         }
     };
     
+    useEffect(() => { // DONE
+        fetchSuppliers();
+    
+        // Retorno da função de efeito para limpar o estado ao desmontar o componente
+        return () => {
+            setSuppliers([]); // Limpar o estado ao desmontar o componente para evitar vazamentos de memória
+        };
+    }, []);
+     
 
     const handleClientFormChange = (event: { target: { name: any; value: any; }; }) => {
         const { name, value } = event.target;

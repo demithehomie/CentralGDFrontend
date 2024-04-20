@@ -1,4 +1,4 @@
-import axios from "axios";
+
 import { useEffect, useState } from "react";
 import './index.css';
 
@@ -12,21 +12,38 @@ export default function GTReportComponent() {
     const [reportData, setReportData] = useState<GTReportData>();
     const [isLoading, setIsLoading] = useState(false);
   
-    useEffect(() => {
+    useEffect(() => { // DONE
+      const abortController = new AbortController();
+      const signal = abortController.signal;
+  
       const fetchReportData = async () => {
-        setIsLoading(true);
-        try {
-          const response = await axios.get('https://gdcompanion-prod.onrender.com/guerratool/report/direct-payment/amount');
-          setReportData(response.data);
-          setIsLoading(false);
-        } catch (error) {
-          console.error('Error fetching report data:', error);
-          setIsLoading(false);
-        }
+          setIsLoading(true);
+          try {
+              const response = await fetch('https://gdcompanion-prod.onrender.com/guerratool/report/direct-payment/amount', { signal });
+              if (!response.ok) {
+                  throw new Error('Erro na requisição: ' + response.statusText);
+              }
+              const data = await response.json();
+              setReportData(data);
+              setIsLoading(false);
+          } catch (error: any) {
+              if (error.name === 'AbortError') {
+                  console.log('Request aborted:', error);
+              } else {
+                  console.error('Error fetching report data:', error);
+                  setIsLoading(false);
+              }
+          }
       };
   
       fetchReportData();
-    }, []);
+  
+      // Cleanup function
+      return () => {
+          abortController.abort(); // Cancela a solicitação quando o componente for desmontado
+      };
+  }, []);
+  
   
     return (
       <div>

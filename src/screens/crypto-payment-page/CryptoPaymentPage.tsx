@@ -198,55 +198,41 @@ const CryptoPaymentPage = () => {
   // }
   
   useEffect(() => {
-
-    
-
-    fetchPaymentInfo( /*paymentId ?? '' */).then((info: PaymentInfo) => {
-        if (new Date() > new Date(info.expirationDate)) {
-            setExpired(true);
+    const fetchPaymentInfoAndStartCountdown = async () => {
+        try {
+            const info: PaymentInfo = await fetchPaymentInfo(/*paymentId ?? ''*/);
+            if (new Date() > new Date(info.expirationDate)) {
+                setExpired(true);
+                Swal.fire({
+                    title: 'Expirado!',
+                    text: 'Esse pagamento expirou.',
+                    icon: 'error',
+                    confirmButtonText: 'Ok'
+                });
+            } else {
+                setPaymentInfo(info);
+            }
+        } catch (error) {
+            console.error('Erro ao buscar informações de pagamento:', error);
             Swal.fire({
-                title: 'Expirado!',
-                text: 'Esse pagamento expirou.',
+                title: 'Erro!',
+                text: 'Não foi possível buscar as informações de pagamento.',
                 icon: 'error',
                 confirmButtonText: 'Ok'
             });
-        } else {
-            setPaymentInfo(info);
         }
-    }).catch(error => {
-      console.error('Erro ao buscar informações de pagamento:', error);
-      Swal.fire({
-        title: 'Erro!',
-        text: 'Não foi possível buscar as informações de pagamento.',
-        icon: 'error',
-        confirmButtonText: 'Ok'
-      });
-    });
-    let timer: NodeJS.Timeout | undefined;
-  if (countdown > 0) {
-    timer = setInterval(() => setCountdown(countdown - 1), 1000);
-  }
+    };
 
-  // When countdown reaches 0, close the page
-  if (countdown === 0) {
-    Swal.fire({
-      title: 'Time Out!',
-      text: 'The payment window has expired.',
-      icon: 'warning',
-      confirmButtonText: 'OK'
-    }).then(() => {
-      window.close(); // This might not work in all browsers due to security restrictions
-    });
-  }
+    const timer = setInterval(() => {
+        setCountdown(countdown => countdown - 1);
+    }, 1000);
 
-  // Your existing logic to handle payment information and expiration
+    fetchPaymentInfoAndStartCountdown();
 
-  // Cleanup function
-  return () => {
-    if (timer) clearInterval(timer);
-  };
-  }, [countdown, paymentId]); // Rerun the effect if countdown changes or if component is re-rendered with a new paymentId
-
+    return () => {
+        clearInterval(timer); // Limpa o intervalo quando o componente for desmontado
+    };
+}, [paymentId]);
 
 
     

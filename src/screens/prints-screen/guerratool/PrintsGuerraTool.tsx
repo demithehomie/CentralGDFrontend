@@ -19,11 +19,14 @@ export default function PrintsGuerraTool() {
     const [itemsPerPage] = useState<number>(8);
     const apiurldev = `https://gdcompanion-prod.onrender.com`;
 
+    const controller = new AbortController();
+    const signal = controller.signal;
+    
     const fetchAndUpdateUsers = async () => {
       const endpoint = `${apiurldev}/guerratool/prints-with-pagination?page=${currentPage}&limit=${itemsPerPage}`;
       try {
         setIsLoading(true);
-        const response = await fetch(endpoint);
+        const response = await fetch(endpoint, { signal });
         if (!response.ok) {
           throw new Error('Erro na requisição: ' + response.statusText);
         }
@@ -39,14 +42,16 @@ export default function PrintsGuerraTool() {
       } finally {
         setIsLoading(false);
       }
-  };
-  
-  
+    };
     
-      useEffect(() => {
-        fetchAndUpdateUsers();
-      }, [currentPage, itemsPerPage]);
-
+    useEffect(() => { // DONE
+      fetchAndUpdateUsers();
+    
+      return () => {
+        controller.abort();
+      };
+    }, [currentPage, itemsPerPage]);
+    
       const toggleResellerStatus = async (userId: number) => {
         try {
           const response = await fetch(`${apiurldev}/users/${userId}/toggle-reseller`, { method: 'PUT' });

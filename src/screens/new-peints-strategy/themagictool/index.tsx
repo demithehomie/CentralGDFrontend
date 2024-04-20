@@ -22,7 +22,9 @@ export default function TheMagictoolPrintsStrategy() {
     const [loading, setLoading] = useState(false); // State to manage loading state
     const [inputValue, setInputValue] = useState<string>('');
 
-    useEffect(() => {
+    
+
+    useEffect(() => { // DONE ?
         const timeoutId = setTimeout(() => {
           if (inputRef.current) {
             const fakeEvent = { target: { value: inputRef.current.value.trim() } } as React.ChangeEvent<HTMLInputElement>;
@@ -77,35 +79,47 @@ export default function TheMagictoolPrintsStrategy() {
     localStorage.setItem('inputValue', value);
   };
 
-    // Função para carregar o valor do localStorage quando a aplicação é montada
-    useEffect(() => {
-        const savedValue = localStorage.getItem('inputValue');
-        if (savedValue) {
-          setInputValue(savedValue);
-        }
-      }, []);
+
+  useEffect(() => { // DONE ?
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+
+    const savedValue = localStorage.getItem('inputValue');
+    if (savedValue) {
+      setInputValue(savedValue);
+    }
 
     const getAllUsersIDs = async () => {
-        try {
-            setLoading(true); // Set loading state to true before fetching data
-            const response = await fetch('https://gdcompanion-prod.onrender.com/themagictool/screenshots/get-all-user-ids');
-            if (!response.ok) {
-                throw new Error('Erro na requisição: ' + response.statusText);
-            }
-            const data = await response.json();
-            const userIDs = data.map((user: { user_id: any; }) => user.user_id);
-            const usernames = data.map((user: { username: any; }) => user.username);
-            setGuerraToolID(userIDs);
-            setGuerraToolUser(usernames);
-            console.log('Conteúdo de data:', userIDs);
-            return userIDs;
-        } catch (err) {
-            console.error(err);
-        } finally {
-            setLoading(false); // Set loading state to false after fetching data (whether successful or not)
+      try {
+        setLoading(true); // Set loading state to true before fetching data
+        const response = await fetch('https://gdcompanion-prod.onrender.com/themagictool/screenshots/get-all-user-ids', {
+          signal // Passando o sinal do AbortController para a opção de sinal do fetch
+        });
+        
+        if (!response.ok) {
+          throw new Error('Erro na requisição: ' + response.statusText);
         }
+
+        const data = await response.json();
+        const userIDs = data.map((user: { user_id: any; }) => user.user_id);
+        const usernames = data.map((user: { username: any; }) => user.username);
+        setGuerraToolID(userIDs);
+        setGuerraToolUser(usernames);
+        console.log('Conteúdo de data:', userIDs);
+        return userIDs;
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false); // Set loading state to false after fetching data (whether successful or not)
+      }
     };
 
+    getAllUsersIDs();
+
+    return () => {
+      abortController.abort(); // Cancelar a solicitação quando o componente for desmontado
+    };
+  }, []);
 
     
     const handleClick = async (userID: number) => {
@@ -128,9 +142,9 @@ export default function TheMagictoolPrintsStrategy() {
                     if (response.status === 200) {
                         Swal.fire({
                             title: 'Sucesso!',
-                            text: 'O print foi ocultado com sucesso. A página será recarregada em 5 segundos.',
+                            text: 'O print foi ocultado com sucesso. A página será recarregada agora.',
                             icon: 'success',
-                            timer: 5000, // 5 segundos
+                            timer: 1500, // 5 segundos
                             timerProgressBar: true,
                             showConfirmButton: false
                         }).then(() => {
@@ -150,9 +164,7 @@ export default function TheMagictoolPrintsStrategy() {
 
 
 
-    useEffect(() => {
-        getAllUsersIDs();
-    }, []);
+   
 
 
    

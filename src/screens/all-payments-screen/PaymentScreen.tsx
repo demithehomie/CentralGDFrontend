@@ -79,8 +79,10 @@ const shouldRenderItem = (transfer: TransferData) => {
   );
 };
 
-useEffect(() => {
-  if (statusPaymentApproved) {
+useEffect(() => { // DONE
+  let isMounted = true;
+
+  if (statusPaymentApproved && isMounted) {
     Swal.fire({
       title: 'Transferência Aprovada',
       text: 'Sua transferência foi aprovada com sucesso!',
@@ -92,14 +94,16 @@ useEffect(() => {
       }
     });
   }
+
+  // Marcar o componente como desmontado ao limpar o efeito
+  return () => {
+    isMounted = false;
+  };
 }, [statusPaymentApproved]);
 
 
-  useEffect(() => {
-    // Fetch pending transfers when the component mounts
-    setLastRefreshed(new Date());
-    fetchPendingTransfers();
-  }, []);
+
+
 
   const [clientFormData, setClientFormData] = useState({
     name: '',
@@ -120,7 +124,9 @@ useEffect(() => {
 
   
 
-  useEffect(() => {
+  useEffect(() => { // DONE
+    let timeoutId: any; // Declara uma variável para armazenar o identificador do temporizador
+
     const atualizarStatusPagamento = async () => {
       try {
         // Suponha que você tenha o ID do cliente disponível
@@ -128,20 +134,26 @@ useEffect(() => {
         
         // Fazer a requisição POST para atualizar o status do pagamento do cliente
         await axios.post('https://gdcompanion-prod.onrender.com/atualizar-status-pagamento', { clientId });
-
+  
         // Aguardar 5 segundos antes de recarregar a página
-        setTimeout(() => {
+        timeoutId = setTimeout(() => {
           window.location.reload();
         }, 5000);
       } catch (error) {
         console.error('Erro ao atualizar pagamento do cliente:', error);
       }
     };
-
+  
     if (statusPaymentApproved) {
       atualizarStatusPagamento();
     }
+  
+     // Limpeza necessária para evitar vazamentos de memória
+  return () => {
+    clearTimeout(timeoutId); // Limpar o temporizador para evitar que ele continue executando após o componente ser desmontado
+  };
   }, [statusPaymentApproved]);
+  
   
   const calculateTotalAmount = (amount: number) => {
     const addedPercentage = amount * 0.01; // 1% of the amount
@@ -337,26 +349,45 @@ useEffect(() => {
     };
 
 
-
-  const fetchPendingTransfers = async () => {
-    try {
-      // Replace this with your API endpoint to fetch pending transfers
-      const response = await axios.get('https://gdcompanion-prod.onrender.com/pending-transfers-from-clients');
-      if (response.data) {
-        const pendingTransfersData: TransferData[] = response.data;
-        setPendingTransfers(pendingTransfersData);
-        console.log(response.data)
-      }
-    } catch (error) {
-      console.error('Error fetching pending transfers:', error);
-    } finally {
-      setIsLoading(false); // Set loading state to false when data is fetched or if an error occurs
+// Definir a função fetchPendingTransfers fora do useEffect
+const fetchPendingTransfers = async (cancelTokenSource: any) => {
+  setIsLoading(true); // Set loading state to true while fetching data
+  try {
+    const response = await axios.get('https://gdcompanion-prod.onrender.com/pending-transfers-from-clients', {
+      cancelToken: cancelTokenSource.token
+    });
+    if (response.data) {
+      const pendingTransfersData: TransferData[] = response.data;
+      setPendingTransfers(pendingTransfersData);
     }
+  } catch (error) {
+    if (axios.isCancel(error)) {
+      console.log('Request canceled:', error.message);
+    } else {
+      console.error('Error fetching pending transfers:', error);
+    }
+  } finally {
+    setIsLoading(false); // Set loading state to false when data is fetched or if an error occurs
+  }
+};
+
+// Use o useEffect para executar a função fetchPendingTransfers
+useEffect(() => { // A PRINCIPIO, DONE
+  const cancelTokenSource = axios.CancelToken.source();
+
+  // Fetch pending transfers when the component mounts
+  setLastRefreshed(new Date());
+  fetchPendingTransfers(cancelTokenSource);
+
+  // Limpeza do cancelamento ao desmontar o componente
+  return () => {
+    cancelTokenSource.cancel('Component unmounted'); // Cancelar a requisição quando o componente for desmontado
   };
+}, []);
   
 
 
-  useEffect(() => {
+  useEffect(() => { // DONE ?
     if (linkBuyMercadoPago && statusPaymentPending) {
       // Forçar recarga da página
     // alert("Seu pagamento está pendente. Aguarde a aprovação.");
@@ -367,7 +398,7 @@ useEffect(() => {
     }
   }, [linkBuyMercadoPago, statusPaymentPending]);
 
-  useEffect(() => {
+  useEffect(() => { // DONE ?
     const interval = setInterval(() => {
       // Chama a função que verifica o status do pagamento
       getStatusPaymentViaMercadoPago();
@@ -383,14 +414,20 @@ useEffect(() => {
   
   
 
-  useEffect(() => {
+  useEffect(() => { // DONE ?
     // Calcular os IDs que devem ser renderizados e atualizar o estado de uma só vez
     const newRenderedIds = pendingTransfers
       .filter(shouldRenderItem)
       .map(transfer => transfer.id);
   
     setRenderedIds(newRenderedIds);
+  
+    // Limpar o estado ao desmontar o componente
+    return () => {
+      setRenderedIds([]);
+    };
   }, [pendingTransfers]);
+  
 
   const handleCellClick = (transfer: TransferData) => {
     setSelectedTransfer(transfer);
@@ -401,23 +438,46 @@ useEffect(() => {
     window.open(url, '_blank');
   };
 
-  useEffect(() => {
-    // Verifica se o status do pagamento é aprovado
-    if (statusPaymentApproved) {
-      // Chama as funções para verificar o status do pagamento via Mercado Pago
-      getStatusPaymentViaMercadoPagoWithResponse();
-      getStatusPaymentViaMercadoPago();
-    }
-  }, [statusPaymentApproved]); 
+  // Primeiro useEffect
+  useEffect(() => { // DONE ?
+    const cancelTokenSource = axios.CancelToken.source();
+  
+    // Chamando a função principal dentro do useEffect
+    getStatusPaymentViaMercadoPago();
+  
+    return () => {
+      // Cancela a solicitação quando o componente for desmontado
+      cancelTokenSource.cancel('Component unmounted');
+    };
+  }, [statusPaymentApproved]);
+  
+  // Segundo useEffect
+  useEffect(() => { // DONE ?
+    const cancelTokenSource = axios.CancelToken.source();
+  
+    // Chamando a função principal dentro do useEffect
+    getStatusPaymentViaMercadoPagoWithResponse();
+  
+    return () => {
+      // Cancela a solicitação quando o componente for desmontado
+      cancelTokenSource.cancel('Component unmounted');
+    };
+  }, [responsePayment]);
+  
+  useEffect(() => { // DONE ?
 
-  useEffect(() => {
+    const cancelTokenSource = axios.CancelToken.source();
     // Função para recarregar os dados de pagamentos pendentes
     const recarregarDados = async () => {
       // Aqui, você chamaria a função para buscar os dados atualizados, como 'fetchPendingTransfers'
-      await fetchPendingTransfers();
+      await fetchPendingTransfers(cancelTokenSource);
     };
   
     recarregarDados();
+     // Limpeza do cancelamento ao desmontar o componente
+  return () => {
+    cancelTokenSource.cancel('Component unmounted'); // Cancelar a requisição quando o componente for desmontado
+  };
   }, [statusPaymentApproved]); // Dependendo de como você rastreia a aprovação de pagamentos
   
   const navigateToReports = () => {
@@ -481,13 +541,14 @@ useEffect(() => {
   };
   
 
-  const initializeComponent = () => {
+  const initializeComponent = () => { // DONE ?
+    const cancelTokenSource = axios.CancelToken.source();
     setIsLoading(true); // Supondo que você queira começar com o estado de carregamento
-    fetchPendingTransfers(); // Buscar os dados iniciais necessários
+    fetchPendingTransfers(cancelTokenSource); // Buscar os dados iniciais necessários
     setLastRefreshed(new Date());// Defina qualquer outro estado inicial aqui
   };
   
-  useEffect(() => {
+  useEffect(() => { // DONE ?
     initializeComponent();
 
   }, []);

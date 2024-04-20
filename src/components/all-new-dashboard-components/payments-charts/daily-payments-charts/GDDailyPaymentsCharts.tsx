@@ -17,83 +17,67 @@ export default function GDDailyPaymentsCharts() {
   });
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
+  useEffect(() => { // DONE
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+
     const fetchSummaryData = async () => {
-      setIsLoading(true);
-      let yesterdayResponse; // Declaração da variável fora do bloco try-catch
-      try {
-        // Obter os dados do dia atual
-        const todayResponse = await axios.get('https://gdcompanion-prod.onrender.com/report/json?type=daily');
-
-        // Calcular a receita total para hoje
-        const totalServicesToday = todayResponse.data.filter((item: { pending_payments: string; }) => item.pending_payments === "false").reduce((acc: any, curr: { amount: any; }) => acc + curr.amount, 0);
-        
-        const totalRevenueToday = todayResponse.data.filter((item: { pending_payments: string; }) => item.pending_payments === "false").reduce((acc: number, curr: { amount: number; }) => acc + (curr.amount * 1), 0);
-
-        // Obter a data do primeiro item da resposta
-       // Obter a data atual
-        const currentDate = new Date();
-
-        // Calcular a data do dia anterior
-        const yesterday = new Date(currentDate);
-        const tomorrow = new Date(currentDate);
-        console.log(`yesterday: ${yesterday}`)
-        
-        yesterday.setDate(currentDate.getDate() - 1);
-        tomorrow.setDate(currentDate.getDate() + 1);
-        console.log(`nova yesterday: ${yesterday}`)
-        console.log(`nova tomorrow: ${tomorrow}`)
-        // Formatar as datas para o formato 'YYYY-MM-DD'
-        const formattedYesterday = formatDate(yesterday);
-        const formattedTomorrowDate = formatDate(tomorrow);
-
+        setIsLoading(true);
         try {
-          // Obter os dados do dia anterior
-          yesterdayResponse = await axios.post('https://gdcompanion-prod.onrender.com/report/json/custom-range', {
-              startDate: formattedYesterday,
-              endDate: formattedTomorrowDate
-          });
-      
-          // Analisar os dados da resposta para extrair startDate e endDate
-          const responseData = JSON.parse(yesterdayResponse.config.data);
-          const startDate = responseData.startDate;
-          const endDate = responseData.endDate;
-      
-          console.log('StartDate:', startDate);
-          console.log('EndDate:', endDate);
-      
-          console.log("Yesterday Response", yesterdayResponse);
-      
-          // Restante do código para processar os dados do dia anterior
-      } catch (error) {
-          // Lidar com erros aqui
-          console.error('Erro ao obter os dados do dia anterior:', error);
-          setIsLoading(false); // Certifique-se de definir isLoading como false para que o indicador de carregamento seja ocultado
-      }
-      
-        // Calcular a receita total para ontem
-        const totalRevenueYesterday = yesterdayResponse?.data.filter((item: { pending_payments: string; }) => item.pending_payments === "false").reduce((acc: number, curr: { amount: number; }) => acc + (curr.amount * 1), 0);
+            let yesterdayResponse; // Declaração da variável fora do bloco try-catch
 
-        // Calcular o aumento percentual
-        const percentageIncrease = totalRevenueYesterday !== 0 ? ((totalRevenueToday - totalRevenueYesterday) / totalRevenueYesterday) * 100 : 0;
+            // Obter os dados do dia atual
+            const todayResponse = await axios.get('https://gdcompanion-prod.onrender.com/report/json?type=daily', { signal });
 
-        setSummaryData({
-          daily: { totalServices: totalServicesToday, totalRevenue: totalRevenueToday },
-          percentageIncrease: percentageIncrease
-        });
-        setIsLoading(false);
+            // Calcular a receita total para hoje
+            const totalServicesToday = todayResponse.data.filter((item: { pending_payments: string; }) => item.pending_payments === "false").reduce((acc: any, curr: { amount: any; }) => acc + curr.amount, 0);
+            const totalRevenueToday = todayResponse.data.filter((item: { pending_payments: string; }) => item.pending_payments === "false").reduce((acc: number, curr: { amount: number; }) => acc + (curr.amount * 1), 0);
 
-            // Exibir os dados no console
-            console.log('Percentage Increase:', summaryData.percentageIncrease);
-            console.log('Yesterday:', formattedYesterday);
-      } catch (error) {
-        setIsLoading(false);
-        console.error('Error fetching summary data:', error);
-      }
+            // Obter a data do dia anterior
+            const currentDate = new Date();
+            const yesterday = new Date(currentDate);
+            yesterday.setDate(currentDate.getDate() - 1);
+
+            // Formatar a data para o formato 'YYYY-MM-DD'
+            const formattedYesterday = formatDate(yesterday);
+            const formattedTomorrowDate = formatDate(new Date(currentDate.setDate(currentDate.getDate() + 1)));
+
+            try {
+                // Obter os dados do dia anterior
+                yesterdayResponse = await axios.post('https://gdcompanion-prod.onrender.com/report/json/custom-range', {
+                    startDate: formattedYesterday,
+                    endDate: formattedTomorrowDate
+                }, { signal });
+
+                // Restante do código para processar os dados do dia anterior
+            } catch (error) {
+                console.error('Erro ao obter os dados do dia anterior:', error);
+            }
+
+            // Calcular a receita total para ontem
+            const totalRevenueYesterday = yesterdayResponse?.data.filter((item: { pending_payments: string; }) => item.pending_payments === "false").reduce((acc: number, curr: { amount: number; }) => acc + (curr.amount * 1), 0);
+
+            // Calcular o aumento percentual
+            const percentageIncrease = totalRevenueYesterday !== 0 ? ((totalRevenueToday - totalRevenueYesterday) / totalRevenueYesterday) * 100 : 0;
+
+            setSummaryData({
+                daily: { totalServices: totalServicesToday, totalRevenue: totalRevenueToday },
+                percentageIncrease: percentageIncrease
+            });
+        } catch (error) {
+            console.error('Error fetching summary data:', error);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     fetchSummaryData();
-  }, []);
+
+    // Cleanup function
+    return () => {
+        abortController.abort(); // Cancela a solicitação quando o componente for desmontado
+    };
+}, []);
 
   // Função para formatar a data no formato 'YYYY-MM-DD'
   const formatDate = (date: Date) => {

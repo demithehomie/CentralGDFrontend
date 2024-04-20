@@ -2,7 +2,7 @@ import MainNavbar from '../../components/main-navbar/MainNavbar'
 import moment from 'moment';
 
 import './LogsScreen.css'
-import  { useEffect, useState } from 'react';
+import  { SetStateAction, useEffect, useState } from 'react';
 import axios from 'axios';
 import { Table, TablePaginationConfig } from 'antd';
 
@@ -17,20 +17,41 @@ export default function LogsScreen() {
         total: 0,
       });
     
-      const fetchLogs = async (page: number, pageSize: number) => {
-        const response = await axios.get(`https://gdcompanion-prod.onrender.com/guerradone/credit_logs_with_pagination?page=${page}&limit=${pageSize}`);
-        return response.data; // { total, page, limit, data }
+      const fetchLogs = async (page: any, pageSize: any, signal: any) => {
+        try {
+          const response = await axios.get(`https://gdcompanion-prod.onrender.com/guerradone/credit_logs_with_pagination?page=${page}&limit=${pageSize}`, { signal });
+          return response.data;
+        } catch (error: any) {
+          if (error.name === 'AbortError') {
+            console.log('Request aborted');
+          } else {
+            console.error('Erro ao buscar dados:', error);
+          }
+          return null;
+        }
       };
-    
-      useEffect(() => {
-        fetchLogs(pagination.current, pagination.pageSize).then(data => {
-          setLogs(data.data);
-          setPagination(p => ({ ...p, total: data.total }));
+
+      const abortController = new AbortController();
+      const signal = abortController.signal;
+      
+      useEffect(() => { // DONE
+        
+        
+      
+        fetchLogs(pagination.current, pagination.pageSize, signal).then(data => {
+          if (data) {
+            setLogs(data.data);
+            setPagination(p => ({ ...p, total: data.total }));
+          }
         });
-      }, []);
-    
+      
+        return () => {
+          abortController.abort();
+        };
+      }, []); // Empty dependency array means this effect runs only once after the component mounts
+      
       const handleTableChange = (pagination: { current: number; pageSize: number; }) => {
-        fetchLogs(pagination.current, pagination.pageSize).then(data => {
+        fetchLogs(pagination.current, pagination.pageSize, signal).then((data: { data: SetStateAction<never[]>; total: any; }) => {
           setLogs(data.data);
           setPagination(p => ({ ...p, total: data.total, current: pagination.current }));
         });

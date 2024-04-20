@@ -54,6 +54,7 @@ export const AuthProvider = ({ children }: any) => {
         return true;
       } catch (error) {
         console.error('Erro durante a operação de login:', error);
+        logout();
         return false;
       }
     };
@@ -88,7 +89,7 @@ export const AuthProvider = ({ children }: any) => {
     
     
 
-useEffect(() => {
+useEffect(() => { // ALEGA QUE NÃO É NECESSÁRIO E EU VOU ACREDITA RPOR ENQUANTO
   verifyToken();
 }, []);
 

@@ -109,17 +109,20 @@ const shouldRenderItem = (transfer: TransferData) => {
 };
 
 
-      useEffect(() => {
-        // Calcular os IDs que devem ser renderizados e atualizar o estado de uma só vez
-        const newRenderedIds = pendingTransfers
-          .filter(shouldRenderItem)
-          .map(transfer => transfer.id);
-      
-        setRenderedIds(newRenderedIds);
-        setLastRefreshed(new Date());
-        fetchPendingTransfers();
-       
-      }, [pendingTransfers]);
+useEffect(() => {
+  const newRenderedIds = pendingTransfers
+    .filter(shouldRenderItem)
+    .map(transfer => transfer.id);
+
+  setRenderedIds(newRenderedIds);
+  setLastRefreshed(new Date());
+  fetchPendingTransfers();
+ 
+  return () => {
+      // Limpeza de recursos aqui, se necessário
+  };
+}, [pendingTransfers]);
+
 
       useEffect(() => {
         // Calcular os IDs que devem ser renderizados e atualizar o estado de uma só vez

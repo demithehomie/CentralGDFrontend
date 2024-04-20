@@ -66,9 +66,9 @@ export default function GuerraToolNewPrintStrategy() {
                     if (response.status === 200) {
                         Swal.fire({
                             title: 'Sucesso!',
-                            text: 'O print foi ocultado com sucesso. A página será recarregada em 5 segundos.',
+                            text: 'O print foi ocultado com sucesso. A página será recarregada agora.',
                             icon: 'success',
-                            timer: 5000, // 5 segundos
+                            timer: 1500, // 1.5 segundos
                             timerProgressBar: true,
                             showConfirmButton: false
                         }).then(() => {
@@ -87,13 +87,29 @@ export default function GuerraToolNewPrintStrategy() {
     };
 
 
-    const getAllUsersIDs = async () => {
-        try {
+    const getToken = () => {
+        return localStorage.getItem('token'); // Obtém o token do localStorage
+      };
+      
+      useEffect(() => { // DONE ?
+        const abortController = new AbortController();
+        const signal = abortController.signal;
+    
+        const getAllUsersIDs = async () => {
+          try {
             setLoading(true); // Set loading state to true before fetching data
-            const response = await fetch('https://gdcompanion-prod.onrender.com/guerratool/screenshots/get-all-user-ids');
+            const token = getToken()
+            const response = await fetch('https://gdcompanion-prod.onrender.com/guerratool/screenshots/get-all-user-ids', {
+              headers: {
+                'Authorization': `Bearer ${token}`
+              },
+              signal // Passando o sinal do AbortController para a opção de sinal do fetch
+            });
+    
             if (!response.ok) {
-                throw new Error('Erro na requisição: ' + response.statusText);
+              throw new Error('Erro na requisição: ' + response.statusText);
             }
+    
             const data = await response.json();
             const userIDs = data.map((user: { user_id: any; }) => user.user_id);
             const usernames = data.map((user: { username: any; }) => user.username);
@@ -101,20 +117,19 @@ export default function GuerraToolNewPrintStrategy() {
             setGuerraToolUser(usernames);
             console.log('Conteúdo de data:', userIDs);
             return userIDs;
-        } catch (err) {
+          } catch (err) {
             console.error(err);
-        } finally {
+          } finally {
             setLoading(false); // Set loading state to false after fetching data (whether successful or not)
-        }
-    };
-
-
-
-    useEffect(() => {
+          }
+        };
+    
         getAllUsersIDs();
-    }, []);
-
-
+    
+        return () => {
+          abortController.abort(); // Cancelar a solicitação quando o componente for desmontado
+        };
+      }, []);
 
     return (
         <>

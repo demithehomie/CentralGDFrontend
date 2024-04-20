@@ -86,25 +86,27 @@ const DashboardCardMobile: React.FC<DashboardCardProps> = ({ color, backgroundCo
 
     const titleRef = useRef<HTMLHeadingElement>(null);
 
-  useEffect(() => {
-    const adjustFontSize = () => {
-      const element = titleRef.current;
-      if (!element) return;
-
-      let fontSize = parseFloat(window.getComputedStyle(element, null).getPropertyValue('font-size'));
-      while (element.scrollHeight > element.offsetHeight) {
-        fontSize -= 1;
-        element.style.fontSize = `${fontSize}px`;
-      }
-    };
-
-    adjustFontSize();
-    window.addEventListener('resize', adjustFontSize);
-
-    return () => {
-      window.removeEventListener('resize', adjustFontSize);
-    };
-  }, [title]);
+    useEffect(() => { // DONE
+      const adjustFontSize = () => {
+          const element = titleRef.current;
+          if (!element) return;
+  
+          let fontSize = parseFloat(window.getComputedStyle(element, null).getPropertyValue('font-size'));
+          while (element.scrollHeight > element.offsetHeight) {
+              fontSize -= 1;
+              element.style.fontSize = `${fontSize}px`;
+          }
+      };
+  
+      adjustFontSize();
+      window.addEventListener('resize', adjustFontSize);
+  
+      // Cleanup function
+      return () => {
+          window.removeEventListener('resize', adjustFontSize);
+      };
+  }, [titleRef]); // Certifique-se de que titleRef esteja incluído na lista de dependências
+  
 
   return (
     <Card color={color} backgroundColor={backgroundColor} onClick={onCtaClick}>

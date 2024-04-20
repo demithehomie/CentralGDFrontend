@@ -1,5 +1,5 @@
 import  { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
 import Modal from 'react-modal';
@@ -25,32 +25,32 @@ interface Print {
 }
 
 const UserPrintsPageGT: React.FC<UserPrintsPageGTProps> = () => {
-  const navigate = useNavigate();
+ // const navigate = useNavigate();
  
-  const [hasMore, setHasMore] = useState<boolean>(true);
-    const [totalPrints, setTotalPrints] = useState<number>(0);
+  const [_hasMore, setHasMore] = useState<boolean>(true);
+    const [_totalPrints, _setTotalPrints] = useState<number>(0);
     const [isFullSizeModalOpen, setIsFullSizeModalOpen] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true); // Adicione o estado isLoading
     const { userId } = useParams<{ userId: string }>();
     const [user, setUser] = useState<any>({});
     const [userPrints, setUserPrints] = useState<Print[]>([]);
-    const [currentPage, setCurrentPage] = useState<number>(1);
-    const itemsPerPage: number = 15;
-    const [selectedImage, setSelectedImage] = useState<string | null>(null);
-    const [inputPage, setInputPage] = useState<number>(currentPage);
+    const [currentPage, _setCurrentPage] = useState<number>(1);
+    // const itemsPerPage: number = 15;
+    const [selectedImage, _setSelectedImage] = useState<string | null>(null);
+    const [_inputPage, _setInputPage] = useState<number>(currentPage);
     
-    const openFullSizeModal = () => {
-      setIsFullSizeModalOpen(true);
-    };
+    // const openFullSizeModal = () => {
+    //   setIsFullSizeModalOpen(true);
+    // };
   
     const closeFullSizeModal = () => {
       setIsFullSizeModalOpen(false);
     };
 
-    const handleInputPageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      const newPage = parseInt(event.target.value);
-      setInputPage(newPage);
-    };
+    // const handleInputPageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    //   const newPage = parseInt(event.target.value);
+    //   setInputPage(newPage);
+    // };
 
 
   
@@ -116,7 +116,7 @@ const UserPrintsPageGT: React.FC<UserPrintsPageGTProps> = () => {
     }
   }, [userId]);
 
-  const totalPages = Math.ceil(totalPrints / itemsPerPage);
+  // const totalPages = Math.ceil(totalPrints / itemsPerPage);
 
   // const paginate = (items: Print[], currentPage: number, itemsPerPage: number) => {
   //   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -130,13 +130,13 @@ const UserPrintsPageGT: React.FC<UserPrintsPageGTProps> = () => {
   //   setSelectedImage(imageSrc);
   // };
 
-  const backToDashboard = () => {
-    navigate('/familiaguerra/all-new-dashboard');
-  };
+  // const backToDashboard = () => {
+  //   navigate('/familiaguerra/all-new-dashboard');
+  // };
 
-  const getAllPrintsTheMagicTool = () => {
-    navigate('/guerratool/new-screen/get-all-prints');
-  };
+  // const getAllPrintsTheMagicTool = () => {
+  //   navigate('/guerratool/new-screen/get-all-prints');
+  // };
 
 //   const closeImageModal = () => {
 //     setSelectedImage(null);

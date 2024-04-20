@@ -1,7 +1,7 @@
 import  { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { Carousel } from 'react-responsive-carousel';
+//import { Carousel } from 'react-responsive-carousel';
 import ImageGallery from 'react-image-gallery';
 import Modal from 'react-modal';
 import 'react-image-gallery/styles/css/image-gallery.css'; // Importando o estilo padrão do react-image-gallery
@@ -27,7 +27,7 @@ const UserPrintsPage: React.FC<UserPrintsPageProps> = () => {
   const navigate = useNavigate();
  
   const [hasMore, setHasMore] = useState<boolean>(true);
-    const [totalPrints, setTotalPrints] = useState<number>(0);
+    const [totalPrints, _blanksetTotalPrints] = useState<number>(0);
     const [isFullSizeModalOpen, setIsFullSizeModalOpen] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true); // Adicione o estado isLoading
     const { userId } = useParams<{ userId: string }>();
@@ -35,7 +35,7 @@ const UserPrintsPage: React.FC<UserPrintsPageProps> = () => {
     const [userPrints, setUserPrints] = useState<Print[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const itemsPerPage: number = 1;
-    const [selectedImage, setSelectedImage] = useState<string | null>(null);
+    const [selectedImage, _setSelectedImage] = useState<string | null>(null);
     const [startDate, setStartDate] = useState<string>('');
     const [endDate, setEndDate] = useState<string>('');
     const [inputPage, setInputPage] = useState<number>(currentPage);
@@ -44,9 +44,9 @@ const UserPrintsPage: React.FC<UserPrintsPageProps> = () => {
       navigate(-1); // Navegar uma página para trás no histórico
     };
 
-    const openFullSizeModal = () => {
-      setIsFullSizeModalOpen(true);
-    };
+    // const openFullSizeModal = () => {
+    //   setIsFullSizeModalOpen(true);
+    // };
   
     const closeFullSizeModal = () => {
       setIsFullSizeModalOpen(false);
@@ -75,8 +75,8 @@ const UserPrintsPage: React.FC<UserPrintsPageProps> = () => {
       const oneDayAgo = new Date(new Date().setDate(new Date().getDate() - 2)).toISOString().split('T')[0]; // Dez dias atrás
   
     useEffect(() => {
-      const today = new Date().toISOString().split('T')[0]; // Data de hoje
-      const tenDaysAgo = new Date(new Date().setDate(new Date().getDate() - 10)).toISOString().split('T')[0]; // Dez dias atrás
+      // const today = new Date().toISOString().split('T')[0]; // Data de hoje
+      // const tenDaysAgo = new Date(new Date().setDate(new Date().getDate() - 10)).toISOString().split('T')[0]; // Dez dias atrás
   
       fetchMorePrints();
     }, [userId, currentPage]);

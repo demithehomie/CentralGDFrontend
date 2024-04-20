@@ -90,9 +90,9 @@ export default function TheMagictoolPrintsStrategyButJustTheCancelled() {
                     if (response.status === 200) {
                         Swal.fire({
                             title: 'Sucesso!',
-                            text: 'O print voltou a lista visível com sucesso. A página será recarregada em 5 segundos.',
+                            text: 'O print voltou a lista visível com sucesso. A página será recarregada agora',
                             icon: 'success',
-                            timer: 5000, // 5 segundos
+                            timer: 1500, // 1.5 segundos
                             timerProgressBar: true,
                             showConfirmButton: false
                         }).then(() => {

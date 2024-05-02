@@ -6,6 +6,7 @@ import { TransferData } from "../../../services/PaymentService";
 
 //import Swal from 'sweetalert2';
 import './index.css';
+import { getToken } from "../../../services/UsersService";
 
 export default function Component3() {
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -16,6 +17,7 @@ export default function Component3() {
     const [_selectedTransfer, setSelectedTransfer] = useState<TransferData | null>(null);
     const [_showPopup, setShowPopup] = useState(false);
     const [showDevedoresPopup, setShowDevedoresPopup] = useState(false);
+    const token = getToken()
 
 //     const deleteCliente = async (paymentId: string) => {
 //   // SweetAlert de Confirmação
@@ -62,7 +64,13 @@ export default function Component3() {
      const fetchPendingTransfers = async () => {
         try {
           // Replace this with your API endpoint to fetch pending transfers
-          const response = await axios.get('https://gdcompanion-prod.onrender.com/pending-transfers-from-clients');
+          const response = await axios.get('https://gdcompanion-prod.onrender.com/pending-transfers-from-clients', 
+            {
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            }
+          );
           if (response.data) {
             const pendingTransfersData: TransferData[] = response.data;
             setPendingTransfers(pendingTransfersData);

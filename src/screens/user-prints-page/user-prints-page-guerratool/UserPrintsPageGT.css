@@ -165,3 +165,25 @@
     align-items: center;
     flex-direction: row;
   }
+
+  .detalhes-do-print {
+    background-color: #000000;
+    color: white;
+    border-radius: 30px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    margin: auto;
+    gap: 10px;
+  }
+
+  .the-definitive-delete-button {
+    background-color: red;
+    border: 3px solid white;
+    color: white;
+    display: flex;
+    margin: auto;
+  }
+
+  

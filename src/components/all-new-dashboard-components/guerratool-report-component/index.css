@@ -7,27 +7,33 @@
 .new-info-card-gt {
     font-family: 'Lexend Exa', sans-serif;
     text-align: left;
-    background-color: rgb(24, 255, 124);
+    background-color: rgb(6, 164, 74);
     border-radius: 20px;
-    color: #1c1c37;
+    color: #d7d7da;
     width: 350px;
-    height: 150px;
+    height: 220px;
     padding: 25px;
     box-shadow: #0e0053 2px 2px 10px;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    align-items: center;
+    justify-content: center;
 }
 
 
 .new-info-card-gt label {
     font-family: 'Russo One', sans-serif;
+    font-style: italic !important;
    
-    color: #010058;
+    color: #ffffff;
    
 }
 
 
 
 .new-info-card-gt p {
-     color: #010058;
+     color: #ffffff;
      
      
 }
@@ -36,5 +42,10 @@
     font-family: 'Lexend Exa', sans-serif;
     font-size: 20px;
     font-weight: 600;
-    color: #010058;
+    color: #ffffff;
+}
+
+.guerratool-logo-style {
+    width: 30%;
+    filter: brightness(0) invert(1);
 }

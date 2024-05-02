@@ -1,6 +1,8 @@
 
 import { useEffect, useState } from "react";
 import './index.css';
+import { getToken } from "../../../services/UsersService";
+import GUERRATOOL from '../../../assets/gtool_sem_fundo.png'
 
 export interface GTReportData {
     totalAmount: number;
@@ -15,11 +17,17 @@ export default function GTReportComponent() {
     useEffect(() => { // DONE
       const abortController = new AbortController();
       const signal = abortController.signal;
+      const token = getToken()
   
       const fetchReportData = async () => {
           setIsLoading(true);
           try {
-              const response = await fetch('https://gdcompanion-prod.onrender.com/guerratool/report/direct-payment/amount', { signal });
+              const response = await fetch('https://gdcompanion-prod.onrender.com/guerratool/report/direct-payment/amount', {
+              headers: {
+                'Authorization': `Bearer ${token}`
+            }, signal
+          }
+              );
               if (!response.ok) {
                   throw new Error('Erro na requisição: ' + response.statusText);
               }
@@ -51,7 +59,8 @@ export default function GTReportComponent() {
           <div>Aguarde...</div>
         ) : reportData ? (
           <div className='new-info-card-gt'>
-             <label style={{ fontSize: 30 }}>GUERRATOOL</label>
+             {/* <label style={{ fontSize: 30 }}>GUERRATOOL</label> */}
+             <img src={GUERRATOOL} alt="guerratool-logo-style" className="guerratool-logo-style" />
             <h2 className="title-of-card-gt">Hoje: US$ {reportData.totalAmount.toFixed(2).replace('.', ',')}</h2>
             {/* <p>Last Updated At: {reportData.last_updated_at}</p> */}
             <p> {reportData.percentageIncrease > 0 ? '🔼' : '🔻'}  <strong>{reportData.percentageIncrease.toFixed(2).replace('.', ',')}% </strong>desde ontem</p>

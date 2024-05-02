@@ -5,21 +5,29 @@ import './LogsScreen.css'
 import  { SetStateAction, useEffect, useState } from 'react';
 import axios from 'axios';
 import { Table, TablePaginationConfig } from 'antd';
+import { getToken } from '../../services/UsersService';
 
 
 export default function LogsScreen() {
     const [logs, setLogs] = useState([]);
-   // const [creditLogs, setCreditLogs] = useState([]);
-
     const [pagination, setPagination] = useState({
         current: 1,
         pageSize: 10,
         total: 0,
       });
+
+      const [abortController, setAbortController] = useState(new AbortController()); // Mantenha o AbortController no estado
+      const token = getToken()
     
       const fetchLogs = async (page: any, pageSize: any, signal: any) => {
         try {
-          const response = await axios.get(`https://gdcompanion-prod.onrender.com/guerradone/credit_logs_with_pagination?page=${page}&limit=${pageSize}`, { signal });
+          const response = await axios.get(`https://gdcompanion-prod.onrender.com/guerradone/credit_logs_with_pagination?page=${page}&limit=${pageSize}`, { 
+            
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+          
+          signal });
           return response.data;
         } catch (error: any) {
           if (error.name === 'AbortError') {
@@ -31,11 +39,11 @@ export default function LogsScreen() {
         }
       };
 
-      const abortController = new AbortController();
       const signal = abortController.signal;
+
       
       useEffect(() => { // DONE
-        
+        const signal = abortController.signal;
         
       
         fetchLogs(pagination.current, pagination.pageSize, signal).then(data => {
@@ -46,10 +54,13 @@ export default function LogsScreen() {
         });
       
         return () => {
-          abortController.abort();
-        };
-      }, []); // Empty dependency array means this effect runs only once after the component mounts
-      
+          console.log("Limpando o controller de aborto");
+          abortController.abort(); // Abortando a solicitação anterior
+          setAbortController(new AbortController()); // Criando um novo controller de aborto para a próxima solicitação
+      };
+  }, []);
+
+  
       const handleTableChange = (pagination: { current: number; pageSize: number; }) => {
         fetchLogs(pagination.current, pagination.pageSize, signal).then((data: { data: SetStateAction<never[]>; total: any; }) => {
           setLogs(data.data);
@@ -154,9 +165,7 @@ export default function LogsScreen() {
                         <h2>Central de Logs</h2>
                         <hr />
                         <h2>The Magic Tool e GUERRATOOL - Logs de Creditos</h2>
-                        <h4 style={{
-                          color: 'white',
-                        }}>Creditos inseridos pela equipe GUERRADONE</h4>
+                  
                       
                         <Table
                             dataSource={logs}

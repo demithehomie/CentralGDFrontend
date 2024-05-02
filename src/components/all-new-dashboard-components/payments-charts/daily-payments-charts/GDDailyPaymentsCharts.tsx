@@ -1,6 +1,9 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import './Styles.css'
+import { getToken } from '../../../../services/UsersService';
+
+import GUERRADONE from '../../../../assets/logogdbrancatotal.png'
 
 interface SummaryData {
   daily: {
@@ -26,8 +29,16 @@ export default function GDDailyPaymentsCharts() {
         try {
             let yesterdayResponse; // Declaração da variável fora do bloco try-catch
 
+            const token = getToken()
+
             // Obter os dados do dia atual
-            const todayResponse = await axios.get('https://gdcompanion-prod.onrender.com/report/json?type=daily', { signal });
+            const todayResponse = await axios.get('https://gdcompanion-prod.onrender.com/report/json?type=daily', {
+              headers: {
+                'Authorization': `Bearer ${token}`
+              },
+               signal 
+              
+              });
 
             // Calcular a receita total para hoje
             const totalServicesToday = todayResponse.data.filter((item: { pending_payments: string; }) => item.pending_payments === "false").reduce((acc: any, curr: { amount: any; }) => acc + curr.amount, 0);
@@ -44,10 +55,18 @@ export default function GDDailyPaymentsCharts() {
 
             try {
                 // Obter os dados do dia anterior
-                yesterdayResponse = await axios.post('https://gdcompanion-prod.onrender.com/report/json/custom-range', {
-                    startDate: formattedYesterday,
-                    endDate: formattedTomorrowDate
-                }, { signal });
+                yesterdayResponse = await axios.post('https://gdcompanion-prod.onrender.com/report/json/custom-range', 
+                {
+                  startDate: formattedYesterday,
+                  endDate: formattedTomorrowDate
+                },
+                {
+                  headers: {
+                    'Authorization': `Bearer ${token}`
+                  },
+                  signal: signal
+                }
+              );
 
                 // Restante do código para processar os dados do dia anterior
             } catch (error) {
@@ -92,13 +111,19 @@ export default function GDDailyPaymentsCharts() {
       {isLoading ? (
         <div><h1 style={{ color: '#ffffff'}}>Aguarde...</h1></div>
       ) : (
+      
+        <>
+        <br /> <br /> <br />
         <div className='new-info-card'>
-          <label style={{ fontSize: 30 }}>GUERRADONE</label>
+          <br />
+          {/* <label style={{ fontSize: 30 }}>GUERRADONE</label> */}
+          <img src={GUERRADONE} alt="guerradone" className='guerradone-logo-style' />
           {/* <p className='title-of-card'>Hoje:
             <strong> R${' '} 
                {summaryData.daily.totalServices.toFixed(2).replace('.', ',')}
             </strong>
           </p> */}
+          <br />
           <p>
             <strong>
               REPORT EM MANUTENÇÃO
@@ -106,12 +131,13 @@ export default function GDDailyPaymentsCharts() {
           </p>
           <p> {summaryData.percentageIncrease > 0 ? '🔼' : '🔻'} <strong>
             {summaryData.percentageIncrease.toFixed(2).replace('.', ',')}%
-            {/* <span style={{ color: summaryData.percentageIncrease > 0 ? 'green' : 'red', marginLeft: '5px' }}>
+            <span style={{ color: summaryData.percentageIncrease > 0 ? 'green' : 'red', marginLeft: '5px' }}>
               {summaryData.percentageIncrease > 0 ? '🔼' : '🔻'}
-            </span> */}
+            </span>
           </strong> desde ontem
           </p>
         </div>
+        </>
       )}
     </>
   );

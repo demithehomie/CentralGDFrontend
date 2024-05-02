@@ -65,9 +65,14 @@ import FastPaymentReports from './screens/all-payments-screen/new-payment-screen
 import NewPaymentScreen from './screens/new-payment-screen/NewPaymentScreen';
 import GuerraToolNewPrintStrategy from './screens/new-peints-strategy/guerratool';
 import TheMagictoolPrintsStrategy from './screens/new-peints-strategy/themagictool';
+// import noIDPrintsStrategy from './screens/new-peints-strategy/prints-with-no-id';
+
 import GuerraToolNewPrintStrategyButJustTheCancelled from './screens/new-peints-strategy/guerratool/cancelled-prints';
 import TheMagictoolPrintsStrategyButJustTheCancelled from './screens/new-peints-strategy/themagictool/cancelled-prints';
 import GTPRINTS from './screens/second-screenshots/guerratool';
+import NoIDPrintsStrategy from './screens/new-peints-strategy/prints-with-no-id';
+import UserPrintsPageNOID from './screens/user-prints-page/no-id/UserPrintsNoID';
+import TheMagicToolPrintsListFormat from './screens/new-peints-strategy/list-format/the-magic-tool';
 // import { ChakraProvider } from '@chakra-ui/react';
 
 
@@ -134,6 +139,7 @@ function App() {
           
           <Route path="/guerratool/new-screen/get-all-prints" element={<PrivateRoute><GuerraToolNewPrintStrategy /></PrivateRoute>} />
           <Route path="/themagictool/new-screen/get-all-prints" element={<PrivateRoute><TheMagictoolPrintsStrategy /></PrivateRoute>} />
+          <Route path="/themagictool/new-screen/get-all-prints/users-without-ids" element={<PrivateRoute><NoIDPrintsStrategy/></PrivateRoute>} />
 
           <Route path="/guerratool/new-screen/get-prints/cancelled" element={<PrivateRoute><GuerraToolNewPrintStrategyButJustTheCancelled /></PrivateRoute>} />
           <Route path="/themagictool/new-screen/get-prints/cancelled" element={<PrivateRoute><TheMagictoolPrintsStrategyButJustTheCancelled /></PrivateRoute>} />
@@ -149,6 +155,17 @@ function App() {
           
           <Route path="/user-prints-page/:userId" element={<PrivateRoute><UserPrintsPage /></PrivateRoute>} />
           <Route path="/guerratool/user-prints-page/:userId" element={<PrivateRoute><UserPrintsPageGT /></PrivateRoute>} />
+
+          <Route path="/withoutid/user-prints-page" element={<PrivateRoute><UserPrintsPageNOID/></PrivateRoute>} />
+
+          {/* PRINTS EM FORMA DE LISTA COM MÚLTIPLA SELEÇÃO E EXCLUSÃO */}
+
+          <Route path="/user-prints-page/list/:userId" element={<PrivateRoute><TheMagicToolPrintsListFormat /></PrivateRoute>} />
+          {/* <Route path="/guerratool/user-prints-page/list/:userId" element={<PrivateRoute>< /></PrivateRoute>} /> */}
+
+          <Route path="/withoutid/user-prints-page/list" element={<PrivateRoute><UserPrintsPageNOID/></PrivateRoute>} />
+
+          {/* PRINTS EM FORMA DE LISTA COM MÚLTIPLA SELEÇÃO E EXCLUSÃO */}
 
           {/* NOVA USER PRINTS PAGE  */}
 

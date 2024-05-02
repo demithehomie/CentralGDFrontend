@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 import '../index.css';
 import MainNavbar from '../../../../components/main-navbar/MainNavbar';
 import { useNavigate } from 'react-router-dom';
-import { FolderOutline, Person, RefreshOutline } from 'react-ionicons'
+import { FolderOutline,  RefreshOutline } from 'react-ionicons'
 import { Spin } from 'antd';
 import axios from "axios";
 import Swal from 'sweetalert2';
+import { getToken } from '../../../../services/UsersService';
 
 interface User {
     user_id: number; // Adjust type according to your API response
@@ -60,8 +61,14 @@ export default function GuerraToolNewPrintStrategyButJustTheCancelled() {
             if (result.isConfirmed) {
                 try {
                     // Faz a requisição para ocultar o print
-                    const response = await axios.put(`https://gdcompanion-prod.onrender.com/guerratool/hide-or-show-print/${userID}`);
-                    
+                    const response = await axios.put(`https://gdcompanion-prod.onrender.com/guerratool/hide-or-show-print/${userID}`,
+                    null, // O segundo parâmetro é o corpo da solicitação, que é nulo neste caso
+                    {
+                      headers: {
+                        'Authorization': `Bearer ${token}`
+                      }
+                    }
+                  )
                     // Verifica se a requisição foi bem-sucedida
                     if (response.status === 200) {
                         Swal.fire({
@@ -86,11 +93,17 @@ export default function GuerraToolNewPrintStrategyButJustTheCancelled() {
         });
     };
 
+    const token = getToken()
+
 
     const getAllUsersIDs = async () => {
         try {
             setLoading(true); // Set loading state to true before fetching data
-            const response = await fetch('https://gdcompanion-prod.onrender.com/guerratool/screenshots/get-user-ids/hidden');
+            const response = await fetch('https://gdcompanion-prod.onrender.com/guerratool/screenshots/get-user-ids/hidden', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
             if (!response.ok) {
                 throw new Error('Erro na requisição: ' + response.statusText);
             }
@@ -125,7 +138,7 @@ export default function GuerraToolNewPrintStrategyButJustTheCancelled() {
                 <h1 style={{ color: "#ffffff", paddingTop: 100 }}>Usuários com Prints Ocultados </h1>
                     <h1 style={{ color: "#ffffff"}}> GUERRATOOL</h1>
                     <h3 className='title' style={{ }}>Digite O Nome Do Usuário Ocultado</h3>
-                    <h5  style={{ color: '#ffffff'}}>Em seguida, clique para acessar prints específicos</h5>
+                  
                  
                     <div style={{ flexDirection: 'column', display: 'flex' }}>
                         <input type="text" className='the-prints-searchbar' onInput={searchUser} />
@@ -146,27 +159,7 @@ export default function GuerraToolNewPrintStrategyButJustTheCancelled() {
                         <br />
                         <button onClick={() => navigate('/guerratool/new-screen/get-all-prints')}>
 
-                        <Person
-                        color={'#00000'} 
-                     
-                        title={"Person"}
-                        height="20px"
-                        width="20px"
-                        />
-                            <Person
-                        color={'#00000'} 
-                     
-                        title={"Person"}
-                        height="20px"
-                        width="20px"
-                        />
-                            <Person
-                        color={'#00000'} 
-                     
-                        title={"Person"}
-                        height="20px"
-                        width="20px"
-                        />
+                ACESSAR USUÁRIOS VISÍVEIS
                         </button>
                          </div>
                     </div>
@@ -192,6 +185,7 @@ export default function GuerraToolNewPrintStrategyButJustTheCancelled() {
                             {/* Displaying the user ID */}
                             <p className='title'>ID do usuário: <strong>{guerraToolIDs[index].toString()}</strong></p>
                             <br />
+                            <div className='new-row-of-buttons' >
                             <button className='the-user-logic-item' onClick={() => navigate(`/guerratool/user-prints-page/${guerraToolIDs[index]}`)}>
                                 {`Acessar`}
                             </button>
@@ -201,6 +195,7 @@ export default function GuerraToolNewPrintStrategyButJustTheCancelled() {
                                 onClick={() => handleClick(Number(guerraToolIDs[index]))}>
                                 {`Tornar Visiível`}
                             </button>
+                            </div>
                             <br />
                         </div>
                     ))}

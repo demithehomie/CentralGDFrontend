@@ -185,14 +185,22 @@ export default function Users() {
     
   };
   
-  
+  const getToken = () => {
+    return localStorage.getItem('token'); // Obtém o token do localStorage
+  };
   
 
-  const fetchAndUpdateUsers = async () => {
-    const endpoint = `${apiurldev}/users-with-pagination?page=${currentPage}&limit=${itemsPerPage}`;
+  const fetchAndUpdateUsers = async (currentPage: any, itemsPerPage: any, setUsers: any, setIsLoading: any, setError: any, _controller: any) => {
+    const endpoint = `${apiurldev}/themagictool/users-with-pagination?page=${currentPage}&limit=${itemsPerPage}`;
     try {
       setIsLoading(true);
-      const response = await fetch(endpoint);
+      const token = getToken(); // Obtendo o token de autenticação
+      const response = await fetch(endpoint, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+       // signal: controller.signal // Passando o sinal do AbortController para o fetch
+      });
       if (!response.ok) {
         throw new Error('Erro na requisição: ' + response.statusText);
       }
@@ -206,25 +214,42 @@ export default function Users() {
       setIsLoading(false);
     }
   };
-
+  
   useEffect(() => {
-    fetchAndUpdateUsers();
+   const controller = new AbortController();
+  
+    fetchAndUpdateUsers(currentPage, itemsPerPage, setUsers, setIsLoading, setError, controller);
+  
+    // return () => {
+    //   controller.abort();
+    // };
   }, [currentPage, itemsPerPage]);
+  
 
   const toggleResellerStatus = async (userId: number) => {
     try {
-      const response = await fetch(`${apiurldev}/users/${userId}/toggle-reseller`, { method: 'PUT' });
+      const controller = new AbortController();
+      const trytheresponse = await fetch(`${apiurldev}/themagictool/users/${userId}/toggle-reseller`, { method: 'PUT' });
+      const token = getToken(); // Obtendo o token de autenticação
+      const response = await fetch(trytheresponse.url, { // Usar trytheresponse.url para obter o URL correto
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        signal: controller.signal // Passando o sinal do AbortController para o fetch
+      });
+  
       if (!response.ok) {
         throw new Error('Falha ao atualizar o status de revendedor');
       }
-      await fetchAndUpdateUsers();
+      // Passa os argumentos necessários para fetchAndUpdateUsers
+      await fetchAndUpdateUsers(currentPage, itemsPerPage, setUsers, setIsLoading, setError, controller);
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
       }
     }
   };
-
+  
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
   };
@@ -235,6 +260,10 @@ export default function Users() {
 
   const prints = async () => {
     navigate('/themagictool/new-screen/get-all-prints')
+  }
+
+  const printsSemId = async () => {
+    navigate('/withoutid/user-prints-page')
   }
 
   const usersGuerraTool = async () => {
@@ -308,6 +337,7 @@ export default function Users() {
       <br />
       <div style={{ display: "flex", flexDirection: "row"}}>
         <button className="button" onClick={prints}  >Prints</button>
+        <button className="button" onClick={printsSemId}  >Prints sem User ID</button>
         <button className="button" onClick={targets}  >Targets</button>
       </div>
       

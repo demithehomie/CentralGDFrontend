@@ -77,6 +77,10 @@ const goToLogs= () => {
     Swal.close();
 }
 
+const goToTargets = () => {
+  navigate('/target')
+}
+
 const toggleMenu = () => {
   Swal.fire({
     title: 'Menu',
@@ -126,88 +130,105 @@ const toggleMenu = () => {
   });
 }
 
+const goToPrints = async () => {
+  navigate('/themagictool/new-screen/get-all-prints')
+}
+
 
   return (
-    <>
-    <div className="navbar-toggle" onClick={toggleMenu}>
+         <>
+            <div className="navbar-toggle" onClick={toggleMenu}>
                 <span className='menu-span'>Menu</span>
             </div>
-    <div className='all-the-main-navbar-content'>
-     
-          <h2 style={{ fontFamily: 'Lexend Exa' }}>GUERRADONE</h2>
-          <h4 style={{ color: 'dodgerblue'}}> Companion</h4>
-      
-            {/* <div className="logo-at-the-navbar" onClick={goBackToDashboard}>
-              <img src={logo} alt="logo"  />
-            </div> */}
-      
-      <div className='navbar-center-menu'>
 
-     
-                <div onClick={goBackToDashboard}>
-                    <h3 className='main-navbar-menu-item-text'>Início</h3>
-                </div>
-                <div onClick={goToPaymentScreen}>
-                    <h3 className='main-navbar-menu-item-text'>Pagamentos</h3>
-                </div>
-                <div onClick={goToAllReports}>
-                    <h3 className='main-navbar-menu-item-text'>Relatórios</h3>
-                </div>
-                <div onClick={goToServers}>
-                    <h3 className='main-navbar-menu-item-text'>Servidores</h3>
-                </div>
-                {/* <div onClick={goToAnalytics}>
-                    <h3 className='main-navbar-menu-item-text'>Analytics</h3>
-                </div> */}
-                <div onClick={goToUsers}>
-                    <h3 className='main-navbar-menu-item-text'>Usuários</h3>
-                </div>
-                <div onClick={goToLogs}>
-                    <h3 className='main-navbar-menu-item-text'>Logs</h3>
-                </div>
+            <div className='all-the-main-navbar-content'>
+            
+                  <h2 style={{ fontFamily: 'Lexend Exa' }}>GUERRADONE</h2>
+                  <h4 style={{ color: 'dodgerblue'}}> Companion</h4>
+              
+                    {/* <div className="logo-at-the-navbar" onClick={goBackToDashboard}>
+                      <img src={logo} alt="logo"  />
+                    </div> */}
+              
+              <div className='navbar-center-menu'>
 
-                </div>
+            
+                        <div onClick={goBackToDashboard}>
+                            <h3 className='main-navbar-menu-item-text'>Início</h3>
+                        </div>
+                        <div onClick={goToPaymentScreen}>
+                            <h3 className='main-navbar-menu-item-text'>Pagamentos</h3>
+                        </div>
+                        <div onClick={goToAllReports}>
+                            <h3 className='main-navbar-menu-item-text'>Relatórios</h3>
+                        </div>
+                        <div onClick={goToServers}>
+                            <h3 className='main-navbar-menu-item-text'>Servidores</h3>
+                        </div>
+                        {/* <div onClick={goToAnalytics}>
+                            <h3 className='main-navbar-menu-item-text'>Analytics</h3>
+                        </div> */}
+                        <div onClick={goToUsers}>
+                            <h3 className='main-navbar-menu-item-text'>Usuários</h3>
+                        </div>
+                        <div onClick={goToPrints}>
+                            <h3 className='main-navbar-menu-item-text'>Prints</h3>
+                        </div>
+                        {/* <div onClick={goToLogs}>
+                            <h3 className='main-navbar-menu-item-text'>Logs</h3>
+                        </div> */}
+                        <div onClick={goToTargets}>
+                            <h3 className='main-navbar-menu-item-text'>Targets</h3>
+                        </div>
 
-                <div className='logout-button' onClick={handleLogout}>
-                    <h3 className='main-navbar-menu-item-text'>Logout</h3>
-                </div>
+                        </div>
 
-         {/* Menu que será mostrado/ocultado */}
-          {showMenu && (
-          
-            <>
-            <div className='navbar-center-menu-mobile'>
-                <div onClick={goBackToDashboard}>
-                    <h3 className='main-navbar-menu-item-text'>Início</h3>
-                </div>
-                <div onClick={goToPaymentScreen}>
-                    <h3 className='main-navbar-menu-item-text'>Pagamentos</h3>
-                </div>
-                <div onClick={goToAllReports}>
-                    <h3 className='main-navbar-menu-item-text'>Relatórios</h3>
-                </div>
-                <div onClick={goToServers}>
-                    <h3 className='main-navbar-menu-item-text'>Servidores</h3>
-                </div>
-                {/* <div onClick={goToAnalytics}>
-                    <h3 className='main-navbar-menu-item-text'>Analytics</h3>
-                </div> */}
-                <div onClick={goToUsers}>
-                    <h3 className='main-navbar-menu-item-text'>Usuários</h3>
-                </div>
-                <div onClick={goToLogs}>
-                    <h3 className='main-navbar-menu-item-text'>Logs</h3>
-                </div>
-                <div onClick={handleLogout}>
-                    <h3 className='main-navbar-menu-item-text'>Logout</h3>
-                </div>    
-                </div>  
-            </>
+                        <div className='logout-button' onClick={handleLogout}>
+                            <h3 className='main-navbar-menu-item-text'>Logout</h3>
+                        </div>
 
-            )}
+                {/* Menu que será mostrado/ocultado */}
+                  {showMenu && (
+                  
+                    <>
+                    <div className='navbar-center-menu-mobile'>
+                        <div onClick={goBackToDashboard}>
+                            <h3 className='main-navbar-menu-item-text'>Início</h3>
+                        </div>
+                        <div onClick={goToPaymentScreen}>
+                            <h3 className='main-navbar-menu-item-text'>Pagamentos</h3>
+                        </div>
+                        <div onClick={goToAllReports}>
+                            <h3 className='main-navbar-menu-item-text'>Relatórios</h3>
+                        </div>
+                        <div onClick={goToServers}>
+                            <h3 className='main-navbar-menu-item-text'>Servidores</h3>
+                        </div>
+                        {/* <div onClick={goToAnalytics}>
+                            <h3 className='main-navbar-menu-item-text'>Analytics</h3>
+                        </div> */}
+                        <div onClick={goToUsers}>
+                            <h3 className='main-navbar-menu-item-text'>Usuários</h3>
+                        </div>
+                        <div onClick={goToPrints}>
+                            <h3 className='main-navbar-menu-item-text'>Prints</h3>
+                        </div>
+                        {/* <div onClick={goToLogs}>
+                            <h3 className='main-navbar-menu-item-text'>Logs</h3>
+                        </div> */}
+                        <div onClick={goToTargets}>
+                            <h3 className='main-navbar-menu-item-text'>Targets</h3>
+                        </div>
+                        <div onClick={handleLogout}>
+                            <h3 className='main-navbar-menu-item-text'>Logout</h3>
+                        </div>    
+                        </div>  
+                    </>
 
-    </div>
-    </>
+                    )}
+
+            </div>
+          </>
     
   )
 }

@@ -1,4 +1,5 @@
 import  { useState } from 'react';
+import packageJson from '../../../package.json';
 import {
   //Box,
   Button,
@@ -18,11 +19,13 @@ import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/fGuerra.png'; // Substitua pelo caminho correto do seu logo
 import { useAuth } from '../../context/auth/AuthContext';
 import './LoginForm.css';
+import Swal from 'sweetalert2';
 
 const LoginForm = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
   const toast = useToast();
+  const appVersion = packageJson.version;
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -60,10 +63,32 @@ const LoginForm = () => {
     }
   };
 
+  const handleBetaButton = () => {
+    Swal.fire({
+      title: 'MANUTENÇÃO IMPORTANTE',
+      html: `
+  <p style="color: #000;">Estamos modificando várias partes cruciais do GD Companion, então algumas instabilidades ocorrerão nos seguintes setores</p>
+  
+  <ul style="color: #000;">
+    <li style="text-align: left">Segurança e autenticação. Reforços extras contra possíveis ataques</li>
+    <li style="text-align: left">Prints. Nova interface e prevenção  de vazamento de memória</li>
+    <li style="text-align: left">Página de Pagamentos completamente nova.</li>
+    <li style="text-align: left">Task Logs e Credit Logs com camadas extras de segurança.</li>
+  </ul>
+  <p style="color: #000;">Obrigado pela compreensão</p>
+  <p style="color: #000;">Família Guerra (C) 2024.</p>
+  `,
+      icon: 'info',
+      confirmButtonText: 'Close'
+    });
+
+  }
+
   return (
     <Center height="100vh" bg="#302F50">
          {/* <Image src={logo} alt="Logo" boxSize="190px" objectFit="cover" /> */}
       <VStack spacing={4} as="form" onSubmit={handleSubmit}>
+        
       <Image 
           src={logo} 
           alt="Logo" 
@@ -106,8 +131,22 @@ const LoginForm = () => {
         </FormControl>
 
         <Button colorScheme="blue" isLoading={isLoading} type="submit">
-         Launch
+         INICIAR
         </Button>
+
+        <br /><br /><br />
+
+        <button style={{
+          backgroundColor: "green",
+          color: '#ffffff',
+          padding: 15,
+          borderRadius: 30,
+          boxShadow: "0 0 10px #000000",  
+        }}
+        
+        onClick={handleBetaButton}
+        
+        >Versão BETA {appVersion} </button>
 
         {isLoading && (
           <Center>

@@ -7,6 +7,7 @@ import { User } from '../../../components/user-table/UserTable';
 // import useSendFunctions from '../../personalized-hooks/useSendFunctions';
 import axios from 'axios'; 
 import MainNavbar from '../../../components/main-navbar/MainNavbar';
+import { getToken } from '../../../services/UsersService';
 
 export interface UserProfileProps {
   user?: User;
@@ -153,19 +154,30 @@ const UserProfileGuerraTool: React.FC<UserProfileProps> = ({  }) => {
 
 
  useEffect(() => {
-   const fetchUser = async () => {
-     try {
-       const response = await axios.get(`https://gdcompanion-prod.onrender.com/users/${userId}`);
-       console.log(userId)
-    
-         setUserData(response.data);
-     } catch (error) {
-       console.error((error as Error).message);
-     }
-   };
- 
-   fetchUser();
- }, [userId]);
+  const controller = new AbortController();
+  const signal = controller.signal;
+  const token = getToken()
+
+  const fetchUser = async () => {
+    try {
+      const response = await axios.get(`https://gdcompanion-prod.onrender.com/guerratool/users/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        signal: signal
+      });
+      setUserData(response.data);
+    } catch (error) {
+      console.error((error as Error).message);
+    }
+  };
+
+  fetchUser();
+
+  return () => {
+    controller.abort();
+  };
+}, [userId]);
 
  return (
    <>

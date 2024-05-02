@@ -6,6 +6,7 @@ import { useToast } from '../../../context/toast/ToastProvider';//
 import './index.css';
 import { Badge, Spin, Table } from 'antd';
 import Swal from 'sweetalert2';
+import { getToken } from '../../../services/UsersService';
 
 
 export const Component2 = () => {
@@ -18,7 +19,7 @@ export const Component2 = () => {
  const [potentialClients, setPotentialClients] = useState<TransferData[]>([])
     const [_renderedIds, setRenderedIds] = useState<string[]>([]);
     const [_lastRefreshed, setLastRefreshed] = useState<Date | null>(null);
-  
+  const token = getToken()
   const [showPopup, setShowPopup] = useState(false); // State for popup visibility
 
 
@@ -27,7 +28,13 @@ export const Component2 = () => {
  const fetchPotentialClients = async () => {
     try {
       // Replace this with your API endpoint to fetch pending transfers
-      const response = await axios.get('https://gdcompanion-prod.onrender.com/payments-center/pending/get-the-5-most-recent');
+      const response = await axios.get('https://gdcompanion-prod.onrender.com/payments-center/pending/get-the-5-most-recent', 
+      {  
+        headers: {
+          'Authorization': `Bearer ${token}` 
+        }
+      }
+      );
       if (response.data) {
         const potentialClientsData: TransferData[] = response.data;
         setPotentialClients(potentialClientsData);
@@ -155,7 +162,13 @@ const shouldRenderItem = (transfer: TransferData) => {
 
   const updateClienteAsPayer = async (paymentId: string) => {
     try {
-      const response = await axios.post(`https://gdcompanion-prod.onrender.com/mercadopago/payment/pix/for-new-payment-screen/${paymentId}`);
+      const response = await axios.post(`https://gdcompanion-prod.onrender.com/mercadopago/payment/pix/for-new-payment-screen/${paymentId}`, 
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }
+      );
       if (response.status === 200) {
         Swal.fire(
           'Perfeito!',

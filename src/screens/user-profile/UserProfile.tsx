@@ -8,6 +8,7 @@ import { User } from '../../components/user-table/UserTable';
 import axios from 'axios'; 
 import MainNavbar from '../../components/main-navbar/MainNavbar';
 import { useAuth } from '../../context/auth/AuthContext';
+import { getToken } from '../../services/UsersService';
 
 export interface UserProfileProps {
   user?: User;
@@ -163,20 +164,31 @@ const UserProfile: React.FC<UserProfileProps> = ({  }) => {
 
 
   useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+    const token = getToken()
+  
     const fetchUser = async () => {
       try {
-        const response = await axios.get(`https://gdcompanion-prod.onrender.com/users/${userId}`);
-        console.log(userId)
-     
-          setUserData(response.data);
+        const response = await axios.get(`https://gdcompanion-prod.onrender.com/themagictool/users/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+          signal: signal
+        });
+        setUserData(response.data);
       } catch (error) {
         console.error((error as Error).message);
       }
     };
   
     fetchUser();
+  
+    return () => {
+      controller.abort();
+    };
   }, [userId]);
-
+  
   return (
     <>
     <MainNavbar/>

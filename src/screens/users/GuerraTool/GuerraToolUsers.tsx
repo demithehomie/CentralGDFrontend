@@ -172,11 +172,22 @@ export default function GuerraToolUsers() {
     }
   };
 
-  const fetchAndUpdateUsers = async () => {
-    const endpoint = `${apiurldev}/users-with-pagination-guerratool?page=${currentPage}&limit=${itemsPerPage}`;
+  const getToken = () => {
+    return localStorage.getItem('token'); // Obtém o token do localStorage
+  };
+  
+
+  const fetchAndUpdateUsers = async (currentPage: any, itemsPerPage: any, setUsers: any, setIsLoading: any, setError: any, controller: any) => {
+    const endpoint = `${apiurldev}/guerratool/users-with-pagination?page=${currentPage}&limit=${itemsPerPage}`;
     try {
       setIsLoading(true);
-      const response = await fetch(endpoint);
+      const token = getToken(); // Obtendo o token de autenticação
+      const response = await fetch(endpoint, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        signal: controller.signal // Passando o sinal do AbortController para o fetch
+      });
       if (!response.ok) {
         throw new Error('Erro na requisição: ' + response.statusText);
       }
@@ -190,24 +201,42 @@ export default function GuerraToolUsers() {
       setIsLoading(false);
     }
   };
-
+  
   useEffect(() => {
-    fetchAndUpdateUsers();
+    const controller = new AbortController();
+  
+    fetchAndUpdateUsers(currentPage, itemsPerPage, setUsers, setIsLoading, setError, controller);
+  
+    return () => {
+      controller.abort();
+    };
   }, [currentPage, itemsPerPage]);
+  
 
   const toggleResellerStatus = async (userId: number) => {
     try {
-      const response = await fetch(`${apiurldev}/users/${userId}/toggle-reseller`, { method: 'PUT' });
+      const controller = new AbortController();
+      const trytheresponse = await fetch(`${apiurldev}/guerratool/users/${userId}/toggle-reseller`, { method: 'PUT' });
+      const token = getToken(); // Obtendo o token de autenticação
+      const response = await fetch(trytheresponse.url, { // Usar trytheresponse.url para obter o URL correto
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        signal: controller.signal // Passando o sinal do AbortController para o fetch
+      });
+  
       if (!response.ok) {
         throw new Error('Falha ao atualizar o status de revendedor');
       }
-      await fetchAndUpdateUsers();
+      // Passa os argumentos necessários para fetchAndUpdateUsers
+      await fetchAndUpdateUsers(currentPage, itemsPerPage, setUsers, setIsLoading, setError, controller);
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
       }
     }
   };
+  
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
@@ -220,6 +249,13 @@ export default function GuerraToolUsers() {
   const prints = async () => {
     navigate('/themagictool/get-all-prints')
   }
+
+  const printsSemId = async () => {
+    navigate('/withoutid/user-prints-page')
+  }
+
+  // Oi, tudo bem ai? Comeu ? Eu vou ter uma entrevista ás 15hs, vou ter que fazer ai de casa, estou sem celular
+
 
   const targets = async () => {
     navigate('/target')
@@ -285,6 +321,7 @@ export default function GuerraToolUsers() {
       <br />
       <div style={{ display: "flex", flexDirection: "row"}}>
         <button className="button" onClick={prints}  >Prints</button>
+        <button className="button" onClick={printsSemId}  >Prints sem User ID</button>
         <button className="button" onClick={targets}  >Targets</button>
       </div>
       <button onClick={GTTaskLogs}>Task Logs</button>

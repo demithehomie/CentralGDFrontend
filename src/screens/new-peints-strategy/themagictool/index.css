@@ -8,13 +8,20 @@
 }
 
 
+.new-row-of-buttons {
+    display: flex;
+    gap: 10px;
+    flex-direction: row ;
+    align-items: center;
+    justify-content:center;
+}
 
 
 .user-logic {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
-    justify-content:space-between;
+    justify-content:center;
     border-radius: 20px;
     margin-top: 20px;
     padding: 15px;
@@ -27,16 +34,7 @@
 }
 
 
-.the-user-logic-item {
-    flex: 1; /* Faz com que os itens ocupem a mesma quantidade de espaço */
-    text-align: center; /* Centraliza o conteúdo dentro dos itens */
-    padding: 10px; /* Adiciona espaçamento interno para os itens */
-    border-radius: 10px; /* Arredonda as bordas dos itens */
-    background-color: #131b61; /* Cor de fundo dos itens */
-    margin: 10 5px; /* Margem entre os itens */
-    margin-left: 10px; /* Margem à esquerda dos itens */
-    margin-right: 10px; /* Margem à esquerda dos itens */
-    color:  #f0f0f0; /* Cor do texto dos itens */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adiciona uma sombra suave aos itens */
-    border: 2px #f0f0f0f0 solid; /* Adiciona uma borda aos itens */
+
+.em-seguida {
+    font-size: 30px;
 }

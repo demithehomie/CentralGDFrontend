@@ -13,7 +13,7 @@ interface User {
 }
 
 
-export default function TheMagictoolPrintsStrategy() {
+export default function NoIDPrintsStrategy() {
 
     const inputRef = useRef<HTMLInputElement>(null); // Referência para o input
     const navigate = useNavigate();
@@ -176,60 +176,7 @@ export default function TheMagictoolPrintsStrategy() {
 
 
 
-   const handleDelete = async (userID: any) => {
-
-
-    Swal.fire({
-        title: 'Você tem certeza?',
-        text: 'Você deseja deletar o print deste usuário?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Sim',
-        cancelButtonText: 'Cancelar',
-    }).then(async (result) => {
-        if (result.isConfirmed) {
-            try {
-                // Faz a requisição para deletar o print
-    ////////////////////
-    ////////////////
-    /////////////// DELETAR PRIINT
-    /////////////
-    ////////////
-                const response = await axios.delete(`https://gdcompanion-prod.onrender.com/themagictool/prints-deletion/definitive/${userID}`,
-               
-                {
-                  headers: {
-                    'Authorization': `Bearer ${token}`
-                  }
-                }
-              )
-                // Verifica se a requisição foi bem-sucedida
-                if (response.status === 200) {
-                    Swal.fire({
-                        title: 'Sucesso!',
-                        text: 'O print foi deletado com sucesso. A página será recarregada agora.',
-                        icon: 'success',
-                        timer: 1500, // 5 segundos
-                        timerProgressBar: true,
-                        showConfirmButton: false
-                    }).then(() => {
-                        // Recarrega a página após o timer de 5 segundos
-                        window.location.reload();
-                    });
-                } else {
-                    Swal.fire('Erro!', 'Ocorreu um erro ao deletar o print.', 'error');
-                }
-            } catch (error) {
-                console.error('Erro ao deletar o print:', error);
-                Swal.fire('Erro!', 'Ocorreu um erro ao deletar o print.', 'error');
-            }
-        }
-    });
-
-
-   }
+   
 
 
    
@@ -240,7 +187,7 @@ export default function TheMagictoolPrintsStrategy() {
             <MainNavbar />
             <div>
                 <div>
-                    <h1 style={{ color: "#ffffff", paddingTop: 100 }}>Acesso aos Prints - THE MAGIC TOOL</h1>
+                    <h1 style={{ color: "#ffffff", paddingTop: 100 }}>Acesso aos Prints - Usuários Sem ID</h1>
                     <h3 className='title' style={{ }}>Digite O Nome Do Usuário </h3>
          
                  
@@ -304,32 +251,15 @@ export default function TheMagictoolPrintsStrategy() {
                             {/* Displaying the user ID */}
                             <p  className='title'>ID do usuário: <strong>{guerraToolIDs[index].toString()}</strong></p>
                             <br />
-
-                            <div className='new-row-of-buttons' >
-
-                            <button 
-                                className="the-user-logic-item" 
-                                onClick={() => navigate(`/user-prints-page/${guerraToolIDs[index]}`)}>
+                            <button className="the-user-logic-item" onClick={() => navigate(`/user-prints-page/${guerraToolIDs[index]}`)}>
                                 {`Acessar`}
                             </button>
-
                             <button 
                                 className="the-user-logic-item" 
                                 style={{ backgroundColor: "red"}} 
                                 onClick={() => handleClick(Number(guerraToolIDs[index]))}>
                                 {`Ocultar`}
                             </button>
-
-                            <button
-                              className="the-user-logic-item" 
-                              style={{ backgroundColor: "yellow", color: "black", fontWeight: "bold"}} 
-                              onClick={() => handleDelete(Number(guerraToolIDs[index]))}
-                            >
-                                {`Apagar`}
-                            </button>
-
-                            </div>
-
                             <br />
                         </div>
                     ))}

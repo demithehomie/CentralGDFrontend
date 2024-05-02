@@ -1,0 +1,28 @@
+.definitive-card-list {
+    background-color: grey;
+    gap: 10px;
+    border-radius: 30px;
+}
+
+.definitive-card {
+    gap: 20px;
+    display: flex;
+    padding: 10px;
+    border-radius: 30px;
+}
+
+.definitive-image-container {
+    border-radius: 30px;
+}
+
+.definitive-image-content {
+    border-radius: 30px;
+}
+
+.definitive-buttons {
+    gap: 70px;
+}
+
+.definitive-card-image {
+    border-radius: 30px;
+}

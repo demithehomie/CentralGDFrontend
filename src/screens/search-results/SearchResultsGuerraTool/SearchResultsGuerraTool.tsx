@@ -4,6 +4,7 @@ import axios from 'axios';
 import { User } from '../../../components/user-table/UserTable';
 import './SearchResultsGuerraTool.css';
 import MainNavbar from '../../../components/main-navbar/MainNavbar';
+import { getToken } from '../../../services/UsersService';
 
 
 const SearchResultsGuerraTool = () => {
@@ -13,27 +14,38 @@ const SearchResultsGuerraTool = () => {
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
 
+ 
   useEffect(() => {
+    const token = getToken()
     const searchQuery = new URLSearchParams(location.search).get('query');
     if (searchQuery) {
-      fetchResults(searchQuery);
+      fetchResults(searchQuery, token! );
     }
   }, [location]);
 
   // Tipar o parâmetro query como string
-  const fetchResults = async (query: string) => {
+  const fetchResults = async (query: string, token: string) => {
     setIsLoading(true);
     try {
-      const response = await axios.get(`https://gdcompanion-prod.onrender.com/search-users-guerratool`, {
-        params: { keyword: query }
-      });
-      setResults(response.data);
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        };
+
+        const response = await axios.get(`https://gdcompanion-prod.onrender.com/search-users/guerratool`, {
+            params: { keyword: query },
+            ...config
+        });
+
+        setResults(response.data);
     } catch (error) {
-      console.error('Erro ao buscar resultados:', error);
-      // Trate o erro conforme necessário
+        console.error('Erro ao buscar resultados:', error);
+        // Trate o erro conforme necessário
+    } finally {
+        setIsLoading(false);
     }
-    setIsLoading(false);
-  };
+};
 
   if (isLoading) {
     return <div>Carregando...</div>;

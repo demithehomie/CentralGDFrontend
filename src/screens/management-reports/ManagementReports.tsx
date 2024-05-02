@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import MainNavbar from '../../components/main-navbar/MainNavbar';
 
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ChartData } from 'chart.js';
+import { getToken } from '../../services/UsersService';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -26,7 +27,7 @@ export interface ReportData {
 
 function ManagementReports() {
     const navigate = useNavigate();
-
+    const token = getToken()
     const [showGraph, setShowGraph] = useState(false);
     const [graphData, setGraphData] = useState<MyChartData | null>(null);
     const [currentReportType, setCurrentReportType] = useState<string>('');
@@ -42,8 +43,13 @@ function ManagementReports() {
     const [annualReportData, setAnnualReportData] = useState<ReportData[]>([]);
    
     const fetchReportData = async (reportType: string, setReportData: React.Dispatch<React.SetStateAction<ReportData[]>>, signal: AbortSignal) => {
+
+        const token = getToken()
         try {
-          const response = await axios.get(`https://gdcompanion-prod.onrender.com/report/json?type=${reportType}`, { signal });
+          const response = await axios.get(`https://gdcompanion-prod.onrender.com/report/json?type=${reportType}`, {     
+            headers: {
+            'Authorization': `Bearer ${token}`
+        }, signal });
           setReportData(response.data);
           console.log('Dados do relatório:', response.data);
         } catch (error: any) {
@@ -82,10 +88,15 @@ function ManagementReports() {
 // Function to emit DOCX
 const emitDocx = async (reportType: any) => {
     try {
+
+        const token = getToken()
         const response = await axios({
             url: `https://gdcompanion-prod.onrender.com/report/docx?type=${reportType}`, // Update with your actual endpoint
             method: 'GET',
             responseType: 'blob', // Important to handle binary response data
+            headers: {
+                Authorization: `Bearer ${token}` // Define os headers como um objeto
+            }
         });
   
         // Create a URL for the blob
@@ -111,7 +122,10 @@ const emitDocx = async (reportType: any) => {
         const response = await axios({
             url: `https://gdcompanion-prod.onrender.com/report/xlsx?type=${reportType}`, // Update with your actual endpoint
             method: 'GET',
-            responseType: 'blob', // Important to handle binary response data
+            responseType: 'blob', // Important to handle binary response 
+            headers: {
+                Authorization: `Bearer ${token}` // Define os headers como um objeto
+            }
         });
   
         // Create a URL for the blob
@@ -138,6 +152,9 @@ const emitDocx = async (reportType: any) => {
             url: `https://gdcompanion-prod.onrender.com/report/pdf?type=${reportType}`, // Update with your actual endpoint
             method: 'GET',
             responseType: 'blob', // Important to handle binary response data
+            headers: {
+                Authorization: `Bearer ${token}` // Define os headers como um objeto
+            }
         });
   
         // Create a URL for the blob
@@ -165,7 +182,14 @@ const handlePendingPaymentChange = async (item: ReportData, newValue: string) =>
     try {
       await axios.post(`https://gdcompanion-prod.onrender.com/marcar-posts-pagos-manualmente/${item.payment_id}`, {
         pending_payments: newPendingStatus
-      });
+      },
+      {
+        headers: {
+            Authorization: `Bearer ${token}` // Define os headers como um objeto
+        }
+      }
+    
+    );
   
       // Determinar a qual conjunto de dados o item pertence (exemplo usando dailyReportData)
       let updatedReportData;
@@ -281,9 +305,13 @@ const fetchCustomRangeReportData = async () => {
     const response = await axios.post('https://gdcompanion-prod.onrender.com/report/json/custom-range', {
       startDate: formattedStartDate,
       endDate: formattedEndDate
-    }, {
-      cancelToken: cancelToken.token // Passa o cancelToken para a configuração da solicitação
-    });
+    }, 
+    {
+        headers: {
+            Authorization: `Bearer ${token}` // Define os headers como um objeto
+        }, cancelToken: cancelToken.token // Passa o cancelToken para a configuração da solicitação
+    }
+);
 
     if (!response.data || response.data.length === 0) {
       Swal.fire({
@@ -335,7 +363,11 @@ useEffect(() => { // DONE
     }).then(async (result) => {
         if (result.isConfirmed) {
             try {
-                const response = await axios.delete(`https://gdcompanion-prod.onrender.com/deletar-cliente/${paymentId}`);
+                const response = await axios.delete(`https://gdcompanion-prod.onrender.com/deletar-cliente/${paymentId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
                 if (response.status === 200) {
                     Swal.fire(
                         'Deletado!',

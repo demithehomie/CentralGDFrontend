@@ -3,6 +3,8 @@ import  /*React,*/{ createContext, useState, useContext, useEffect } from 'react
 //import jwt, { JwtPayload } from 'jsonwebtoken';
 //import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
+import { getToken } from '../../services/UsersService';
+import { API_URL } from '../../services/apiService';
 //import { useNavigate } from 'react-router-dom';
 
 interface User {
@@ -12,11 +14,11 @@ interface User {
 }
 
 interface AuthContextType {
-  currentUser: User | null; // Substitua 'any' pelo tipo apropriado
+  currentUser: User | null; 
   login: (username: string, password: string) => Promise<boolean>;
   logout: () => void;
-  verifyToken: () => Promise<void>; // Adicione esta linha
-  verifySession: () => boolean; // Adicione esta linha
+  verifyToken: () => Promise<void>; 
+  verifySession: () => boolean; 
 }
 
 
@@ -24,16 +26,14 @@ const AuthContext = createContext<AuthContextType>({
   currentUser: null,
   login: async () => false,
   logout: () => {},
-  verifyToken: async () => {}, // Adicione esta linha: Implementação stub para verifyToken
-  verifySession: () => false, // Adicione esta linha: Implementação stub para verifySession
+  verifyToken: async () => {}, 
+  verifySession: () => false, 
 });
 
 
 export const useAuth = () => useContext(AuthContext);
 
-//const apiurldev = `http://localhost:3001`;
-
-const apiurl = `https://gdcompanion-prod.onrender.com`
+const apiurl = API_URL;
 
 export const AuthProvider = ({ children }: any) => {
  // const navigate = useNavigate();
@@ -41,11 +41,15 @@ export const AuthProvider = ({ children }: any) => {
 
 
 
-
+    const token = getToken()
 
     const login = async (username: any, password: any) => {
       try {
-        const response = await axios.post(`${apiurl}/new-login-method`, { username, password });
+        const response = await axios.post(`${apiurl}/new-login-method`, { username, password },   {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const { accessToken, name } = response.data;
         const timestamp = new Date().getTime(); // Timestamp atual em milissegundos
         localStorage.setItem('token', accessToken);
@@ -65,7 +69,7 @@ export const AuthProvider = ({ children }: any) => {
       const timestamp = localStorage.getItem('timestamp');
       const now = new Date().getTime();
     
-      if (!token || !timestamp || now - parseInt(timestamp) > 3600000) { // 60 minutos = 3600000 milissegundos
+      if (!token || !timestamp || now - parseInt(timestamp) > 28800000) { // 8 HORAS = 28800000 milissegundos
         logout(); // Isso vai remover o token e o usuário atual
         return;
       }
@@ -108,7 +112,7 @@ const verifySession = (): boolean => {
 
   if (token && timestamp) {
     const sessionDuration = now - parseInt(timestamp);
-    const sessionIsValid = sessionDuration <= 3600000; // Por exemplo, 1 hora = 3600000 milissegundos
+    const sessionIsValid = sessionDuration <= 86400000; // Por exemplo, 1 dia = 86400000 milissegundos
     return sessionIsValid;
   }
 

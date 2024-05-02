@@ -44,6 +44,15 @@ export default function GuerraToolNewPrintStrategy() {
             }
         });
     }
+
+  
+    
+    
+
+    const getToken = () => {
+        return localStorage.getItem('token'); // Obtém o token do localStorage
+      };
+    const token = getToken()
     
      
     const handleClick = async (userID: number) => {
@@ -60,7 +69,14 @@ export default function GuerraToolNewPrintStrategy() {
             if (result.isConfirmed) {
                 try {
                     // Faz a requisição para ocultar o print
-                    const response = await axios.put(`https://gdcompanion-prod.onrender.com/guerratool/hide-or-show-print/${userID}`);
+                    const response = await axios.put(`https://gdcompanion-prod.onrender.com/guerratool/hide-or-show-print/${userID}`,
+                    null, // O segundo parâmetro é o corpo da solicitação, que é nulo neste caso
+                    {
+                      headers: {
+                        'Authorization': `Bearer ${token}`
+                      }
+                    }
+                  )
                     
                     // Verifica se a requisição foi bem-sucedida
                     if (response.status === 200) {
@@ -87,9 +103,6 @@ export default function GuerraToolNewPrintStrategy() {
     };
 
 
-    const getToken = () => {
-        return localStorage.getItem('token'); // Obtém o token do localStorage
-      };
       
       useEffect(() => { // DONE ?
         const abortController = new AbortController();
@@ -131,6 +144,64 @@ export default function GuerraToolNewPrintStrategy() {
         };
       }, []);
 
+      
+
+   const handleDelete = async (userID: any) => {
+
+
+    Swal.fire({
+        title: 'Você tem certeza?',
+        text: 'Você deseja deletar o print deste usuário?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sim',
+        cancelButtonText: 'Cancelar',
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            try {
+                // Faz a requisição para deletar o print
+    ////////////////////
+    ////////////////
+    /////////////// DELETAR PRIINT
+    /////////////
+    ////////////
+                const response = await axios.delete(`https://gdcompanion-prod.onrender.com/themagictool/prints-deletion/definitive/${userID}`,
+               
+                {
+                  headers: {
+                    'Authorization': `Bearer ${token}`
+                  }
+                }
+              )
+                // Verifica se a requisição foi bem-sucedida
+                if (response.status === 200) {
+                    Swal.fire({
+                        title: 'Sucesso!',
+                        text: 'O print foi deletado com sucesso. A página será recarregada agora.',
+                        icon: 'success',
+                        timer: 1500, // 5 segundos
+                        timerProgressBar: true,
+                        showConfirmButton: false
+                    }).then(() => {
+                        // Recarrega a página após o timer de 5 segundos
+                        window.location.reload();
+                    });
+                } else {
+                    Swal.fire('Erro!', 'Ocorreu um erro ao deletar o print.', 'error');
+                }
+            } catch (error) {
+                console.error('Erro ao deletar o print:', error);
+                Swal.fire('Erro!', 'Ocorreu um erro ao deletar o print.', 'error');
+            }
+        }
+    });
+
+
+   }
+
+
     return (
         <>
                 {loading && <Spin />} 
@@ -139,7 +210,7 @@ export default function GuerraToolNewPrintStrategy() {
                 <div>
                     <h1 style={{ color: "#ffffff", paddingTop: 100 }}>Acesso aos Prints - GUERRATOOL</h1>
                     <h3 className='title' style={{ }}>Digite O Nome Do Usuário </h3>
-                    <h5 style={{ color: '#ffffff' }}>Em seguida, clique para acessar prints específicos</h5>
+         
                  
                     <div style={{ flexDirection: 'column', display: 'flex' }}>
                         <input type="text" className='the-prints-searchbar' onInput={searchUser} />
@@ -196,6 +267,8 @@ export default function GuerraToolNewPrintStrategy() {
                             {/* Displaying the user ID */}
                             <p className='title'>ID do usuário: <strong>{guerraToolIDs[index].toString()}</strong></p>
                             <br />
+
+                            <div className='new-row-of-buttons' >
                             <button className='the-user-logic-item' onClick={() => navigate(`/guerratool/user-prints-page/${guerraToolIDs[index]}`)}>
                                 {`Acessar`}
                             </button>
@@ -205,6 +278,15 @@ export default function GuerraToolNewPrintStrategy() {
                                 onClick={() => handleClick(Number(guerraToolIDs[index]))}>
                                 {`Ocultar`}
                             </button>
+                            <button
+                              className="the-user-logic-item" 
+                              style={{ backgroundColor: "yellow", color: "black", fontWeight: "bold"}} 
+                              onClick={() => handleDelete(Number(guerraToolIDs[index]))}
+                            >
+                                
+                                {`Apagar`}
+                            </button>
+                            </div>
                             <br />
                         </div>
                     ))}

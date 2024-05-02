@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import MainNavbar from '../../components/main-navbar/MainNavbar';
 import './MotorolaServerScreen.css';
 import Swal from 'sweetalert2';
@@ -46,12 +46,17 @@ interface ResponseData {
 
 async function fetchServerStatus(): Promise<LoginMacacoResult> {
   try {
+
+    const headers = new Headers();
+    // headers.append('Access-Control-Allow-Origin', '*');
+    // headers.append('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    // headers.append('Access-Control-Allow-Headers', 'Content-Type, Authorization', );
+    headers.append('Content-Type', 'application/json');
+    headers.append('appver', '1.1.1');
+
     const response = await fetch('https://frpbosstool-server.onrender.com/api/login', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'appver': '1.0.0'
-      },
+      headers: headers,
       body: JSON.stringify({
         user: 'guerratool',
         pass: 'GuerratoolAPIaccess!**Pass',
@@ -71,14 +76,19 @@ async function fetchServerStatus(): Promise<LoginMacacoResult> {
   }
 }
 
-async function fetchLogs(page: number, pageSize: number): Promise<ResponseData> {
+async function fetchLogs(): Promise<ResponseData> {
   try {
-    const response = await fetch(`https://frpbosstool-server.onrender.com/panel/getuserlog?page=${page}&pageSize=${pageSize}`, {
+
+    const headers = new Headers();
+    // headers.append('Access-Control-Allow-Origin', '*');
+    // headers.append('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    // headers.append('Access-Control-Allow-Headers', 'Content-Type, Authorization', );
+    headers.append('Content-Type', 'application/json');
+    headers.append('appver', '1.1.1');
+    const response = await fetch(`https://frpbosstool-server.onrender.com/panel/getuserlog?`, {
+  // const response = await fetch(`https://frpbosstool-server.onrender.com/panel/getuserlog?page=${page}&pageSize=${pageSize}`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'appver': '1.0.0'
-      },
+      headers:  headers,
       body: JSON.stringify({
         user: 'guerratool',
         pass: 'GuerratoolAPIaccess!**Pass',
@@ -116,15 +126,15 @@ export default function MotorolaServerScreen() {
 
   const apiUrl = 'https://frpbosstool-server.onrender.com/api';
   const headers = new Headers();
-  headers.append('Access-Control-Allow-Origin', '*');
-  headers.append('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  headers.append('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
-  async function fetchData(page: number, pageSize: number) {
+  headers.append('Content-Type', 'application/json');
+  headers.append('appver', '1.1.1');
+
+  async function fetchData() {
     setLoading(true);
     try {
       const { server: serverStatus, credits: creditsData } = await fetchServerStatus();
-      const { logs: logsData } = await fetchLogs(page, pageSize);
+      const { logs: logsData } = await fetchLogs();
       setServerStatus(serverStatus);
       setCredits(creditsData.toString());
       setLogs(logsData);
@@ -137,7 +147,7 @@ export default function MotorolaServerScreen() {
   }
 
   function handleTableChange(pagination: any) {
-    fetchData(pagination.current, pagination.pageSize);
+    fetchData();
     setPagination(pagination);
   }
 
@@ -148,16 +158,26 @@ export default function MotorolaServerScreen() {
   //   }
   // }
 
+  useEffect(() => {
+    // This will show the alert when the component mounts
+    Swal.fire({
+        title: 'Atenção!',
+        text: 'A API dos serviços Samsung se encontra instável, mas estamos lidando com isso no momento, para que as informações estejam disponíveis no mais rápido possível ',
+        icon: 'info',
+        confirmButtonText: 'Ok'
+    });
+}, []);
+
 
   async function handleLogin() {
     try {
         setLoading(true); // Define o estado de carregamento como verdadeiro
         const headers = new Headers();
-        headers.append('Access-Control-Allow-Origin', '*');
-        headers.append('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-        headers.append('Access-Control-Allow-Headers', 'Content-Type, Authorization', );
+        // headers.append('Access-Control-Allow-Origin', '*');
+        // headers.append('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+        // headers.append('Access-Control-Allow-Headers', 'Content-Type, Authorization', );
         headers.append('Content-Type', 'application/json');
-        headers.append('appver', '1.0.0');
+        headers.append('appver', '1.1.1');
         
         const response = await fetch(apiUrl + '/login', {
           method: 'POST',
@@ -310,7 +330,7 @@ const data = [
                 }}>
                 {loading && <p>Aguarde...</p>}
                 <BootstrapTable striped bordered hover>
-                  <thead style={{ backgroundColor: "#ffffff"}}>
+                  <thead style={{ backgroundColor: "black"}}>
                     <tr>
                       <th >Info</th>
                       <th>Value</th>
@@ -319,8 +339,8 @@ const data = [
                   <tbody>
                     {data.map(item => (
                       <tr key={item.key}>
-                        <td style={{  backgroundColor: "#ffffff" }}>{item.info}</td>
-                        <td style={{  backgroundColor: "#ffffff" }}>{item.value}</td>
+                        <td style={{  backgroundColor: "black" }}>{item.info}</td>
+                        <td style={{  backgroundColor: "black" }}>{item.value}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -340,7 +360,7 @@ const data = [
             margin: '10px',
             fontSize: '20px',
             paddingBottom: '45px',
-          }} onClick={() => fetchData(1, pagination.pageSize)} disabled={loading} loading={loading}>
+          }} onClick={() => fetchData()} disabled={loading} loading={loading}>
             Obter dados com Detalhes
             
           </Button>

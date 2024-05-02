@@ -3,6 +3,7 @@ import axios from 'axios';
 import './MiniTargettable.css';
 import { useNavigate } from 'react-router-dom';
 import MainNavbar from '../main-navbar/MainNavbar';
+import { getToken } from '../../services/UsersService';
 
 interface ScreenShotRequest {
     id: number;
@@ -17,11 +18,17 @@ const MiniTargetTable = () => {
   const [requests, setRequests] = useState<ScreenShotRequest[]>([]); // Tipagem aqui
   const [newTarget, setNewTarget] = useState('');
   const [editTargets, setEditTargets] = useState<{ [key: number]: string }>({});
+  const token = getToken()
 
  // Função para buscar as solicitações de captura de tela
 const fetchRequests = async (signal: any) => {
   try {
-      const response = await axios.get(`${apiURL}/get-all-screenshot-requests`, { signal });
+      const response = await axios.get(`${apiURL}/get-all-screenshot-requests`, { 
+        headers: {
+          'Authorization' : `Bearer ${token}`
+
+        }, signal
+       });
       setRequests(response.data);
   } catch (error) {
       console.error('Erro ao buscar os dados', error);
@@ -49,7 +56,12 @@ const handleCreate = async () => {
       const abortController = new AbortController();
       const signal = abortController.signal;
 
-      await axios.post(`${apiURL}/create-screenshot-request`, { target: newTarget }, { signal }); // Adicione o argumento 'signal' aqui
+      await axios.post(`${apiURL}/create-screenshot-request`, { target: newTarget }, { 
+        headers: {
+          'Authorization' : `Bearer ${token}`
+
+        }, signal
+       }); // Adicione o argumento 'signal' aqui
 
       // Execute a função para buscar as solicitações de captura de tela
       fetchRequests(signal);
@@ -67,7 +79,12 @@ const handleUpdate = async (id: number) => {
       const abortController = new AbortController();
       const signal = abortController.signal;
 
-      await axios.put(`${apiURL}/update-screenshot-request/${id}`, { target: targetToUpdate }, { signal }); // Adicione o argumento 'signal' aqui
+      await axios.put(`${apiURL}/update-screenshot-request/${id}`, { target: targetToUpdate }, { 
+        headers: {
+          'Authorization' : `Bearer ${token}`
+
+        }, signal
+       }); // Adicione o argumento 'signal' aqui
 
       // Execute a função para buscar as solicitações de captura de tela
       fetchRequests(signal);
@@ -82,7 +99,12 @@ const handleDelete = async (id: number) => {
       const abortController = new AbortController();
       const signal = abortController.signal;
 
-      await axios.delete(`${apiURL}/delete-screenshot-request/${id}`, { signal }); // Adicione o argumento 'signal' aqui
+      await axios.delete(`${apiURL}/themagictool/delete-screenshot-request/${id}`, { 
+        headers: {
+          'Authorization' : `Bearer ${token}`
+
+        }, signal
+       }); // Adicione o argumento 'signal' aqui
 
       // Execute a função para buscar as solicitações de captura de tela
       fetchRequests(signal);

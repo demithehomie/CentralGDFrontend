@@ -165,3 +165,13 @@
     align-items: center;
     flex-direction: row;
   }
+
+  .tmt-pastas-titulo {
+    font-size: 25px;
+    color: #ffffff;
+  }
+
+  .tmt-pastas-subtitulo {
+    font-size:35px;
+    color: #ffffff;
+  }

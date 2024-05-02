@@ -1,15 +1,20 @@
 import  { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-//import { Carousel } from 'react-responsive-carousel';
-import ImageGallery from 'react-image-gallery';
+import Swal from 'sweetalert2';
 import Modal from 'react-modal';
-import 'react-image-gallery/styles/css/image-gallery.css'; // Importando o estilo padrão do react-image-gallery
+import 'react-image-gallery/styles/css/image-gallery.css'; 
 import './UserPrintsPage.css';
 import Loader from '../../components/loader/Loader';
 import FloatingButtons from '../../components/floating-button/FloatingButton';
 import MainNavbar from '../../components/main-navbar/MainNavbar';
 import { FolderOpenOutline } from 'react-ionicons';
+const itemsPerPage: number = 1;
+import ImageGallery from 'react-image-gallery';
+import { getToken } from '../../services/UsersService';
+import onError from  '../../assets/404.png';
+
+
 
 Modal.setAppElement('#root');
 
@@ -21,24 +26,52 @@ interface Print {
   id: number;
   file_name: string;
   created_at: string;
+  reason: string;
+  details: string;
+  public: number;
+  fingerprint: string;
 }
 
 const UserPrintsPage: React.FC<UserPrintsPageProps> = () => {
   const navigate = useNavigate();
  
   const [hasMore, setHasMore] = useState<boolean>(true);
-    const [totalPrints, _blanksetTotalPrints] = useState<number>(0);
+    const [_totalPrints, _blanksetTotalPrints] = useState<number>(0);
     const [isFullSizeModalOpen, setIsFullSizeModalOpen] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true); // Adicione o estado isLoading
     const { userId } = useParams<{ userId: string }>();
     const [user, setUser] = useState<any>({});
     const [userPrints, setUserPrints] = useState<Print[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const itemsPerPage: number = 1;
+    //const itemsPerPage: number = 1;
     const [selectedImage, _setSelectedImage] = useState<string | null>(null);
-    const [startDate, setStartDate] = useState<string>('');
-    const [endDate, setEndDate] = useState<string>('');
-    const [inputPage, setInputPage] = useState<number>(currentPage);
+    const [_inputPage, _setInputPage] = useState<number>(currentPage);
+    const [_errorPrints, setErrorPrints] = useState<string>('');
+    const [currentSlideIndex, setCurrentSlideIndex] = useState<number>(0);
+    const [isDeletingPrints, setIsDeletingPrints] = useState<boolean>(false);
+
+    function formatDate(dateString: string) {
+      console.log(`DATA STRING ${dateString}`);
+      const options: Intl.DateTimeFormatOptions = {
+        year: 'numeric', // ou '2-digit'
+        month: '2-digit', // ou 'numeric'
+        day: '2-digit', // ou 'numeric'
+        hour: '2-digit', // ou 'numeric'
+        minute: '2-digit', // ou 'numeric'
+        hour12: false
+      };
+      
+      // Cria um objeto de data com base na string fornecida
+      let date = new Date(dateString);
+      
+      // Ajusta a data adicionando 3 horas para compensar o fuso horário
+    
+      date = new Date(date.getTime() + (3 * 60 * 60 * 1000)); // Adiciona 3 horas
+    
+      // Utiliza o fuso horário local para a formatação
+      console.log(`QUE ISSO? ${new Intl.DateTimeFormat('pt-BR', options).format(date)}`)
+      return new Intl.DateTimeFormat('pt-BR', options).format(date);
+    }
 
     const handleClickVoltar = () => {
       navigate(-1); // Navegar uma página para trás no histórico
@@ -52,35 +85,50 @@ const UserPrintsPage: React.FC<UserPrintsPageProps> = () => {
       setIsFullSizeModalOpen(false);
     };
 
-    const handleInputPageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      const newPage = parseInt(event.target.value);
-      setInputPage(newPage);
-    };
+    // const handleInputPageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    //   const newPage = parseInt(event.target.value);
+    //   setInputPage(newPage);
+    // };
   
+    const token = getToken()
   
-    const fetchMorePrints = async () => {
+    const fetchMorePrints = async (userId: any, itemsPerPage: any, token: any) => {
+      const controller = new AbortController();
+      const signal = controller.signal;
+  
       setIsLoading(true);
       try {
-        const response = await axios.get(`https://gdcompanion-prod.onrender.com/themagictool/get-all-prints-with-date-intervals/${userId}?start_date=${oneDayAgo}&end_date=${today}&page=${currentPage}&limit=${itemsPerPage}`);
-        setUserPrints((prevPrints) => [...prevPrints, ...response.data]);
-        setHasMore(response.data.length >= itemsPerPage);
-      } catch (error) {
-        console.error('Erro ao buscar mais prints do usuário:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+          const config = {
+              headers: {
+                  'Authorization': `Bearer ${token}`
+              },
+              signal: signal
+          };
+  
+          const response = await axios.get(`https://gdcompanion-prod.onrender.com/themagictool/get-all-prints/with-new-pagination/${userId}`, config);
+  
+          // Filter out any errors (404 or otherwise) from$@$v=v1.16$@$the response data
+    const filteredPrints = response.data.filter((print: any) => print.status !== 'error');
 
-    const today = new Date().toISOString().split('T')[0]; // Data de hoje
-      const oneDayAgo = new Date(new Date().setDate(new Date().getDate() - 2)).toISOString().split('T')[0]; // Dez dias atrás
-  
+    setUserPrints((prevPrints) => [...prevPrints, ...filteredPrints]);
+    setHasMore(filteredPrints.length >= itemsPerPage);
+    console.log(userPrints)
+  } catch (error) {
+    if (axios.isCancel(error)) {
+      console.log('Solicitação cancelada:', error.message);
+    } else {
+      console.error('Erro ao buscar mais prints do usuário:', error);
+    }
+  } finally {
+    setIsLoading(false);
+  }
+};
+
     useEffect(() => {
-      // const today = new Date().toISOString().split('T')[0]; // Data de hoje
-      // const tenDaysAgo = new Date(new Date().setDate(new Date().getDate() - 10)).toISOString().split('T')[0]; // Dez dias atrás
-  
-      fetchMorePrints();
+      fetchMorePrints(userId,  itemsPerPage, token);
     }, [userId, currentPage]);
 
+    
     const images = userPrints.map((print) => ({
       original: `https://ewr1.vultrobjects.com/screen/THEMAGICT_2102255/${print.file_name}`,
       thumbnail: `https://ewr1.vultrobjects.com/screen/THEMAGICT_2102255/${print.file_name}`,
@@ -89,7 +137,12 @@ const UserPrintsPage: React.FC<UserPrintsPageProps> = () => {
 
   const getUserById = async (userId: string) => {
     try {
-      const response = await axios.get(`https://gdcompanion-prod.onrender.com/users/${userId}`);
+      const response = await axios.get(`https://gdcompanion-prod.onrender.com/themagictool/users/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
       setUser(response.data);
       return response.data;
     } catch (error) {
@@ -105,19 +158,7 @@ const UserPrintsPage: React.FC<UserPrintsPageProps> = () => {
     }
   }, [userId]);
 
-  const totalPages = Math.ceil(totalPrints / itemsPerPage);
 
-  // const paginate = (items: Print[], currentPage: number, itemsPerPage: number) => {
-  //   const startIndex = (currentPage - 1) * itemsPerPage;
-  //   const endIndex = startIndex + itemsPerPage;
-  //   return items.slice(startIndex, endIndex);
-  // };
-
-  // const paginatedUserPrints = paginate(userPrints, currentPage, itemsPerPage);
-
-  // const openImageModal = (imageSrc: string) => {
-  //   setSelectedImage(imageSrc);
-  // };
 
   const backToDashboard = () => {
     navigate('/familiaguerra/all-new-dashboard');
@@ -127,50 +168,167 @@ const UserPrintsPage: React.FC<UserPrintsPageProps> = () => {
     navigate('/themagictool/new-screen/get-all-prints');
   };
 
-//   const closeImageModal = () => {
-//     setSelectedImage(null);
-//   };
 
-function formatDate(dateString: string) {
-  const options: Intl.DateTimeFormatOptions = {
-    year: 'numeric', // ou '2-digit'
-    month: '2-digit', // ou 'numeric'
-    day: '2-digit', // ou 'numeric'
-    hour: '2-digit', // ou 'numeric'
-    minute: '2-digit', // ou 'numeric'
-    hour12: false
+  const fetchErrorPrints = async (userId: any, token: any) => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+  
+    
+    setIsLoading(true);
+    try {
+      const config = {
+        headers: {
+          'Authorization': `Bearer ${token}`
+      },
+        signal: signal
+      };
+  
+      const response = await axios.get(`https://gdcompanion-prod.onrender.com/themagictool/get-all-prints/with-new-pagination/${userId}`, config);
+  
+      // Filter out any prints with rendering errors
+      const errorPrints = response.data.filter((print: any) => print.status === 'rendering_error');
+  
+      // Filter out any prints without rendering errors
+      const validPrints = response.data.filter((print: any) => print.status !== 'rendering_error');
+  
+      setUserPrints((prevPrints) => [...prevPrints, ...validPrints]);
+      setHasMore(validPrints.length >= itemsPerPage);
+      setErrorPrints(errorPrints);
+      console.log(errorPrints)
+    } catch (error) {
+      if (axios.isCancel(error)) {
+        console.log('Solicitação cancelada:', error.message);
+      } else {
+        console.error('Erro ao buscar mais prints do usuário:', error);
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
   
-  // Cria um objeto de data com base na string fornecida
-  let date = new Date(dateString);
   
-  // Ajusta a data adicionando 3 horas para compensar o fuso horário
+  
+  const deletePrintsDefinitive = async () => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+  
+    
+  
+    try {
+      const config = {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        signal: signal
+      };
+  
+      // Construir a string da query para a primeira solicitação
+      const queryStringFirst = `?filename=${userPrints[currentSlideIndex].file_name}&path=/THEMAGICT_2102255/`;
+  
+      // First, delete prints definitively with query string
+      const firstResponse = await axios.delete(`https://gdcompanion-prod.onrender.com/themagictool/prints-deletion/definitive/${userId}${queryStringFirst}`, config);
+  
+      // Check if deletion was successful
+      if (firstResponse.status === 200) {
+        // Then, sanitize any remaining prints
+        const secondResponse = await axios.delete(`https://gdcompanion-prod.onrender.com/themagictool/prints-deletion/sanitization/${userId}?filename=${userPrints[currentSlideIndex].file_name}`, config);
+  
+        // Check if deletion was successful
+        if (secondResponse.status === 200) {
+          // Show success message using Swal
+          Swal.fire({
+            icon: 'success',
+            title: 'Prints deleted successfully!',
+            text: 'All prints have been deleted.',
+          }).then((_result) => {
+            // Show loading indicator for two seconds before reloading the page
+            setIsLoading(true);
+            setTimeout(() => {
+              setIsLoading(false);
+              // Reload the page after two seconds
+              window.location.reload();
+            }, 1);
+          });
+        } else {
+          // If deletion fails, show error message using Swal
+          Swal.fire({
+            icon: 'error',
+            title: 'Deletion failed!',
+            text: 'An error occurred while sanitizing prints. Please try again later.',
+          });
+        }
+      } else {
+        // If deletion fails, show error message using Swal
+        Swal.fire({
+          icon: 'error',
+          title: 'Deletion failed!',
+          text: 'An error occurred while deleting prints. Please try again later.',
+        });
+      }
+    } catch (error) {
+      // Handle any errors
+      console.error('Error deleting prints:', error);
+      // Show error message using Swal
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'An error occurred. Please try again later.',
+      });
+    } finally {
+      // Always set isLoading to false after request completes
+      setIsDeletingPrints(false);
+    }
+  }
+  
+  
+  // const deleteErrorPrints = async (errorPrints: any) => {
+  //   const controller = new AbortController();
+  //   const signal = controller.signal;
+  //   setIsLoading(true);
+  
+  //   try {
+  //     const config = {
+  //       headers: {
+  //         'Authorization': `Bearer ${token}`
+  //     },
+  //       signal: signal
+  //     };
+  
+  //     const theFirstResponse = await axios.get(`https://gdcompanion-prod.onrender.com/guerratool/prints-deletion/definitive/${userId}`, config);
+  
+  
+  //     const theSecondResponse = await axios.get(`https://gdcompanion-prod.onrender.com/guerratool/prints-deletion/sanitization/${userId}`, config);
+  
+  
+  
+  //     setErrorPrints(errorPrints);
+  //     console.log(errorPrints)
+  
+  //   } catch {
+  
+  //   }
+  // }
+  // O restante do componente permanece o mesmo
+  
+  useEffect(() => {
+    // const today = new Date().toISOString().split('T')[0]; // Data de hoje
+    // const tenDaysAgo = new Date(new Date().setDate(new Date().getDate() - 10)).toISOString().split('T')[0]; // Dez dias atrás
+    fetchErrorPrints(userId, token )
+  //  deleteErrorPrints(errorPrints)
+  }, [userId]);
+  
+  const loadMorePrints = () => {
+    setCurrentPage(prevPage => prevPage + 1); // Avança para a próxima página
+  };
 
-  date = new Date(date.getTime() + (3 * 60 * 60 * 1000)); // Adiciona 3 horas
 
-  // Utiliza o fuso horário local para a formatação
-  return new Intl.DateTimeFormat('pt-BR', options).format(date);
-}
-
-
-// O restante do componente permanece o mesmo
-
-const handleInsertCurrentDate = () => {
-  const currentDate = new Date().toISOString().split('T')[0];
-  setStartDate(currentDate);
-};
-
-const handleInsertTenDaysAgo = () => {
-  const tenDaysAgo = new Date(new Date().setDate(new Date().getDate() - 10)).toISOString().split('T')[0];
-  setEndDate(tenDaysAgo);
-};
 
   return (
     <div>
       <MainNavbar/>
       <br /><br /><br /><br /><br /><br />
       <FloatingButtons/>
-    <h2 style={{ color: '#ffffff' }}>  
+    <h2 className='tmt-pastas-titulo'>  
     
                           <FolderOpenOutline
                             color={'#ffffff'} 
@@ -179,67 +337,59 @@ const handleInsertTenDaysAgo = () => {
                             width="50px"
                             /> 
 
-                             Pasta de prints do usuário {userId}  - {user.username} </h2>
-                             <div className="date-buttons">
-                             <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
-        <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
-                              <button onClick={handleInsertCurrentDate}>Inserir Data Atual</button>
-                              <button onClick={handleInsertTenDaysAgo}>Inserir Data de 10 Dias Atrás</button>
-                            </div>
+                             Pasta de prints do usuário {userId}  </h2>
+                            <h1 className='tmt-pastas-subtitulo' ><i>{user.username}</i></h1>
+                     
     
-    {isLoading ? (
+    {isLoading || isDeletingPrints ? (
       <Loader />
     ) : (
       <div className="carousel-container">
-       {/* <Carousel
-  showThumbs={false}
-  showStatus={false}
-  dynamicHeight={true}
-  showIndicators={true}
-  className="custom-carousel"
->
-  {userPrints.length > 0 ? userPrints.map((print: Print) => (
-    <div
-      key={print.id}
-      className="carousel-item"
-      onClick={() => {
-        setSelectedImage(`https://ewr1.vultrobjects.com/screen/THEMAGICT_2102255/${print.file_name}`);
-        openFullSizeModal();
-      }}
-    >
-      <h3>Criado em {formatDate(print.created_at)}</h3>
-      <img
-        src={`https://ewr1.vultrobjects.com/screen/THEMAGICT_2102255/${print.file_name}`}
-        alt={print.file_name}
-        className="carousel-image"
-        title={print.created_at}
-      />
-
-     
-    </div>
-  )) : [<p key="no-prints">No prints available.</p>]}
-</Carousel> */}
+  
 
 <ImageGallery 
         items={images} 
+        lazyLoad={true}
         additionalClass="custom-image-gallery" // Adicionando uma classe adicional para estilização personalizada
         thumbnailPosition="left" // Posicionando as miniaturas à esquerda
         autoPlay={false} // Definindo autoPlay como false para desativar o autoplay
         showPlayButton={false} // Ocultando o botão de autoplay
+        showNav={true} // Exibir navegação entre as miniaturas
         showThumbnails={true} // Exibir miniaturas
-            showNav={true} // Exibir navegação entre as miniaturas
+        onErrorImageURL={onError}
+        onSlide={(index: number) => setCurrentSlideIndex(index)}
+      // showBullets={true}
+      
         />
-{hasMore && (
+  <br />
+{currentSlideIndex >= 0 && (
+
+        <div className='detalhes-do-print'>
+          <h4>Detalhes do Print</h4>
+        
+          <label>{`Detalhes: ${userPrints[currentSlideIndex].details}`}</label>
+          <label>{`Fingerprint: ${userPrints[currentSlideIndex].fingerprint}`}</label>
+          <label>{`Criado Em: ${formatDate(userPrints[currentSlideIndex].created_at)}`}</label>
+          <label>{`IMG_NAME: ${userPrints[currentSlideIndex].file_name}`}</label>
+          <br />
+          <button className='the-definitive-delete-button' onClick={() => deletePrintsDefinitive()}>EXCLUIR ESTE PRINT</button>
+        </div>
+      )}
+
+<br />
+
+
+        {hasMore && (
             <button
-              onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
+              onClick={loadMorePrints}
               disabled={isLoading}
             >
               {isLoading ? 'Carregando...' : 'Carregar mais'}
             </button>
           )}
-
       </div>
     )}
+
       <Modal
   isOpen={isFullSizeModalOpen}
   onRequestClose={closeFullSizeModal}
@@ -277,7 +427,7 @@ const handleInsertTenDaysAgo = () => {
 
 
 <div className="pagination">
-      <button
+      {/* <button
         className="button"
         disabled={currentPage === 1}
         onClick={() => setCurrentPage(1)}
@@ -321,7 +471,7 @@ const handleInsertTenDaysAgo = () => {
         onClick={() => setCurrentPage(totalPages)}
       >
         Última Página
-      </button>
+      </button> */}
         <br />
         <br />
         <div>

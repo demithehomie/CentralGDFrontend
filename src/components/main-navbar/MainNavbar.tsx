@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { useAuth } from '../../context/auth/AuthContext';
 import { useState } from 'react';
-
+import  guerradone_logo  from '../../assets/logogdbrancatotal.png';
 
 export default function MainNavbar() {
     const { logout } = useAuth();
@@ -143,8 +143,9 @@ const goToPrints = async () => {
 
             <div className='all-the-main-navbar-content'>
             
-                  <h2 style={{ fontFamily: 'Lexend Exa' }}>GUERRADONE</h2>
-                  <h4 style={{ color: 'dodgerblue'}}> Companion</h4>
+                  {/* <h2 style={{ fontFamily: 'Lexend Exa' }}>GUERRADONE</h2> */}
+                  <img className="gd-logo" src={guerradone_logo} alt="guerradone" />
+                  <h4 style={{ color: 'white', marginLeft: '10px'}}>Companion</h4>
               
                     {/* <div className="logo-at-the-navbar" onClick={goBackToDashboard}>
                       <img src={logo} alt="logo"  />
@@ -162,9 +163,9 @@ const goToPrints = async () => {
                         <div onClick={goToAllReports}>
                             <h3 className='main-navbar-menu-item-text'>Relatórios</h3>
                         </div>
-                        <div onClick={goToServers}>
+                        {/* <div onClick={goToServers}>
                             <h3 className='main-navbar-menu-item-text'>Servidores</h3>
-                        </div>
+                        </div> */}
                         {/* <div onClick={goToAnalytics}>
                             <h3 className='main-navbar-menu-item-text'>Analytics</h3>
                         </div> */}
@@ -201,9 +202,9 @@ const goToPrints = async () => {
                         <div onClick={goToAllReports}>
                             <h3 className='main-navbar-menu-item-text'>Relatórios</h3>
                         </div>
-                        <div onClick={goToServers}>
+                        {/* <div onClick={goToServers}>
                             <h3 className='main-navbar-menu-item-text'>Servidores</h3>
-                        </div>
+                        </div> */}
                         {/* <div onClick={goToAnalytics}>
                             <h3 className='main-navbar-menu-item-text'>Analytics</h3>
                         </div> */}

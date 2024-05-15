@@ -16,10 +16,11 @@ import {
 } from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
-import logo from '../../assets/fGuerra.png'; // Substitua pelo caminho correto do seu logo
+
 import { useAuth } from '../../context/auth/AuthContext';
 import './LoginForm.css';
 import Swal from 'sweetalert2';
+import guerralogo from '../../assets/logogdbrancatotal.png'
 
 const LoginForm = () => {
   const { login } = useAuth();
@@ -85,27 +86,30 @@ const LoginForm = () => {
   }
 
   return (
-    <Center height="100vh" bg="#302F50">
+    <Center height="100vh" bg="#000000">
          {/* <Image src={logo} alt="Logo" boxSize="190px" objectFit="cover" /> */}
       <VStack spacing={4} as="form" onSubmit={handleSubmit}>
         
       <Image 
-          src={logo} 
+          src={guerralogo} 
           alt="Logo" 
-          maxW="20%" // Garante que a largura da imagem não exceda o container
+          maxW="10%" // Garante que a largura da imagem não exceda o container
           height="auto" // Altura automática para manter a proporção
           objectFit="contain" // Ajusta a imagem para ser contida dentro do elemento de forma proporcional
         />
+        <h2 style={{ color: '#ffffff'}}>Companion</h2>
         <br />
 
         <FormControl isRequired>
-          <FormLabel htmlFor="login" color="white">Login</FormLabel>
+          <FormLabel htmlFor="login"  color="white">Login</FormLabel>
           <Input
+  
             id="login"
             placeholder="Digite seu login"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            bg="white"
+            bg="black"
+            color="white"
             className='input-login'
           />
         </FormControl>
@@ -119,7 +123,8 @@ const LoginForm = () => {
               placeholder="Digite sua senha"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              bg="white"
+              bg="black"
+              color="white"
               className='input-password'
             />
             <InputRightElement>

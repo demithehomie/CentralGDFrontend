@@ -15,7 +15,8 @@ export interface User {
 
 const TableContainer = styled.div`
     overflow-x: auto;
-    max-width: 100%;
+    max-width: 200%;
+    border-radius: 30px;
 `;
 
 const Table = styled.table`
@@ -23,13 +24,14 @@ const Table = styled.table`
     border-collapse: collapse;
     color: #000000;
     margin-bottom: 20px;
+
 `;
 
 const TableRow = styled.tr`
-    background-color: #f2f2f2;
+    background-color: #565656;
 
     &:nth-child(even) {
-        background-color: #ffffff;
+        background-color: #878787;
     }
 `;
 
@@ -37,13 +39,13 @@ const TableHeader = styled.th`
     background-color: #333;
     color: #ffffff;
     padding: 10px;
-    text-align: left;
+    text-align: center;
 `;
 
 const TableCell = styled.td`
     padding: 8px 10px;
     border: 1px solid #ddd;
-    color: #000000;
+    color: #ffffff;
     white-space: nowrap;
 `;
 

@@ -57,7 +57,7 @@ export default function TMTReportComponent() {
              <br />
             <h2 className="title-of-card-tmt">Hoje: US$ {reportData.totalAmount.toFixed(2).replace('.', ',')}</h2>
             {/* <p>Last Updated At: {reportData.last_updated_at}</p> */}
-            <p > <strong>  {reportData.percentageIncrease > 0 ? '🔼' : '🔻'} </strong> {reportData.percentageIncrease.toFixed(2).replace('.', ',')}% desde ontem  </p>
+            <p >  {reportData.percentageIncrease >- 0 ? '🔼' : '🔻'}  <strong> {reportData.percentageIncrease.toFixed(2).replace('.', ',')}</strong>% desde ontem  </p>
           </div>
         ) : (
           <div>No data available</div>

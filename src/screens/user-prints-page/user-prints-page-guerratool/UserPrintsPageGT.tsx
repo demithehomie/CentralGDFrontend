@@ -13,6 +13,8 @@ const itemsPerPage: number = 1;
 import ImageGallery from 'react-image-gallery';
 import { getToken } from '../../../services/UsersService';
 import onError from  '../../../assets/404.png'
+import { CustomNavigationFloatingButton } from '../../../components/prints-page-floating-button';
+import { FaListAlt } from 'react-icons/fa';
 
 Modal.setAppElement('#root');
 
@@ -47,6 +49,9 @@ const UserPrintsPageGT: React.FC<UserPrintsPageGTProps> = () => {
     const [_errorPrints, setErrorPrints] = useState<string>('');
     const [currentSlideIndex, setCurrentSlideIndex] = useState<number>(0);
     const [isDeletingPrints, setIsDeletingPrints] = useState<boolean>(false);
+    const [deleting, _setDeleting] = useState(false);
+    const [showLoader, setShowLoader] = useState(false); // State to control Swal with loader
+
     // const openFullSizeModal = () => {
     //   setIsFullSizeModalOpen(true);
     // };
@@ -145,7 +150,7 @@ const UserPrintsPageGT: React.FC<UserPrintsPageGTProps> = () => {
 //     setSelectedImage(null);
 //   };
 
-function formatDate(dateString: string) {
+ function formatDate(dateString: string) {
   const options: Intl.DateTimeFormatOptions = {
     year: 'numeric', // ou '2-digit'
     month: '2-digit', // ou 'numeric'
@@ -212,6 +217,7 @@ const deletePrintsDefinitive = async () => {
   
 
   try {
+    setShowLoader(true);
     const config = {
       headers: {
         'Authorization': `Bearer ${token}`
@@ -232,6 +238,7 @@ const deletePrintsDefinitive = async () => {
 
       // Check if deletion was successful
       if (secondResponse.status === 200) {
+        setShowLoader(false);
         // Show success message using Swal
         Swal.fire({
           icon: 'success',
@@ -247,6 +254,7 @@ const deletePrintsDefinitive = async () => {
           }, 1);
         });
       } else {
+        setShowLoader(false);
         // If deletion fails, show error message using Swal
         Swal.fire({
           icon: 'error',
@@ -255,6 +263,7 @@ const deletePrintsDefinitive = async () => {
         });
       }
     } else {
+      setShowLoader(false);
       // If deletion fails, show error message using Swal
       Swal.fire({
         icon: 'error',
@@ -263,6 +272,7 @@ const deletePrintsDefinitive = async () => {
       });
     }
   } catch (error) {
+    setShowLoader(false);
     // Handle any errors
     console.error('Error deleting prints:', error);
     // Show error message using Swal
@@ -273,6 +283,7 @@ const deletePrintsDefinitive = async () => {
     });
   } finally {
     // Always set isLoading to false after request completes
+    setShowLoader(false);
     setIsDeletingPrints(false);
   }
 }
@@ -318,11 +329,41 @@ const loadMorePrints = () => {
   setCurrentPage(prevPage => prevPage + 1); // Avança para a próxima página
 };
 
+useEffect(() => {
+  if (showLoader) {
+    Swal.fire({
+      title: 'Carregando...',
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      showConfirmButton: false,
+      showCancelButton: false,
+      willOpen: () => {
+        Swal.showLoading();
+      }
+    });
+  } else {
+    Swal.close();
+  }
+}, [deleting]);
+
+useEffect(() => {
+  // Ocultar o loader quando a exclusão for concluída
+  if (!deleting) {
+    setShowLoader(false);
+  }
+}, [deleting]);
+
   return (
     <div>
+      {showLoader && 
+            <div className="loader-container">
+                <Loader />
+            </div>
+}
       <MainNavbar/>
       <br /><br /><br /><br /><br /><br />
       <FloatingButtons/>
+      <CustomNavigationFloatingButton customRedirect={`/guerratool/user-prints-page/list/${userId}`} icon={FaListAlt} size="50px"/>
     <h2 style={{ color: '#ffffff', fontSize: 30 }}>
 
                           <FolderOpenOutline

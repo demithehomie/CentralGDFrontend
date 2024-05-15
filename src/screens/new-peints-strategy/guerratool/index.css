@@ -14,12 +14,15 @@
     justify-content: center;
 }
 
+.gt-logo {
+    width: 18%;
+}
 
 .the-prints-searchbar {
     border-radius: 45px;
-    font-size: 45px;
-    border: 10px solid #6986ed;
-    background-color: #7992ee;
+    font-size: 35px;
+    border: 10px solid #060607;
+    background-color: #3e3e3f;
     color: #ffffff;
     text-align: center;
 }
@@ -27,7 +30,7 @@
 
 .user-logic {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
     justify-content:center;
     border-radius: 20px;
@@ -41,6 +44,26 @@
     font-size: larger;
 }
 
+
 .em-seguida {
     font-size: 30px;
 }
+
+
+.loader-hidden {
+    display: none;
+  }
+  .loader-active {
+    display: block;
+  }
+  
+  
+  .loader-container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 9999; /* Certifique-se de que o z-index seja alto o suficiente para que o loader esteja acima de outros elementos */
+  }
+  
+

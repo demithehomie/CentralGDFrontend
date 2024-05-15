@@ -2,27 +2,125 @@
     background-color: grey;
     gap: 10px;
     border-radius: 30px;
+    width: 70%;
+    justify-content: center ;
+    margin: auto;
+}
+
+@media screen and (max-width: 1300px) {
+    .definitive-card-list {
+        width: 95%;
+    }
 }
 
 .definitive-card {
     gap: 20px;
     display: flex;
     padding: 10px;
-    border-radius: 30px;
+
+    position: relative;
 }
 
 .definitive-image-container {
-    border-radius: 30px;
+    border-radius: 1px;
+    width: 20%;
+    overflow: hidden;
+    border: 1px solid #ffffff;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+}
+
+.definitive-image-container img {
+    transition: transform 0.3s ease;
+    
+}
+
+.definitive-image-container:hover img {
+    transform: scale(1.1);
+   
 }
 
 .definitive-image-content {
     border-radius: 30px;
+    padding-left: 1%;
 }
 
 .definitive-buttons {
-    gap: 70px;
+    gap: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
 
 .definitive-card-image {
+    border-radius: 10px;
+    display: block;
+    width: 100%; /* Garante que a imagem ocupe todo o espaço dentro do contêiner */
+}
+
+.image-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+
+.definitive-image-container:hover .image-popup {
+    opacity: 1;
+}
+
+.popup-image {
+    max-width: 90vw;
+    max-height: 90vh;
     border-radius: 30px;
+}
+
+.smallify {
+    width: 10%
+}
+
+.checkbox-print-list {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+   
+}
+
+.the-prints-page-text-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+}
+
+.row-of-buttons-prints-page {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 5%;
+    padding-left: 5%;
+    margin: auto;
+    gap: 15px;
+}
+
+.row-of-buttons-prints-page-internal {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+
+}
+
+.print-page-button {
+    margin: 10px;
 }

@@ -73,6 +73,7 @@ import GTPRINTS from './screens/second-screenshots/guerratool';
 import NoIDPrintsStrategy from './screens/new-peints-strategy/prints-with-no-id';
 import UserPrintsPageNOID from './screens/user-prints-page/no-id/UserPrintsNoID';
 import TheMagicToolPrintsListFormat from './screens/new-peints-strategy/list-format/the-magic-tool';
+import GuerraToolPrintsListFormat from './screens/new-peints-strategy/list-format/guerratool';
 // import { ChakraProvider } from '@chakra-ui/react';
 
 
@@ -161,7 +162,7 @@ function App() {
           {/* PRINTS EM FORMA DE LISTA COM MÚLTIPLA SELEÇÃO E EXCLUSÃO */}
 
           <Route path="/user-prints-page/list/:userId" element={<PrivateRoute><TheMagicToolPrintsListFormat /></PrivateRoute>} />
-          {/* <Route path="/guerratool/user-prints-page/list/:userId" element={<PrivateRoute>< /></PrivateRoute>} /> */}
+          <Route path="/guerratool/user-prints-page/list/:userId" element={<PrivateRoute>< GuerraToolPrintsListFormat/></PrivateRoute>} />
 
           <Route path="/withoutid/user-prints-page/list" element={<PrivateRoute><UserPrintsPageNOID/></PrivateRoute>} />
 

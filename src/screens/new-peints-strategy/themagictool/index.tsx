@@ -7,6 +7,8 @@ import { Spin } from 'antd';
 import Swal from 'sweetalert2';
 import axios from "axios";
 
+import tmtlogo from '../../../assets/tmttttt.png'
+
 interface User {
     user_id: number; // Adjust type according to your API response
     username: string; // Adjust type according to your API response
@@ -21,6 +23,8 @@ export default function TheMagictoolPrintsStrategy() {
     const [guerraToolUser, setGuerraToolUser] = useState<User[]>([]); // Specify type as User[]
     const [loading, setLoading] = useState(false); // State to manage loading state
     const [inputValue, setInputValue] = useState<string>('');
+    const [deleting, setDeleting] = useState(false);
+    const [showLoader, setShowLoader] = useState(false); // State to control Swal with loader
 
     
 
@@ -126,6 +130,7 @@ export default function TheMagictoolPrintsStrategy() {
   const token = getToken()
 
     const handleClick = async (userID: number) => {
+        setDeleting(true); // Inicia o estado de carregamento
         Swal.fire({
             title: 'Você tem certeza?',
             text: 'Você deseja ocultar o print deste usuário?',
@@ -177,8 +182,8 @@ export default function TheMagictoolPrintsStrategy() {
 
 
    const handleDelete = async (userID: any) => {
-
-
+    
+    setDeleting(true); 
     Swal.fire({
         title: 'Você tem certeza?',
         text: 'Você deseja deletar o print deste usuário?',
@@ -191,13 +196,14 @@ export default function TheMagictoolPrintsStrategy() {
     }).then(async (result) => {
         if (result.isConfirmed) {
             try {
+                setShowLoader(true);
                 // Faz a requisição para deletar o print
     ////////////////////
     ////////////////
     /////////////// DELETAR PRIINT
     /////////////
     ////////////
-                const response = await axios.delete(`https://gdcompanion-prod.onrender.com/themagictool/prints-deletion/definitive/${userID}`,
+                const firstResponse = await axios.delete(`https://gdcompanion-prod.onrender.com/themagictool/prints-deletion/definitive/delete-them-all/${userID}`,
                
                 {
                   headers: {
@@ -205,43 +211,87 @@ export default function TheMagictoolPrintsStrategy() {
                   }
                 }
               )
+
+             
                 // Verifica se a requisição foi bem-sucedida
-                if (response.status === 200) {
+                if (firstResponse.status === 200) {
+                    setShowLoader(false);
                     Swal.fire({
                         title: 'Sucesso!',
                         text: 'O print foi deletado com sucesso. A página será recarregada agora.',
                         icon: 'success',
-                        timer: 1500, // 5 segundos
+                        timer: 7000, // 5 segundos
                         timerProgressBar: true,
-                        showConfirmButton: false
+                        showConfirmButton: true
                     }).then(() => {
+                        Swal.fire({
+                            title: 'Atenção!',
+                            text: '[AUTOMAÇÃO EM ANDAMENTO] - É necessário apagar os targets, ou o usuário aparecerá novamente na lista. Se voltou a aparecer, apague os targets relacionados ao usuário em questão e tente novamente,',
+                            icon: 'warning',
+                            timer: 7000, // 5 segundos
+                            timerProgressBar: true,
+                            showConfirmButton: true
+                        }).then(() => {
                         // Recarrega a página após o timer de 5 segundos
                         window.location.reload();
+                        });
                     });
                 } else {
                     Swal.fire('Erro!', 'Ocorreu um erro ao deletar o print.', 'error');
+                    setShowLoader(false);
                 }
+                setShowLoader(false);
             } catch (error) {
                 console.error('Erro ao deletar o print:', error);
                 Swal.fire('Erro!', 'Ocorreu um erro ao deletar o print.', 'error');
+                setShowLoader(false);
             }
         }
+        setShowLoader(false);
     });
-
-
+    setDeleting(false); // Finaliza o estado de carregamento
+   
    }
 
+   useEffect(() => {
+    if (showLoader) {
+      Swal.fire({
+        title: 'Carregando...',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        showConfirmButton: false,
+        showCancelButton: false,
+        willOpen: () => {
+          Swal.showLoading();
+        }
+      });
+    } else {
+      Swal.close();
+    }
+  }, [deleting]);
 
+  useEffect(() => {
+    // Ocultar o loader quando a exclusão for concluída
+    if (!deleting) {
+      setShowLoader(false);
+    }
+  }, [deleting]);
    
 
     return (
         <>
+       
+
+
                {loading && <Spin />} {/* Show spinner while loading */}
             <MainNavbar />
-            <div>
+          
                 <div>
-                    <h1 style={{ color: "#ffffff", paddingTop: 100 }}>Acesso aos Prints - THE MAGIC TOOL</h1>
-                    <h3 className='title' style={{ }}>Digite O Nome Do Usuário </h3>
+                  <br /><br /><br />
+                  <h2 style={{ color: "#ffffff", fontSize: 35 }}>Acesso aos Prints </h2>
+                  <img src={tmtlogo} alt="tmtlogo" className='tmt-logo-bro'/>
+                   
+                 <br /><br />
          
                  
                     <div style={{ flexDirection: 'column', display: 'flex' }}>
@@ -249,17 +299,17 @@ export default function TheMagictoolPrintsStrategy() {
                         ref={inputRef}
                             type="text" 
                             className='the-prints-searchbar' 
-                            placeholder="Digite aqui a sua pesquisa..." 
+                            placeholder="Digite O Nome Do Usuário..." 
                             onInput={searchUser} 
                             value={inputValue} 
                             onChange={handleInputChange} 
                             onLoad={searchUser}
                             />
                        
-                        <br />
+                        <br /><br />
 
                         <div className='row-of-buttons-for-prints'>
-                        <button style={{ backgroundColor: "dodgerblue", color: "#ffffff", fontWeight: "bold", border: "2px solid #ffffff"}} onClick={() => navigate('/guerratool/new-screen/get-all-prints')}>ACESSAR PRINTS DO GUERRATOOL</button>
+                        <button style={{ backgroundColor: "#006400", color: "#ffffff", fontWeight: "bold", border: "2px solid #ffffff"}} onClick={() => navigate('/guerratool/new-screen/get-all-prints')}>ACESSAR PRINTS DO GUERRATOOL</button>
                         <br />
                         <button onClick={() => window.location.reload()}>
                             REGARREGAR CONTEÚDO{" "}
@@ -334,7 +384,7 @@ export default function TheMagictoolPrintsStrategy() {
                         </div>
                     ))}
                 </div>
-            </div>
+            
             {/* <h6 className='title' style={{ fontSize: '20px' }}>ID do usuário</h6> */}
         </>
     );

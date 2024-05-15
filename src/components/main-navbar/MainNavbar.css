@@ -8,10 +8,15 @@
     position: fixed;
     width: 100%;
     z-index: 1000;
-    background-color: #100d34; /* A deep, rich background color */
+    background-color: #000000; /* A deep, rich background color */
     padding: 0.2rem 2rem; /* Adjusted padding for better spacing */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1); /* Subtle shadow for depth */
     transition: background-color 0.3s ease-in-out; /* Smooth transition for any background color change */
+}
+
+.gd-logo {
+    width: 50px;
+    
 }
 
 .logo-at-the-navbar img {

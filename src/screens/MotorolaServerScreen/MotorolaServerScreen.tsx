@@ -84,7 +84,7 @@ async function fetchLogs(): Promise<ResponseData> {
     // headers.append('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     // headers.append('Access-Control-Allow-Headers', 'Content-Type, Authorization', );
     headers.append('Content-Type', 'application/json');
-    headers.append('appver', '1.1.1');
+    headers.append('appver', '1.2.0');
     const response = await fetch(`https://frpbosstool-server.onrender.com/panel/getuserlog?`, {
   // const response = await fetch(`https://frpbosstool-server.onrender.com/panel/getuserlog?page=${page}&pageSize=${pageSize}`, {
       method: 'POST',
@@ -128,7 +128,7 @@ export default function MotorolaServerScreen() {
   const headers = new Headers();
 
   headers.append('Content-Type', 'application/json');
-  headers.append('appver', '1.1.1');
+  headers.append('appver', '1.2.0');
 
   async function fetchData() {
     setLoading(true);
@@ -177,7 +177,7 @@ export default function MotorolaServerScreen() {
         // headers.append('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
         // headers.append('Access-Control-Allow-Headers', 'Content-Type, Authorization', );
         headers.append('Content-Type', 'application/json');
-        headers.append('appver', '1.1.1');
+        headers.append('appver', '1.2.0');
         
         const response = await fetch(apiUrl + '/login', {
           method: 'POST',
@@ -196,8 +196,8 @@ export default function MotorolaServerScreen() {
         // Exibe uma mensagem de sucesso
         Swal.fire({
             icon: 'success',
-            title: 'Fetch Successful',
-            text: 'Server status and credits retrieved successfully.'
+            title: 'Fetch Bem Sucedido',
+            text: 'Status do Servidor recuperado com sucesso'
         });
     } catch (error: any) {
         // Em caso de erro, exibe uma mensagem de erro e registra o erro no console

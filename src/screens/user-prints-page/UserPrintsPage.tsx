@@ -13,6 +13,8 @@ const itemsPerPage: number = 1;
 import ImageGallery from 'react-image-gallery';
 import { getToken } from '../../services/UsersService';
 import onError from  '../../assets/404.png';
+import { CustomNavigationFloatingButton } from '../../components/prints-page-floating-button';
+import { FaListAlt } from "react-icons/fa";
 
 
 
@@ -49,6 +51,9 @@ const UserPrintsPage: React.FC<UserPrintsPageProps> = () => {
     const [_errorPrints, setErrorPrints] = useState<string>('');
     const [currentSlideIndex, setCurrentSlideIndex] = useState<number>(0);
     const [isDeletingPrints, setIsDeletingPrints] = useState<boolean>(false);
+    const [deleting, _setDeleting] = useState(false);
+    const [showLoader, setShowLoader] = useState(false); // State to control Swal with loader
+
 
     function formatDate(dateString: string) {
       console.log(`DATA STRING ${dateString}`);
@@ -215,6 +220,7 @@ const UserPrintsPage: React.FC<UserPrintsPageProps> = () => {
     
   
     try {
+      setShowLoader(true);
       const config = {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -230,11 +236,13 @@ const UserPrintsPage: React.FC<UserPrintsPageProps> = () => {
   
       // Check if deletion was successful
       if (firstResponse.status === 200) {
+       
         // Then, sanitize any remaining prints
         const secondResponse = await axios.delete(`https://gdcompanion-prod.onrender.com/themagictool/prints-deletion/sanitization/${userId}?filename=${userPrints[currentSlideIndex].file_name}`, config);
   
         // Check if deletion was successful
         if (secondResponse.status === 200) {
+          setShowLoader(false);
           // Show success message using Swal
           Swal.fire({
             icon: 'success',
@@ -250,6 +258,7 @@ const UserPrintsPage: React.FC<UserPrintsPageProps> = () => {
             }, 1);
           });
         } else {
+          setShowLoader(false);
           // If deletion fails, show error message using Swal
           Swal.fire({
             icon: 'error',
@@ -258,6 +267,7 @@ const UserPrintsPage: React.FC<UserPrintsPageProps> = () => {
           });
         }
       } else {
+        setShowLoader(false);
         // If deletion fails, show error message using Swal
         Swal.fire({
           icon: 'error',
@@ -266,6 +276,7 @@ const UserPrintsPage: React.FC<UserPrintsPageProps> = () => {
         });
       }
     } catch (error) {
+      setShowLoader(false);
       // Handle any errors
       console.error('Error deleting prints:', error);
       // Show error message using Swal
@@ -276,6 +287,7 @@ const UserPrintsPage: React.FC<UserPrintsPageProps> = () => {
       });
     } finally {
       // Always set isLoading to false after request completes
+      setShowLoader(false);
       setIsDeletingPrints(false);
     }
   }
@@ -322,12 +334,46 @@ const UserPrintsPage: React.FC<UserPrintsPageProps> = () => {
   };
 
 
+  useEffect(() => {
+    if (showLoader) {
+      Swal.fire({
+        title: 'Carregando...',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        showConfirmButton: false,
+        showCancelButton: false,
+        willOpen: () => {
+          Swal.showLoading();
+        }
+      });
+    } else {
+      Swal.close();
+    }
+  }, [deleting]);
+
+  useEffect(() => {
+    // Ocultar o loader quando a exclusão for concluída
+    if (!deleting) {
+      setShowLoader(false);
+    }
+  }, [deleting]);
+
+
 
   return (
+
+    
     <div>
+
+{showLoader && 
+            <div className="loader-container">
+                <Loader />
+            </div>
+        }
       <MainNavbar/>
       <br /><br /><br /><br /><br /><br />
       <FloatingButtons/>
+      <CustomNavigationFloatingButton customRedirect={`/user-prints-page/list/${userId}`} icon={FaListAlt} size="50px"/>
     <h2 className='tmt-pastas-titulo'>  
     
                           <FolderOpenOutline
@@ -366,6 +412,8 @@ const UserPrintsPage: React.FC<UserPrintsPageProps> = () => {
 
         <div className='detalhes-do-print'>
           <h4>Detalhes do Print</h4>
+
+          <label >{`PRINT DE Nº ${userPrints[currentSlideIndex].id}`}</label>
         
           <label>{`Detalhes: ${userPrints[currentSlideIndex].details}`}</label>
           <label>{`Fingerprint: ${userPrints[currentSlideIndex].fingerprint}`}</label>
